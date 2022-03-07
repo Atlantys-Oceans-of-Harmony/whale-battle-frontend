@@ -1,0 +1,56 @@
+@media (min-width: 1024px) {
+    .navbar-background{
+    
+        background-image: url("assets/buttons/navigation.png");
+        background-size: 100% 100%;
+        background-repeat: no-repeat;
+  
+  }
+    
+}
+
+.dropdown-bg-1{
+    background-image: url("assets/buttons/mobile_nav/dropdown-1.png");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+}
+
+.dropdown-bg-2{
+    background-image: url("assets/buttons/mobile_nav/dropdown-2.png");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+}
+.dropdown-bg-3{
+    background-image: url("assets/buttons/mobile_nav/dropdown-3.png");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+}
+.dropdown-bg-4{
+    background-image: url("assets/buttons/mobile_nav/dropdown-4.png");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+}
+.dropdown-bg-5{
+    background-image: url("assets/buttons/mobile_nav/dropdown-5.png");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+}
+.dropdown-bg-6{
+    background-image: url("assets/buttons/mobile_nav/dropdown-6.png");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+}
+.wallet-btn{
+    background-image: url("assets/buttons/button1.png");
+     background-size: 100% 100%;
+      background-position: -8px -8px;
+}
+
+@keyframes goColor {
+    from {background-color: #1B295E00;}
+    to {background-color: #1B295E;}
+}
+@keyframes goTransparent {
+    from {background-color: #1B295E;}
+    to {background-color: #1B295E00;}
+}

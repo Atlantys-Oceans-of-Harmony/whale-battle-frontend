@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "harmony-whales"
+  },
+  "targets": {
+    "harmony-whales": {
+      "hosting": {
+        "whales-battle": [
+          "whales-battle"
+        ]
+      }
+    }
+  }
+}
