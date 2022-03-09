@@ -2,7 +2,8 @@ import { createContext, useEffect, useState } from "react";
 import { ethers } from 'ethers';
 import arbTokenAbi from "abis/arbToken.json";
 import arbWhaleBattleAbi from "abis/arbWhaleBattle.json";
-import harmonyWhalesAbi from "abis/harmonyWhales.json";
+import harmonyWhalesAbi from "abis/harmonyWhalesv2.json";
+import battleStorageAbi from "abis/battleStorage.json";
 import { Provider as MulticallProvider, Contract as MulticallContract } from "ethers-multicall";
 import { BigNumber } from "../../node_modules/ethers/lib/ethers";
 import { toast } from 'react-toastify';
@@ -26,8 +27,11 @@ const NATIVE_CURRENCY = {
 const MULTI_CALL_ADDRESS = "0xd078799c53396616844e2fa97f0dd2b4c145a685";
 const CHAIN_NAME = "Harmony Testnet";
 const ARB_TOKEN_CONTRACT_ADDRESS = "0x73E49908E6ed030d4b66659D5a94260D4f97D402";
-const ARB_WHALE_BATTLE_CONTRACT_ADDRESS = "0x23667c4Ab8fce9EA6689D58B5C11F12256E55b42";
-const HARMONY_WHALES_CONTRACT_ADDRfESS = "0x0519f50287DDcdF8b761Dae76Dc1A76776A0af70";
+const ARB_WHALE_BATTLE_CONTRACT_ADDRESS = "0x7E22Aa2a379e89615d9b5aF32AEF78529612c6c8";
+const HARMONY_WHALES_CONTRACT_ADDRfESS = "0xfDDF1C96B61E5e8150F34845a09D5a1259e5daDd";
+const HARMONY_WHALES_V2_CONTRACT_ADDRESS = "0xfDDF1C96B61E5e8150F34845a09D5a1259e5daDd";
+const OCEAN_STAKING_CONTRACT = "0x3d902f6447A0D4E61d65E863E7C2425D938cfEed";
+const BATTLE_STORAGE_CONTRACT_ADDRESS = "0xa1faD5Fd6B7c3117cc7674C9CB29FF5B73D08293";
 // const HARMONY_WHALES_CONTRACT_ADDRfESS = "0x0519f50287DDcdF8b761Dae76Dc1A76776A0af70";
 export const Web3Provider = (props) => {
 
@@ -49,11 +53,14 @@ export const Web3Provider = (props) => {
         );
         const arbTokenContract = new ethers.Contract(ARB_TOKEN_CONTRACT_ADDRESS, arbTokenAbi, _signer);
         const arbWhaleBattleContract = new ethers.Contract(ARB_WHALE_BATTLE_CONTRACT_ADDRESS, arbWhaleBattleAbi, _signer);
-        const harmonyWhaleContract = new ethers.Contract(HARMONY_WHALES_CONTRACT_ADDRfESS, harmonyWhalesAbi, _signer);
+        const battleStorageContract = new ethers.Contract(BATTLE_STORAGE_CONTRACT_ADDRESS, battleStorageAbi, _signer);
+        const harmonyWhaleContract = new ethers.Contract(HARMONY_WHALES_V2_CONTRACT_ADDRESS, harmonyWhalesAbi, _signer);
         const _contractObjects = {
             arbTokenContract,
             arbWhaleBattleContract,
-            harmonyWhaleContract
+            harmonyWhaleContract,
+            battleStorageContract,
+
         }
         setContractObjects(_contractObjects);
     }, [signer])
@@ -108,7 +115,7 @@ export const Web3Provider = (props) => {
         return ([ethcallProvider, multicallContract]);
 
     }
-    functionsToExport.connectWallet = async (defaultAccount = 1) => {
+    functionsToExport.connectWallet = async (defaultAccount = 0) => {
         const wallet = ethers.Wallet.createRandom();
         console.log(wallet);
         if (defaultAccount >= 0) {
@@ -224,6 +231,28 @@ export const Web3Provider = (props) => {
 
         })
     }
+    functionsToExport.listenToOngoingBattles = async (onWin) => {
+        let filter = contractObjects?.arbWhaleBattleContract?.filters?.AcceptedBattle();
+        contractObjects?.arbWhaleBattleContract?.on(filter, async (...args) => {
+            const data = {
+                battleId: args[0].toString(),
+                creatorAddress: args[1],
+                whaleId: args[2].toString(),
+                whaleIdAccepted: args[3].toString(),
+                ownerTotalPoints: args[4].toString(),
+                acceptedTotalPoints: args[5].toString(),
+                amount: args[6].toString(),
+                created: args[7].toString(),
+            }
+            console.log(args[0].toString());
+            console.log("WonBattle");
+            console.log(args);
+            onWin(data);
+            toast(`Battle #${data.battleId} Won!`)
+
+
+        })
+    }
     functionsToExport.listenToWonBattles = async (onWin) => {
         let filter = contractObjects?.arbWhaleBattleContract?.filters?.BattleWon();
         contractObjects?.arbWhaleBattleContract?.on(filter, async (...args) => {
@@ -246,6 +275,52 @@ export const Web3Provider = (props) => {
 
         })
     }
+    functionsToExport.getBattlesReadyToAccept = async ()=>{
+        const result = await contractObjects?.battleStorageContract?.getBattlesReadyToAccept();
+        
+        return result.filter(e=>e.toString()!=="0");
+    }
+    functionsToExport.getAllBattles = async ()=>{
+        let result = await contractObjects?.battleStorageContract?.getBattlesByAddress(account);
+        let result2 = await contractObjects?.battleStorageContract?.getBattlesReadyToAccept();
+        result = result?.map((lii)=>lii?.length && lii?.filter(e=>e.toString()!=="0"))
+        const wonBattles = result[3]?.length
+        const lostBattles = result[4]?.length
+        const readyToAcceptBattles = result[5]?.map(e=>e.toString())//Battles Created(ideally)
+        const readyToCommenceBattles = result[6]?.map(e=>e.toString())//Battles Joined(ideally)
+        const cancelledBattles = result[7]?.length
+        const forfeitedBattles = result[8]?.length
+       
+        return({wonBattles,lostBattles,readyToAcceptBattles,readyToCommenceBattles,cancelledBattles,forfeitedBattles})
+    }
+    functionsToExport.getBattleDetails  = async (battleIds=[])=>{
+        const [multicallProvider, multicallContract] = await setupMultiCallContract(BATTLE_STORAGE_CONTRACT_ADDRESS, battleStorageAbi);
+            let tokenCalls = battleIds.map(e=>{
+                return(multicallContract.getBattleById(e.toString()));
+            })
+            const userTokens = (await multicallProvider?.all(tokenCalls));
+            userTokens.map((args)=>{
+                const data = {
+                    whaleId: args[0].toString(),
+                    gen:args[1].toString(),
+                    owner:args[2].toString(),
+                    amount:args[3].toString(),
+                    ownerTotalPoints:args[4].toString(),
+                    acceptedBy:args[5].toString(),
+                    whaleIdAccepted:args[6].toString(),
+                    acceptedTotalPoints:args[7].toString(),
+                    winner:args[8].toString(),
+                    endDate:args[9].toString(),
+                    futureBlock:args[10].toString(),
+                    inProgress:args[11],
+                   
+                }
+                return data;
+            })
+            
+            return userTokens;
+        
+    }
     functionsToExport.cancelBattle = async (battleId) => {
         toast(`Cancelling Battle #${battleId} (Placing Transaction)`)
 
@@ -259,7 +334,7 @@ export const Web3Provider = (props) => {
 
     }
 
-    functionsToExport.createBattle = async ({ whaleId, duration, amount, color }, onCreate) => {
+    functionsToExport.createBattle = async ({ whaleId, duration, amount }, onCreate) => {
 
         const requiredAmount = BigNumber.from(amount)
         const availableBalance = await contractObjects?.arbTokenContract.allowance(account, ARB_WHALE_BATTLE_CONTRACT_ADDRESS);
@@ -272,16 +347,13 @@ export const Web3Provider = (props) => {
         }
         toast(`Creating Battle (Placing Transaction)`)
 
-        const newBattle = await contractObjects?.arbWhaleBattleContract?.create(whaleId, amount, color, duration);
+        const newBattle = await contractObjects?.arbWhaleBattleContract?.create(whaleId, "1", amount, duration);
         console.log(newBattle);
         console.log(newBattle.value.toString());
         toast(`Creating Battle (Transaction Placed)`);
 
         const newBattleId = await newBattle.wait();
         console.log(newBattleId);
-
-
-
 
     }
     functionsToExport.joinBattle = async ({ whaleId, battleId, amount }) => {
@@ -303,6 +375,21 @@ export const Web3Provider = (props) => {
         const txn = newBattle.wait();
         console.log(txn);
 
+    }
+    functionsToExport.getReadyToAcceptBattles = async () => {
+        try {
+            const userBalance = parseInt((await contractObjects?.harmonyWhaleContract?.balanceOf(account)).toString());
+            const [multicallProvider, multicallContract] = await setupMultiCallContract(HARMONY_WHALES_CONTRACT_ADDRfESS, harmonyWhalesAbi);
+            let tokenCalls = []
+            for (let i = 0; i < userBalance; i++) {
+                tokenCalls.push(multicallContract.tokenOfOwnerByIndex(account, i));
+            }
+            const userTokens = (await multicallProvider?.all(tokenCalls)).map(e => e.toString());
+            return userTokens;
+        }
+        catch (e) {
+            console.log(e);
+        }
     }
     return (<Web3Context.Provider value={{ account, ...functionsToExport }}>
         {props.children}

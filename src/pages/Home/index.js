@@ -25,7 +25,8 @@ const Home = () => {
         joinBattle, getArbTokenBalance,
         getAllHarmonyWhales, listenToCreatedBattles,
         listenToWonBattles, listenToCanceledBattles,
-        listenToAcceptedBattles, cancelBattle
+        listenToAcceptedBattles, cancelBattle,getAllBattles,
+        getBattleDetails,getBattlesReadyToAccept
     } = useContext(Web3Context);
     const [createBattleForm, setCreateBattleForm] = useState({
         whaleId: "",
@@ -50,17 +51,23 @@ const Home = () => {
     }
     useEffect(() => {
         const fetchStuff = async () => {
-            getArbTokenBalance().then(res => setArbTokenBalance(res)).catch(e => setArbTokenBalance("Failed to Fetch Token Balance"));
             getAllHarmonyWhales().then(res => {
                 setHarmonyWhales(res)
                 setCreateBattleForm({ ...createBattleForm, whaleId: res[0] });
                 setJoinBattleForm({ ...joinBattleForm, whaleId: res[0] });
             }).catch(e => { setHarmonyWhales([]) });
-            listenToCreatedBattles(handleOnCreateBattle);
-            listenToCreatedBattles(handleOnCreateOwnBattle, true);
-            listenToWonBattles(handleOnWinBattle);
-            listenToCanceledBattles(handleOnCancelledBattle);
-            listenToAcceptedBattles(handleOnJoinedBattle);
+            const [{wonBattles,lostBattles,readyToAcceptBattles,readyToCommenceBattles,cancelledBattles,forfeitedBattles},readyToJoinBattleIds] = await Promise.all([getAllBattles(),getBattlesReadyToAccept()]) ;
+
+            const [createdBattles,commenceBattles,readyToJoinbattles] =
+            await Promise.all([getBattleDetails(readyToAcceptBattles),
+                getBattleDetails(readyToCommenceBattles),
+                getBattleDetails(readyToJoinBattleIds)])
+            // listenToCreatedBattles(handleOnCreateBattle);
+            // listenToCreatedBattles(handleOnCreateOwnBattle, true);
+            // listenToWonBattles(handleOnWinBattle);
+            // listenToCanceledBattles(handleOnCancelledBattle);
+            // listenToAcceptedBattles(handleOnJoinedBattle);
+            console.log(createdBattles,commenceBattles,readyToJoinbattles)
 
         }
         if (account) {
@@ -188,27 +195,6 @@ const Home = () => {
                                     </select>
                                     <img src={Button1} alt="" className="absolute -z-10 w-64 -top-10 -left-10" />
 
-                                </div>
-                                <h3 className="text-white sm:text-xl md:text-2xl font-extrabold">Select a Color</h3>
-
-                                <div className="h-32 mt-4  -top-6 -left-8 w-96 relative text-md tracking-tight font-extrabold text-white sm:text-xl md:text-2xl flex items-center wallet-btn ">
-
-                                    {COLOR &&
-                                        <select
-                                            id="duration_create"
-                                            name="duration_create"
-                                            className="mt-1 z-10 pt-2 block bg-transparent text-white focus:outline-none text-lg  pl-32 pr-10 py-2  font-extrabold cursor-pointer  items-center justify-center  mb-3 "
-                                            value={createBattleForm["color"]}
-                                            onChange={e => handleCreateBattleChange("color", e.target.value)}
-                                        >
-                                            {COLOR.map((e, index) => {
-                                                return (<option className="flex" value={index}>{e}</option>
-                                                )
-                                            })}
-
-                                        </select>
-                                    }
-                                    <img src={Button1} alt="" className="absolute -z-10 w-64 -top-10 -left-10" />
                                 </div>
                                 <h3 className="text-white sm:text-xl md:text-2xl font-extrabold">Enter Amount</h3>
 
@@ -400,7 +386,7 @@ const Home = () => {
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{e.amount}</td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{COLOR[parseInt(e.color)]}</td>
-                                            <td onClick={() => handleJoinBattle(e.battleId, e.amount)} className="cursor-pointer">Join Battle</td>
+                                            <td onClick={() => handleJoinBattle(e.battleId, e.amount)} className="text-gray-500 cursor-pointer">Join Battle</td>
                                         </tr>
                                     </>)
                                 })}
