@@ -1,0 +1,341 @@
+[
+    {
+        "type": "constructor",
+        "stateMutability": "nonpayable",
+        "inputs": [
+            {
+                "type": "address",
+                "name": "_whales",
+                "internalType": "address"
+            },
+            {
+                "name": "_plots",
+                "type": "address",
+                "internalType": "address"
+            },
+            {
+                "internalType": "address",
+                "type": "address",
+                "name": "_arb"
+            }
+        ]
+    },
+    {
+        "type": "event",
+        "anonymous": false,
+        "name": "OwnershipTransferred",
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "previousOwner",
+                "type": "address",
+                "indexed": true
+            },
+            {
+                "type": "address",
+                "name": "newOwner",
+                "internalType": "address",
+                "indexed": true
+            }
+        ]
+    },
+    {
+        "inputs": [],
+        "name": "isPaused",
+        "stateMutability": "view",
+        "type": "function",
+        "outputs": [
+            {
+                "name": "",
+                "type": "bool",
+                "internalType": "bool"
+            }
+        ]
+    },
+    {
+        "type": "function",
+        "name": "owner",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "inputs": []
+    },
+    {
+        "type": "function",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "name": "renounceOwnership",
+        "inputs": []
+    },
+    {
+        "outputs": [
+            {
+                "internalType": "address",
+                "type": "address",
+                "name": "owner"
+            },
+            {
+                "type": "uint256",
+                "internalType": "uint256",
+                "name": "stakedWhale"
+            },
+            {
+                "name": "lastClaim",
+                "internalType": "uint256",
+                "type": "uint256"
+            },
+            {
+                "type": "bool",
+                "name": "isWhale",
+                "internalType": "bool"
+            },
+            {
+                "type": "uint256",
+                "internalType": "uint256",
+                "name": "position"
+            }
+        ],
+        "stateMutability": "view",
+        "inputs": [
+            {
+                "type": "uint256",
+                "internalType": "uint256",
+                "name": ""
+            }
+        ],
+        "name": "stakedPlot",
+        "type": "function"
+    },
+    {
+        "outputs": [],
+        "name": "transferOwnership",
+        "stateMutability": "nonpayable",
+        "inputs": [
+            {
+                "name": "newOwner",
+                "type": "address",
+                "internalType": "address"
+            }
+        ],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "_user",
+                "type": "address",
+                "internalType": "address"
+            }
+        ],
+        "name": "getUserStaked",
+        "type": "function",
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint256[]",
+                "internalType": "uint256[]"
+            }
+        ],
+        "stateMutability": "view"
+    },
+    {
+        "name": "stakePlot",
+        "inputs": [
+            {
+                "name": "tokenIds",
+                "internalType": "uint256[]",
+                "type": "uint256[]"
+            }
+        ],
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "plotIds",
+                "type": "uint256[]",
+                "internalType": "uint256[]"
+            }
+        ],
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "name": "unstakePlot",
+        "type": "function"
+    },
+    {
+        "name": "stakeWhale",
+        "type": "function",
+        "stateMutability": "nonpayable",
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "type": "uint256",
+                "name": "tokenId"
+            },
+            {
+                "name": "plotId",
+                "internalType": "uint256",
+                "type": "uint256"
+            }
+        ],
+        "outputs": []
+    },
+    {
+        "name": "unstakeWhale",
+        "inputs": [
+            {
+                "type": "uint256",
+                "internalType": "uint256",
+                "name": "plotId"
+            }
+        ],
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "stateMutability": "nonpayable",
+        "type": "function",
+        "name": "claimRewards",
+        "inputs": [
+            {
+                "type": "uint256[]",
+                "internalType": "uint256[]",
+                "name": "plotIds"
+            }
+        ],
+        "outputs": []
+    },
+    {
+        "name": "getReward",
+        "inputs": [
+            {
+                "name": "plotId",
+                "internalType": "uint256",
+                "type": "uint256"
+            }
+        ],
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint256",
+                "internalType": "uint256"
+            }
+        ],
+        "type": "function",
+        "stateMutability": "view"
+    },
+    {
+        "type": "function",
+        "stateMutability": "nonpayable",
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            },
+            {
+                "type": "address",
+                "internalType": "address",
+                "name": ""
+            },
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            },
+            {
+                "type": "bytes",
+                "name": "",
+                "internalType": "bytes"
+            }
+        ],
+        "name": "onERC721Received",
+        "outputs": [
+            {
+                "type": "bytes4",
+                "internalType": "bytes4",
+                "name": ""
+            }
+        ]
+    },
+    {
+        "stateMutability": "nonpayable",
+        "inputs": [],
+        "name": "withdrawARB",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "stateMutability": "nonpayable",
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "type": "uint256",
+                "name": "newDaily"
+            }
+        ],
+        "name": "setDailyReward",
+        "type": "function",
+        "outputs": []
+    },
+    {
+        "inputs": [
+            {
+                "type": "bool",
+                "name": "pause",
+                "internalType": "bool"
+            }
+        ],
+        "type": "function",
+        "name": "pauseContract",
+        "stateMutability": "nonpayable",
+        "outputs": []
+    },
+    {
+        "name": "setWhale",
+        "type": "function",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "inputs": [
+            {
+                "name": "_whale",
+                "type": "address",
+                "internalType": "address"
+            }
+        ]
+    },
+    {
+        "outputs": [],
+        "name": "setPlot",
+        "type": "function",
+        "stateMutability": "nonpayable",
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_plot",
+                "type": "address"
+            }
+        ]
+    },
+    {
+        "stateMutability": "nonpayable",
+        "inputs": [
+            {
+                "type": "address",
+                "internalType": "address",
+                "name": "_arb"
+            }
+        ],
+        "type": "function",
+        "name": "setARB",
+        "outputs": []
+    }
+]

@@ -1,8 +1,9 @@
 import { createContext, useEffect, useState } from "react";
-import { ethers } from 'ethers';
+import { ethers, utils } from 'ethers';
 import arbTokenAbi from "abis/arbToken.json";
 import arbWhaleBattleAbi from "abis/arbWhaleBattle.json";
 import harmonyWhalesAbi from "abis/harmonyWhalesv2.json";
+import stakingAbi from "abis/staking.json";
 import battleStorageAbi from "abis/battleStorage.json";
 import { Provider as MulticallProvider, Contract as MulticallContract } from "ethers-multicall";
 import { BigNumber } from "../../node_modules/ethers/lib/ethers";
@@ -26,19 +27,24 @@ const NATIVE_CURRENCY = {
 }
 const MULTI_CALL_ADDRESS = "0xd078799c53396616844e2fa97f0dd2b4c145a685";
 const CHAIN_NAME = "Harmony Testnet";
-const ARB_TOKEN_CONTRACT_ADDRESS = "0x73E49908E6ed030d4b66659D5a94260D4f97D402";
-const ARB_WHALE_BATTLE_CONTRACT_ADDRESS = "0x7E22Aa2a379e89615d9b5aF32AEF78529612c6c8";
-const HARMONY_WHALES_CONTRACT_ADDRfESS = "0xfDDF1C96B61E5e8150F34845a09D5a1259e5daDd";
-const HARMONY_WHALES_V2_CONTRACT_ADDRESS = "0xfDDF1C96B61E5e8150F34845a09D5a1259e5daDd";
-const OCEAN_STAKING_CONTRACT = "0x3d902f6447A0D4E61d65E863E7C2425D938cfEed";
-const BATTLE_STORAGE_CONTRACT_ADDRESS = "0xa1faD5Fd6B7c3117cc7674C9CB29FF5B73D08293";
+const ARB_TOKEN_CONTRACT_ADDRESS = "0xbC34E7EA5Dce05bAc24a54759386067Cb461b7dd";
+const ARB_WHALE_BATTLE_CONTRACT_ADDRESS = "0x4C34D0dE1876E62f0d89de0e11404F1550C506D8";
+const HARMONY_WHALES_CONTRACT_ADDRfESS = "0x35BCB2a29F8f6D8F616c3827AabB0e9F5D0e749B";
+const HARMONY_WHALES_V2_CONTRACT_ADDRESS = "0x35BCB2a29F8f6D8F616c3827AabB0e9F5D0e749B";
+const BATTLE_STORAGE_CONTRACT_ADDRESS = "0x9eeC380533392663AD1f528e8681025BF3139c7B";
 // const HARMONY_WHALES_CONTRACT_ADDRfESS = "0x0519f50287DDcdF8b761Dae76Dc1A76776A0af70";
+const STAKING_CONTRACT_ADDRESS = "0x3d902f6447A0D4E61d65E863E7C2425D938cfEed"
+
+
 export const Web3Provider = (props) => {
 
     const [account, setAccount] = useState();
     const [signer, setSigner] = useState();
     const [contractObjects, setContractObjects] = useState();
     const functionsToExport = {};
+    const [update, setUpdate] = useState(0);
+    const [wonBattles, setWonBattles] = useState(0)
+    const [lostBattles, setLostBattles] = useState(0)
 
     const onAccountsChanged = async (accounts) => {
         setAccount(accounts[0]);
@@ -51,18 +57,37 @@ export const Web3Provider = (props) => {
             window.ethereum,
             "any"
         );
+
         const arbTokenContract = new ethers.Contract(ARB_TOKEN_CONTRACT_ADDRESS, arbTokenAbi, _signer);
         const arbWhaleBattleContract = new ethers.Contract(ARB_WHALE_BATTLE_CONTRACT_ADDRESS, arbWhaleBattleAbi, _signer);
         const battleStorageContract = new ethers.Contract(BATTLE_STORAGE_CONTRACT_ADDRESS, battleStorageAbi, _signer);
         const harmonyWhaleContract = new ethers.Contract(HARMONY_WHALES_V2_CONTRACT_ADDRESS, harmonyWhalesAbi, _signer);
+        const stakingContract = new ethers.Contract(STAKING_CONTRACT_ADDRESS, stakingAbi, _signer);
+
         const _contractObjects = {
             arbTokenContract,
             arbWhaleBattleContract,
             harmonyWhaleContract,
             battleStorageContract,
-
+            stakingContract,
         }
         setContractObjects(_contractObjects);
+    }, [signer])
+    const [blockNumber, setBlockNumber] = useState(0)
+    useEffect(() => {
+        const interval = setInterval(() => {
+            if (signer) {
+                (new ethers.providers.Web3Provider(
+                    window.ethereum,
+                    "any"
+                )).getBlockNumber().then(e => {
+                    console.log(e.toString());
+                    setBlockNumber(e.toString())
+                })
+            }
+        }, 10000);
+
+        return () => clearInterval(interval); // This represents the unmount function, in which you need to clear your interval to prevent memory leaks.
     }, [signer])
     const addNewChain = async () => {
         await window.ethereum.request({
@@ -115,7 +140,7 @@ export const Web3Provider = (props) => {
         return ([ethcallProvider, multicallContract]);
 
     }
-    functionsToExport.connectWallet = async (defaultAccount = 0) => {
+    functionsToExport.connectWallet = async (defaultAccount = -1) => {
         const wallet = ethers.Wallet.createRandom();
         console.log(wallet);
         if (defaultAccount >= 0) {
@@ -161,6 +186,7 @@ export const Web3Provider = (props) => {
     functionsToExport.getAllHarmonyWhales = async () => {
         try {
             const userBalance = parseInt((await contractObjects?.harmonyWhaleContract?.balanceOf(account)).toString());
+            console.log("Whales",userBalance);
             const [multicallProvider, multicallContract] = await setupMultiCallContract(HARMONY_WHALES_CONTRACT_ADDRfESS, harmonyWhalesAbi);
             let tokenCalls = []
             for (let i = 0; i < userBalance; i++) {
@@ -275,51 +301,104 @@ export const Web3Provider = (props) => {
 
         })
     }
-    functionsToExport.getBattlesReadyToAccept = async ()=>{
+    functionsToExport.getBattlesReadyToAccept = async () => {
         const result = await contractObjects?.battleStorageContract?.getBattlesReadyToAccept();
-        
-        return result.filter(e=>e.toString()!=="0");
+
+        return result?.filter(e => e?.toString() !== "0") || [];
     }
-    functionsToExport.getAllBattles = async ()=>{
+    functionsToExport.getAllBattles = async () => {
         let result = await contractObjects?.battleStorageContract?.getBattlesByAddress(account);
         let result2 = await contractObjects?.battleStorageContract?.getBattlesReadyToAccept();
-        result = result?.map((lii)=>lii?.length && lii?.filter(e=>e.toString()!=="0"))
-        const wonBattles = result[3]?.length
-        const lostBattles = result[4]?.length
-        const readyToAcceptBattles = result[5]?.map(e=>e.toString())//Battles Created(ideally)
-        const readyToCommenceBattles = result[6]?.map(e=>e.toString())//Battles Joined(ideally)
-        const cancelledBattles = result[7]?.length
-        const forfeitedBattles = result[8]?.length
-       
-        return({wonBattles,lostBattles,readyToAcceptBattles,readyToCommenceBattles,cancelledBattles,forfeitedBattles})
-    }
-    functionsToExport.getBattleDetails  = async (battleIds=[])=>{
-        const [multicallProvider, multicallContract] = await setupMultiCallContract(BATTLE_STORAGE_CONTRACT_ADDRESS, battleStorageAbi);
-            let tokenCalls = battleIds.map(e=>{
-                return(multicallContract.getBattleById(e.toString()));
-            })
-            const userTokens = (await multicallProvider?.all(tokenCalls));
-            userTokens.map((args)=>{
-                const data = {
-                    whaleId: args[0].toString(),
-                    gen:args[1].toString(),
-                    owner:args[2].toString(),
-                    amount:args[3].toString(),
-                    ownerTotalPoints:args[4].toString(),
-                    acceptedBy:args[5].toString(),
-                    whaleIdAccepted:args[6].toString(),
-                    acceptedTotalPoints:args[7].toString(),
-                    winner:args[8].toString(),
-                    endDate:args[9].toString(),
-                    futureBlock:args[10].toString(),
-                    inProgress:args[11],
-                   
-                }
-                return data;
-            })
-            
-            return userTokens;
+        console.log(result)
+        try {
+            let result = await contractObjects?.battleStorageContract?.getBattlesByAddress(account);
+        let result2 = await contractObjects?.battleStorageContract?.getBattlesReadyToAccept();
+        console.log(result)
         
+
+            // console.log(result)
+
+            const _wonBattles = result[4]?.filter(e => e.toString() !== "0").length
+            const _lostBattles = result[5]?.filter(e => e.toString() !== "0").length
+            const readyToAcceptBattles = result[6]?.filter(e => e.toString() !== "0").map(e => e.toString());
+            const readyToCommenceBattles = result[7]?.filter(e => e.toString() !== "0").map(e => e.toString());
+            const _cancelledBattles = result[8]?.filter(e => e.toString() !== "0").length
+            const _forfeitedBattles = result[9]?.filter(e => e.toString() !== "0").length
+            setWonBattles(_wonBattles)
+            setLostBattles(_lostBattles)
+
+
+            return ({
+                wonBattles: _wonBattles,
+                lostBattles: _lostBattles,
+                readyToAcceptBattles,
+                readyToCommenceBattles,
+                cancelledBattles: _cancelledBattles,
+                forfeitedBattles: _forfeitedBattles
+            })
+        }
+        catch (e) {
+            console.log(e)
+            return({wonBattles: 0,
+                lostBattles: 0,
+                readyToAcceptBattles:[],
+                readyToCommenceBattles:[],
+                cancelledBattles: 0,
+                forfeitedBattles: 0})
+        }
+    }
+    functionsToExport.getBattleDetails = async (battleIds = []) => {
+        const [multicallProvider, multicallContract] = await setupMultiCallContract(BATTLE_STORAGE_CONTRACT_ADDRESS, battleStorageAbi);
+        let tokenCalls = battleIds.map(e => {
+            return (multicallContract.getBattleById(e.toString()));
+        })
+        const userTokens = (await multicallProvider?.all(tokenCalls));
+        return userTokens.map((args, index) => {
+            const data = {
+                battleId: battleIds[index].toString(),
+                whaleId: args[0].toString(),
+                gen: args[1].toString(),
+                owner: args[2].toString(),
+                amount: utils.formatEther(args[3].toString()),
+                ownerTotalPoints: args[4].toString(),
+                acceptedBy: args[5].toString(),
+                whaleIdAccepted: args[6].toString(),
+                acceptedTotalPoints: args[7].toString(),
+                winner: args[8].toString(),
+                endDate: args[9].toString(),
+                futureBlock: args[10].toString(),
+                inProgress: args[11],
+
+            }
+            return data;
+        })
+
+        return userTokens;
+
+    }
+    functionsToExport.commenceBattle = async (battleId) => {
+        toast(`Ending Battle #${battleId} (Placing Transaction)`)
+
+        const newBattle = await contractObjects?.arbWhaleBattleContract?.commenceBattle(battleId);
+        console.log(newBattle);
+        console.log(newBattle.value.toString());
+        toast(`Ending Battle #${battleId} (Transaction Placed)`);
+        const newBattleId = await newBattle.wait();
+        console.log(newBattleId);
+        newBattleId?.events?.map((eventElement) => {
+            const { event, args } = eventElement;
+            console.log(event)
+            console.log(args)
+            // const amount = args[1];
+            // if (event === "xpGained") {
+            //     xpGained += parseFloat(amount);
+            // }
+            // else if (event === "xpLost") {
+            //     xpLost += parseFloat(amount);
+            // }
+        })
+        toast("Battle Ended!");
+        setUpdate(update => update + 1);
     }
     functionsToExport.cancelBattle = async (battleId) => {
         toast(`Cancelling Battle #${battleId} (Placing Transaction)`)
@@ -330,12 +409,14 @@ export const Web3Provider = (props) => {
         toast(`Cancelling Battle #${battleId} (Transaction Placed)`);
         const newBattleId = await newBattle.wait();
         console.log(newBattleId);
+        toast("Battle Cancelled");
+        setUpdate(update => update + 1);
 
 
     }
 
     functionsToExport.createBattle = async ({ whaleId, duration, amount }, onCreate) => {
-
+        amount = utils.parseEther(amount)
         const requiredAmount = BigNumber.from(amount)
         const availableBalance = await contractObjects?.arbTokenContract.allowance(account, ARB_WHALE_BATTLE_CONTRACT_ADDRESS);
         if (availableBalance.lt(requiredAmount)) {
@@ -347,18 +428,20 @@ export const Web3Provider = (props) => {
         }
         toast(`Creating Battle (Placing Transaction)`)
 
-        const newBattle = await contractObjects?.arbWhaleBattleContract?.create(whaleId, "1", amount, duration);
+        const newBattle = await contractObjects?.arbWhaleBattleContract?.create(whaleId, "1", amount);
         console.log(newBattle);
         console.log(newBattle.value.toString());
         toast(`Creating Battle (Transaction Placed)`);
 
         const newBattleId = await newBattle.wait();
         console.log(newBattleId);
+        toast("Battle Created!")
+        setUpdate(update => update + 1);
 
     }
     functionsToExport.joinBattle = async ({ whaleId, battleId, amount }) => {
 
-        const requiredAmount = BigNumber.from(amount)
+        const requiredAmount = BigNumber.from(utils.parseEther(amount))
         const availableBalance = await contractObjects?.arbTokenContract.allowance(account, ARB_WHALE_BATTLE_CONTRACT_ADDRESS);
         if (availableBalance.lt(requiredAmount)) {
             toast(`Increasing Allowance for #${battleId} (Placing Transaction)`)
@@ -374,6 +457,8 @@ export const Web3Provider = (props) => {
 
         const txn = newBattle.wait();
         console.log(txn);
+        toast("Battle Joined!")
+        setUpdate(update => update + 1);
 
     }
     functionsToExport.getReadyToAcceptBattles = async () => {
@@ -391,7 +476,7 @@ export const Web3Provider = (props) => {
             console.log(e);
         }
     }
-    return (<Web3Context.Provider value={{ account, ...functionsToExport }}>
+    return (<Web3Context.Provider value={{ account, blockNumber, update, wonBattles, lostBattles, ...functionsToExport }}>
         {props.children}
     </Web3Context.Provider>)
 }

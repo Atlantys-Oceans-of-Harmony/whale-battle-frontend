@@ -28,7 +28,7 @@ const Navbar = () => {
             setNavbar(false);
         }
     };
-    const { connectWallet, account, getArbTokenBalance, userExperience, update, today } = useContext(Web3Context);
+    const { connectWallet, account, getArbTokenBalance, userExperience, update, today, wonBattles,lostBattles } = useContext(Web3Context);
     useEffect(() => {
         getArbTokenBalance().then(e => setArbBalance(e));
     }, [account, update])
@@ -102,7 +102,7 @@ const Navbar = () => {
                                         <div
                                             className="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-mintGreen px-4 py-2 rounded  mr-2"
                                         >
-                                            Total Exp: {userExperience}
+                                            Wins/Loses: {wonBattles}/{lostBattles}
                                         </div>
 
                                         <div

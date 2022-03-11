@@ -1,454 +1,506 @@
 [
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "previousOwner",
-          "type": "address"
-        },
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "newOwner",
-          "type": "address"
-        }
-      ],
-      "name": "OwnershipTransferred",
-      "type": "event"
-    },
-    {
-      "inputs": [],
-      "name": "battleContract",
-      "outputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "_msgSender",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_battleId",
-          "type": "uint256"
-        }
-      ],
-      "name": "cancelBattleCleanup",
-      "outputs": [
-        {
-          "internalType": "bool",
-          "name": "",
-          "type": "bool"
-        }
-      ],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "_battleId",
-          "type": "uint256"
-        }
-      ],
-      "name": "getBattleById",
-      "outputs": [
-        {
-          "components": [
-            {
-              "internalType": "uint256",
-              "name": "whaleId",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint8",
-              "name": "gen",
-              "type": "uint8"
-            },
-            {
-              "internalType": "address",
-              "name": "owner",
-              "type": "address"
-            },
-            {
-              "internalType": "uint256",
-              "name": "amount",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
-              "name": "ownerTotalPoints",
-              "type": "uint256"
-            },
-            {
-              "internalType": "address",
-              "name": "acceptedBy",
-              "type": "address"
-            },
-            {
-              "internalType": "uint256",
-              "name": "whaleIdAccepted",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
-              "name": "acceptedTotalPoints",
-              "type": "uint256"
-            },
-            {
-              "internalType": "address",
-              "name": "winner",
-              "type": "address"
-            },
-            {
-              "internalType": "uint256",
-              "name": "endDate",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
-              "name": "futureBlock",
-              "type": "uint256"
-            },
-            {
-              "internalType": "bool",
-              "name": "inProgress",
-              "type": "bool"
-            }
-          ],
-          "internalType": "struct BattleStorage.Battle",
-          "name": "",
-          "type": "tuple"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "getBattleCount",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "_playerAddress",
-          "type": "address"
-        }
-      ],
-      "name": "getBattlesByAddress",
-      "outputs": [
-        {
-          "components": [
-            {
-              "internalType": "uint256",
-              "name": "ReadyIndex",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
-              "name": "CancelledIndex",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
-              "name": "CommenceIndex",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256[]",
-              "name": "Won",
-              "type": "uint256[]"
-            },
-            {
-              "internalType": "uint256[]",
-              "name": "Lost",
-              "type": "uint256[]"
-            },
-            {
-              "internalType": "uint256[]",
-              "name": "ReadyToAccept",
-              "type": "uint256[]"
-            },
-            {
-              "internalType": "uint256[]",
-              "name": "ReadyToCommence",
-              "type": "uint256[]"
-            },
-            {
-              "internalType": "uint256[]",
-              "name": "Cancelled",
-              "type": "uint256[]"
-            },
-            {
-              "internalType": "uint256[]",
-              "name": "Forfeited",
-              "type": "uint256[]"
-            }
-          ],
-          "internalType": "struct BattleStorage.BattlesOfAddress",
-          "name": "",
-          "type": "tuple"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "getBattlesReadyToAccept",
-      "outputs": [
-        {
-          "internalType": "uint256[]",
-          "name": "",
-          "type": "uint256[]"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "getBattlesReadyToCommence",
-      "outputs": [
-        {
-          "internalType": "uint256[]",
-          "name": "",
-          "type": "uint256[]"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "_whaleId",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint8",
-          "name": "_gen",
-          "type": "uint8"
-        },
-        {
-          "internalType": "address",
-          "name": "_owner",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_amount",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_duration",
-          "type": "uint256"
-        }
-      ],
-      "name": "newBattle",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "owner",
-      "outputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "_battleId",
-          "type": "uint256"
-        },
-        {
-          "internalType": "address",
-          "name": "_playerAddress",
-          "type": "address"
-        }
-      ],
-      "name": "removeReadyToCommenceByAddress",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "_battleId",
-          "type": "uint256"
-        }
-      ],
-      "name": "removeReadyToCommenceFromAllBattles",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "renounceOwnership",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "_battleContract",
-          "type": "address"
-        }
-      ],
-      "name": "setBattleContract",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "newOwner",
-          "type": "address"
-        }
-      ],
-      "name": "transferOwnership",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "_battleId",
-          "type": "uint256"
-        },
-        {
-          "internalType": "address",
-          "name": "winnerAddress",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "loserAddress",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "acceptedTotal",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "ownerTotal",
-          "type": "uint256"
-        }
-      ],
-      "name": "upDateBattleWon",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "_battleId",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_whaleId",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "acceptedStartPoints",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "ownerStartPoints",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "amountAfterFee",
-          "type": "uint256"
-        },
-        {
-          "internalType": "address",
-          "name": "_msgSender",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_futureBlock",
-          "type": "uint256"
-        }
-      ],
-      "name": "updateBattleOnAccept",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "newBattleId",
-          "type": "uint256"
-        },
-        {
-          "internalType": "address",
-          "name": "_msgSender",
-          "type": "address"
-        }
-      ],
-      "name": "updateBattleOnCreate",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    }
-  ]
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "previousOwner",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
+      }
+    ],
+    "name": "OwnershipTransferred",
+    "type": "event"
+  },
+  {
+    "inputs": [],
+    "name": "battleContract",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_msgSender",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_battleId",
+        "type": "uint256"
+      }
+    ],
+    "name": "cancelBattleCleanup",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_battleId",
+        "type": "uint256"
+      }
+    ],
+    "name": "getBattleById",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "whaleId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint8",
+            "name": "gen",
+            "type": "uint8"
+          },
+          {
+            "internalType": "address",
+            "name": "owner",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "amount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "ownerTotalPoints",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "acceptedBy",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "whaleIdAccepted",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "acceptedTotalPoints",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "winner",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "endDate",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "futureBlock",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct BattleStorage.Battle",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getBattleCount",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_battleId",
+        "type": "uint256"
+      }
+    ],
+    "name": "getBattleHasEndedById",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_battleId",
+        "type": "uint256"
+      }
+    ],
+    "name": "getBattleIsInProgressById",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_playerAddress",
+        "type": "address"
+      }
+    ],
+    "name": "getBattlesByAddress",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "bool",
+            "name": "Exists",
+            "type": "bool"
+          },
+          {
+            "internalType": "uint256",
+            "name": "ReadyIndex",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "CancelledIndex",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "CommenceIndex",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256[]",
+            "name": "Won",
+            "type": "uint256[]"
+          },
+          {
+            "internalType": "uint256[]",
+            "name": "Lost",
+            "type": "uint256[]"
+          },
+          {
+            "internalType": "uint256[]",
+            "name": "ReadyToAccept",
+            "type": "uint256[]"
+          },
+          {
+            "internalType": "uint256[]",
+            "name": "ReadyToCommence",
+            "type": "uint256[]"
+          },
+          {
+            "internalType": "uint256[]",
+            "name": "Cancelled",
+            "type": "uint256[]"
+          },
+          {
+            "internalType": "uint256[]",
+            "name": "Forfeited",
+            "type": "uint256[]"
+          }
+        ],
+        "internalType": "struct BattleStorage.BattlesOfAddress",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getBattlesReadyToAccept",
+    "outputs": [
+      {
+        "internalType": "uint256[]",
+        "name": "",
+        "type": "uint256[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getBattlesReadyToCommence",
+    "outputs": [
+      {
+        "internalType": "uint256[]",
+        "name": "",
+        "type": "uint256[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_battleId",
+        "type": "uint256"
+      }
+    ],
+    "name": "getOwnerOfBattleById",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_whaleId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint8",
+        "name": "_gen",
+        "type": "uint8"
+      },
+      {
+        "internalType": "address",
+        "name": "_owner",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "newBattle",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "owner",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_battleId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_playerAddress",
+        "type": "address"
+      }
+    ],
+    "name": "removeReadyToCommenceByAddress",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_battleId",
+        "type": "uint256"
+      }
+    ],
+    "name": "removeReadyToCommenceFromAllBattles",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "renounceOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_battleContract",
+        "type": "address"
+      }
+    ],
+    "name": "setBattleContract",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
+      }
+    ],
+    "name": "transferOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_battleId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "winnerAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "loserAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "acceptedTotal",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "ownerTotal",
+        "type": "uint256"
+      }
+    ],
+    "name": "upDateBattleWon",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_battleId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_whaleId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "acceptedStartPoints",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "ownerStartPoints",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amountAfterFee",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_msgSender",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_futureBlock",
+        "type": "uint256"
+      }
+    ],
+    "name": "updateBattleOnAccept",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "newBattleId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_msgSender",
+        "type": "address"
+      }
+    ],
+    "name": "updateBattleOnCreate",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]

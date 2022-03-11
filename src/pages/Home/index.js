@@ -26,7 +26,7 @@ const Home = () => {
         getAllHarmonyWhales, listenToCreatedBattles,
         listenToWonBattles, listenToCanceledBattles,
         listenToAcceptedBattles, cancelBattle,getAllBattles,
-        getBattleDetails,getBattlesReadyToAccept
+        getBattleDetails,getBattlesReadyToAccept,blockNumber, update,commenceBattle
     } = useContext(Web3Context);
     const [createBattleForm, setCreateBattleForm] = useState({
         whaleId: "",
@@ -49,6 +49,11 @@ const Home = () => {
     function classNames(...classes) {
         return classes.filter(Boolean).join(' ')
     }
+    console.log(blockNumber);
+    const [battlesToCommence, setBattleToCommence] = useState([]);
+    useEffect(()=>{
+        getBattlesReadyToAccept().then(e=>getBattleDetails(e).then(ee=>setBattlesToJoin(ee)));
+    },[blockNumber])
     useEffect(() => {
         const fetchStuff = async () => {
             getAllHarmonyWhales().then(res => {
@@ -67,13 +72,19 @@ const Home = () => {
             // listenToWonBattles(handleOnWinBattle);
             // listenToCanceledBattles(handleOnCancelledBattle);
             // listenToAcceptedBattles(handleOnJoinedBattle);
-            console.log(createdBattles,commenceBattles,readyToJoinbattles)
+            console.log("Battles Created:",createdBattles)
+            console.log("Battles to commence",commenceBattles)
+            console.log("Battles Ready to join",readyToJoinbattles);
+            setCreatedBattles(createdBattles);
+            setBattleToCommence(commenceBattles);
+            setBattlesToJoin(readyToJoinbattles);
+            
 
         }
         if (account) {
             fetchStuff();
         }
-    }, [account])
+    }, [account, update])
     const handleOnWinBattle = async (data) => {
         console.log(data.battleId + ":WOn")
         if (battlesWon.filter((e) => e.battleId === data.battleId).length === 0) {
@@ -155,7 +166,7 @@ const Home = () => {
                                         onChange={e => handleCreateBattleChange("whaleId", e.target.value)}
                                     >
                                         {harmonyWhales.map(e => {
-                                            return (<option className="flex" value={e}>Whale #{e}</option>
+                                            return (<option className="flex bg-blue-600" value={e}>Whale #{e}</option>
                                             )
                                         })}
 
@@ -166,37 +177,16 @@ const Home = () => {
 
                                 <div className="relative w-80 mt-4">
                                     <img src={Frame} alt="" className="absolute w-96" />
-                                    <img src={`https://api.harmonywhales.com/images/${createBattleForm?.whaleId}`} alt="" className="pt-12 ml-8 w-64" />
+                                    <img src={`https://harmony-whales-meta.herokuapp.com/token/image/${createBattleForm?.whaleId}`} alt="" className="pt-12 ml-8 w-64" />
                                 </div>
                             </>
                             }
                         </div>
                         <div>
                             <div className="text-white sm:text-xl md:text-2xl font-extrabold">
-                                <h3 className="text-white sm:text-xl md:text-2xl font-extrabold">Select Duration</h3>
 
-                                <div className="h-32 mt-4  -top-6 -left-8 w-96 relative text-md tracking-tight font-extrabold text-white sm:text-xl md:text-2xl flex items-center wallet-btn ">
-                                    <select
-                                        id="whale_create"
-                                        name="whale_create"
-                                        className="mt-1 z-10 pt-2 block bg-transparent text-white focus:outline-none text-lg  pl-32 pr-10 py-2  font-extrabold cursor-pointer  items-center justify-center  mb-3 "
-                                        value={createBattleForm["duration"]}
-                                        onChange={e => handleCreateBattleChange("duration", e.target.value)}
-                                    >
-                                        {DURATION &&
-
-
-                                            DURATION.map(e => {
-                                                return (<option className="flex" value={e}>{e / 60} minutes</option>
-                                                )
-                                            })
-
-                                        }
-                                    </select>
-                                    <img src={Button1} alt="" className="absolute -z-10 w-64 -top-10 -left-10" />
-
-                                </div>
-                                <h3 className="text-white sm:text-xl md:text-2xl font-extrabold">Enter Amount</h3>
+                                
+                                <h3 className="text-white sm:text-xl md:text-2xl font-extrabold">Enter Amount(ARB)</h3>
 
                                 <div className="h-32 mt-4  -top-6 -left-8 w-96 relative text-md tracking-tight font-extrabold text-white sm:text-xl md:text-2xl flex items-center ">
                                     <input
@@ -244,17 +234,12 @@ const Home = () => {
                                             >BattleID</th>
                                             <th
                                                 scope="col"
-                                                className="px-6 py-3 text-left  uppercase tracking-wider">From</th>
+                                                className="px-6 py-3 text-left  uppercase tracking-wider">Creator</th>
 
                                             <th
                                                 scope="col"
                                                 className="px-6 py-3 text-left uppercase tracking-wider">Amount</th>
-                                            <th
-                                                scope="col"
-                                                className="px-6 py-3 text-left  uppercase tracking-wider">Color</th>
-                                            <th
-                                                scope="col"
-                                                className="px-6 py-3 text-left  uppercase tracking-wider">Created At</th>
+                                           
                                             <th
                                                 scope="col"
                                                 className="px-6 py-3 text-left uppercase tracking-wider">Cancel</th>
@@ -263,31 +248,30 @@ const Home = () => {
 
                                     </thead>
                                     <tbody className=" divide-y text-white font-bold divide-gray-200">
-                                        {createdBattles.map((e) => {
+                                        {createdBattles?.length>0?createdBattles.map((e) => {
                                             return (<>
                                                 <tr>
                                                     <td className="px-6 py-4 whitespace-nowrap text-gray-200">{e.battleId}</td>
                                                     <td className="px-6 py-4 whitespace-nowrap">
                                                         <div className="flex items-center">
                                                             <div className="flex-shrink-0 h-10 w-10">
-                                                                <img className="h-10 w-10 rounded-full" src={`https://api.harmonywhales.com/images/${e.whaleId}`} alt="" />
+                                                                <img className="h-10 w-10 rounded-full" src={`https://harmony-whales-meta.herokuapp.com/token/image/${e.whaleId}`} alt="" />
                                                             </div>
                                                             <div className="ml-4">
-                                                                <div className=" font-medium text-gray-200">{e.creatorAddress.slice(0, 6)}...{e.creatorAddress.slice(-6)}</div>
+                                                                <div className=" font-medium text-gray-200">{e.owner.slice(0, 6)}...{e.owner.slice(-6)}</div>
                                                                 <div className="text-gray-200">Whale #{e.whaleId}</div>
                                                             </div>
                                                         </div>
                                                     </td>
 
-                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-200">{e.amount}</td>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-200">{COLOR[parseInt(e.color)]}</td>
+                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-200">{e.amount} ARB</td>
                                                     <td
                                                         onClick={() => handleCancelBattle(e?.battleId)}
 
                                                         className="cursor-pointer">Cancel</td>
                                                 </tr>
                                             </>)
-                                        })}
+                                        }):<div>No Battles</div>}
 
                                     </tbody>
                                 </table>
@@ -316,7 +300,7 @@ const Home = () => {
                                 onChange={e => handleJoinBattleChange("whaleId", e.target.value)}
                             >
                                 {harmonyWhales.map(e => {
-                                    return (<option className="flex" value={e}>Whale #{e}</option>
+                                    return (<option className="flex bg-blue-600" value={e}>Whale #{e}</option>
                                     )
                                 })}
 
@@ -327,7 +311,7 @@ const Home = () => {
 
                         <div className="relative w-80 m-4">
                             <img src={Frame} alt="" className="absolute w-96" />
-                            <img src={`https://api.harmonywhales.com/images/${joinBattleForm?.whaleId}`} alt="" className="pt-12 ml-8 w-64" />
+                            <img src={`https://harmony-whales-meta.herokuapp.com/token/image/${joinBattleForm?.whaleId}`} alt="" className="pt-12 ml-8 w-64" />
                         </div>
                     </>
                     }
@@ -337,7 +321,7 @@ const Home = () => {
 
             <h3 className="text-xl text-white leading-6 font-bold">Battles to join appear here:</h3>
 
-            <div className="flex text-white text-xl flex-col">
+            <div className="flex pb-96 text-white text-xl flex-col">
                 <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                     <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
                         <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg"></div>
@@ -352,11 +336,8 @@ const Home = () => {
                                     <th
                                         scope="col"
                                         className="px-6 py-3 text-left  uppercase tracking-wider"
-                                    >CreatorID</th>
-                                    <th
-                                        scope="col"
-                                        className="px-6 py-3 text-left  uppercase tracking-wider"
-                                    >WhaleID</th>
+                                    >Creator</th>
+                                  
                                     <th
                                         scope="col"
                                         className="px-6 py-3 text-left  uppercase tracking-wider"
@@ -364,32 +345,31 @@ const Home = () => {
                                     <th
                                         scope="col"
                                         className="px-6 py-3 text-left  uppercase tracking-wider"
-                                    >Color</th>
+                                    >Join</th>
 
                                 </tr>
                             </thead>
-                            <tbody className="bg-white divide-y divide-gray-200">
-                                {battlesToJoin.map((e) => {
+                            <tbody className="bg-transparent divide-y text-white divide-gray-200">
+                                {battlesToJoin?.length>0?battlesToJoin.map((e) => {
                                     return (<>
                                         <tr>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{e.battleId}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap">{e.battleId}</td>
                                             <td className="px-6 py-4 whitespace-nowrap">
                                                 <div className="flex items-center">
                                                     <div className="flex-shrink-0 h-10 w-10">
-                                                        <img className="h-10 w-10 rounded-full" src={`https://api.harmonywhales.com/images/${e.whaleId}`} alt="" />
+                                                        <img className="h-10 w-10 rounded-full" src={`https://harmony-whales-meta.herokuapp.com/token/image/${e.whaleId}`} alt="" />
                                                     </div>
                                                     <div className="ml-4">
-                                                        <div className="text-sm font-medium text-gray-900">{e.creatorAddress.slice(0, 6)}...{e.creatorAddress.slice(-6)}</div>
-                                                        <div className="text-sm text-gray-500">Whale #{e.whaleId}</div>
+                                                        <div className="text0-sm">{e.owner.slice(0, 6)}...{e.owner.slice(-6)}</div>
+                                                        <div className="text-sm">Whale #{e.whaleId}</div>
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{e.amount}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{COLOR[parseInt(e.color)]}</td>
-                                            <td onClick={() => handleJoinBattle(e.battleId, e.amount)} className="text-gray-500 cursor-pointer">Join Battle</td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm ">{e.amount} ARB</td>
+                                            <td onClick={() => handleJoinBattle(e.battleId, e.amount)} className=" cursor-pointer">Join Battle</td>
                                         </tr>
                                     </>)
-                                })}
+                                }):<div>No Battles to Join!</div>}
                             </tbody>
                         </table>
                     </div>
@@ -399,9 +379,14 @@ const Home = () => {
     }
     if (!account) {
         return (
-            <div className="flex flex-col items-center justify-center h-screen">
+            <div className="flex flex-col text-white items-center justify-center h-screen">
                 <div className="text-4xl font-bold">Connect to a wallet first!</div>
-                <div className="text-xl text-center font-semibold">You can connect to the test wallets(1 and 2) that have test tokens and test whales<br />Or<br />You can connect with your own wallet</div>
+            </div>)
+    }
+    if (harmonyWhales?.length<=0) {
+        return (
+            <div className="flex flex-col items-center justify-center h-screen">
+                 <div className="text-4xl text-white font-bold">You need to have atleast 1 Gen 1 Whale!</div>
             </div>)
     }
     return (<>
@@ -410,6 +395,83 @@ const Home = () => {
         <img src={Dinasour} alt="" className="dinasour  absolute  bottom-0 right-0" />
         <img src={Reef} alt="" className=" absolute  w-96 bottom-0 left-0" /> */}
         <div className="w-full">
+        <div className="relative z-10">
+                <div className="text-2xl text-center font-bold mb-8 text-white">Battles In Progress</div>
+                <div className="flex flex-col">
+                    <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                        <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+                            <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+                                <table className="min-w-full divide-y divide-gray-200">
+                                    <thead className="relative z-10 text-white text-2xl">
+                                        <tr>
+                                            <th
+                                                scope="col"
+                                                className="px-6 py-3 text-left  uppercase tracking-wider"
+                                            >BattleID</th>
+                                            <th
+                                                scope="col"
+                                                className="px-6 py-3 text-left  uppercase tracking-wider">Creator</th>
+                                             <th
+                                                scope="col"
+                                                className="px-6 py-3 text-left  uppercase tracking-wider">Challenger</th>
+
+                                            <th
+                                                scope="col"
+                                                className="px-6 py-3 text-left uppercase tracking-wider">Amount</th>
+                                           
+                                            <th
+                                                scope="col"
+                                                className="px-6 py-3 text-left uppercase tracking-wider">Status</th>
+                                        </tr>
+
+
+                                    </thead>
+                                    <tbody className=" divide-y text-white font-bold divide-gray-200">
+                                        {battlesToCommence?.length>0? battlesToCommence.map((e) => {
+                                            return (<>
+                                                <tr>
+                                                    <td className="px-6 py-4 whitespace-nowrap text-gray-200">{e.battleId}</td>
+                                                    <td className="px-6 py-4 whitespace-nowrap">
+                                                        <div className="flex items-center">
+                                                            <div className="flex-shrink-0 h-10 w-10">
+                                                                <img className="h-10 w-10 rounded-full" src={`https://harmony-whales-meta.herokuapp.com/token/image/${e.whaleId}`} alt="" />
+                                                            </div>
+                                                            <div className="ml-4">
+                                                                <div className=" font-medium text-gray-200">{e.owner.slice(0, 6)}...{e.owner.slice(-6)}</div>
+                                                                <div className="text-gray-200">Whale #{e.whaleId}</div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td className="px-6 py-4 whitespace-nowrap">
+                                                        <div className="flex items-center">
+                                                            <div className="flex-shrink-0 h-10 w-10">
+                                                                <img className="h-10 w-10 rounded-full" src={`https://harmony-whales-meta.herokuapp.com/token/image/${e.whaleIdAccepted}`} alt="" />
+                                                            </div>
+                                                            <div className="ml-4">
+                                                                <div className=" font-medium text-gray-200">{e.acceptedBy.slice(0, 6)}...{e.acceptedBy.slice(-6)}</div>
+                                                                <div className="text-gray-200">Whale #{e.whaleIdAccepted}</div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+
+                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-200">{e.amount} ARB</td>
+                                                    {parseInt(e.futureBlock)-parseInt(blockNumber)<=0? <td
+                                                        onClick={() => commenceBattle(e?.battleId)}
+
+                                                        className="cursor-pointer">End Battle</td>:<td>Battle in Progress!</td>}
+                                                   
+                                                </tr>
+                                            </>)
+                                        }):<div>No battles</div>}
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
             <div
                 className=" mx-auto h-36 w-96 relative text- tracking-tight font-extrabold focus-visible:border-0 focus:border-0 text-white sm:text-xl md:text-2xl flex items-center wallet-btn ">
                 <button
@@ -425,62 +487,7 @@ const Home = () => {
 
         {gameState.index === 0 ? CreateBattle() : JoinBattle()}
 
-        <div className="text-xl pt-32 text-white font-bold">
-            Battles Won
-        </div>
-        <div className="-my-2 text-white overflow-x-auto sm:-mx-6 lg:-mx-8 mb-32">
-            <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-                <div className=" ">
-                    <table className="min-w-full divide-y divide-gray-200"></table>
-                    <table className="min-w-full divide-y divide-gray-200">
-                        <thead className="">
-                            <tr>
-                                <th scope="col"
-                                    className="px-6 py-3 text-left  uppercase tracking-wider"
-                                >BattleID</th>
-                                <th scope="col"
-                                    className="px-6 py-3 text-left  uppercase tracking-wider"
-                                >CreatorID</th>
-                                <th scope="col"
-                                    className="px-6 py-3 text-left  uppercase tracking-wider"
-                                >WhaleID</th>
-                                <th scope="col"
-                                    className="px-6 py-3 text-left  uppercase tracking-wider"
-                                >Accepted WhaleID</th>
-                                <th scope="col"
-                                    className="px-6 py-3 text-left  uppercase tracking-wider"
-                                >Owner Points</th>
-                                <th scope="col"
-                                    className="px-6 py-3 text-left  uppercase tracking-wider"
-                                >Accepted Points</th>
-                                <th scope="col"
-                                    className="px-6 py-3 text-left uppercase tracking-wider"
-                                >Amount</th>
-                                <th scope="col"
-                                    className="px-6 py-3 text-left  uppercase tracking-wider"
-                                >Created At</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {battlesWon.map((e) => {
-                                return (<>
-                                    <tr>
-                                        <td className="px-6 py-4 whitespace-nowrap ">{e.battleId}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap ">{e.creatorAddress}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap ">{e.whaleId}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap ">{e.whaleIdAccepted}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap ">{e.ownerTotalPoints}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap ">{e.acceptedTotalPoints}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap ">{e.amount}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap ">{e.created}</td>
-                                    </tr>
-                                </>)
-                            })}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
+        
     </>)
 }
 export default Home;
