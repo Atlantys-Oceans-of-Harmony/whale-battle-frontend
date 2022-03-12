@@ -12,8 +12,12 @@ import "./index.css"
 import Navbar from "components/Navbar/index";
 import Button1 from "assets/buttons/button1.png"
 import Button2 from "assets/buttons/button2.png"
+import BattleToJoinCard from "components/BattleToJoinCard";
 import Frame from "assets/frame.png";
 import { toast } from 'react-toastify';
+import BattleToJoinModal from "components/BattleToJoinModal";
+import BattleProgressCard from "components/BattleProgressCard";
+import WonSummary from "components/WonSummary";
 
 const DURATION = [300, 600, 1800, 3600];
 const COLOR = ["Blue", "Red"]
@@ -49,11 +53,26 @@ const Home = () => {
     function classNames(...classes) {
         return classes.filter(Boolean).join(' ')
     }
+    const [wonSummary,setWonSummary] = useState({});
+    const [openWon, setOpenWon] = useState(false);
     console.log(blockNumber);
     const [battlesToCommence, setBattleToCommence] = useState([]);
     useEffect(()=>{
         getBattlesReadyToAccept().then(e=>getBattleDetails(e).then(ee=>setBattlesToJoin(ee)));
     },[blockNumber])
+    useEffect(() => {
+        const timerId = setInterval(async ()=>{
+            const [readyToJoinBattleIds] = await Promise.all([getBattlesReadyToAccept()]) ;
+
+            const [readyToJoinbattles] =
+            await Promise.all([
+                getBattleDetails(readyToJoinBattleIds)])
+            setBattlesToJoin(readyToJoinbattles);
+        }, 10000);
+        return function cleanup() {
+            clearInterval(timerId);
+        };
+    }, []);
     useEffect(() => {
         const fetchStuff = async () => {
             getAllHarmonyWhales().then(res => {
@@ -144,8 +163,15 @@ const Home = () => {
     const handleCancelBattle = async (battleId) => {
         await cancelBattle(battleId);
     }
+    const [openCreateBattle,setOpenCreateBattle] = useState(false);
+    const [createBattleSelectedIndex,setCreatedBattleSelectedIndex] = useState(-1);
+
     const CreateBattle = () => {
         return (<div className="mb-96">
+ <BattleToJoinModal
+            open={openCreateBattle}
+            setOpen={setOpenCreateBattle}
+            {...(createBattleSelectedIndex>=0?createdBattles[createBattleSelectedIndex]:{})}/>
 
             <div className="shadow sm:rounded-md sm:overflow-hidden">
                 <div className=" py-6 px-4 space-y-6 sm:p-6">
@@ -221,76 +247,50 @@ const Home = () => {
             </div>
             <div className="relative z-10">
                 <div className="text-2xl text-center font-bold mb-8 text-white">Battles Created</div>
-                <div className="flex flex-col">
-                    <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-                        <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-                            <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-                                <table className="min-w-full divide-y divide-gray-200">
-                                    <thead className="relative z-10 text-white text-2xl">
-                                        <tr>
-                                            <th
-                                                scope="col"
-                                                className="px-6 py-3 text-left  uppercase tracking-wider"
-                                            >BattleID</th>
-                                            <th
-                                                scope="col"
-                                                className="px-6 py-3 text-left  uppercase tracking-wider">Creator</th>
+                <div className="lg:px-16 grid md:grid-cols-2 lg:grid-cols-3 grid-cols-1">
 
-                                            <th
-                                                scope="col"
-                                                className="px-6 py-3 text-left uppercase tracking-wider">Amount</th>
-                                           
-                                            <th
-                                                scope="col"
-                                                className="px-6 py-3 text-left uppercase tracking-wider">Cancel</th>
-                                        </tr>
+                {createdBattles?.length>0?createdBattles.map((e,index) => {
+                     const handleClick = ()=>{
+                        handleCancelBattle(e.battleId)
+                    }
+                    const handleDetail = ()=>{
+                        setOpenJoinBattle(false)
+                        setOpenCreateBattle(true)
 
-
-                                    </thead>
-                                    <tbody className=" divide-y text-white font-bold divide-gray-200">
-                                        {createdBattles?.length>0?createdBattles.map((e) => {
+                        setCreatedBattleSelectedIndex(index)
+                        
+                    }
                                             return (<>
-                                                <tr>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-gray-200">{e.battleId}</td>
-                                                    <td className="px-6 py-4 whitespace-nowrap">
-                                                        <div className="flex items-center">
-                                                            <div className="flex-shrink-0 h-10 w-10">
-                                                                <img className="h-10 w-10 rounded-full" src={`https://harmony-whales-meta.herokuapp.com/token/image/${e.whaleId}`} alt="" />
-                                                            </div>
-                                                            <div className="ml-4">
-                                                                <div className=" font-medium text-gray-200">{e.owner.slice(0, 6)}...{e.owner.slice(-6)}</div>
-                                                                <div className="text-gray-200">Whale #{e.whaleId}</div>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-
-                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-200">{e.amount} ARB</td>
-                                                    <td
-                                                        onClick={() => handleCancelBattle(e?.battleId)}
-
-                                                        className="cursor-pointer">Cancel</td>
-                                                </tr>
+                                            <BattleToJoinCard
+                                            join={false}
+                                            handleClick={handleClick}
+                                            handleDetail={handleDetail}
+                                            {...e}/>
+                                                
                                             </>)
                                         }):<div>No Battles</div>}
-
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                                        </div>
 
             </div>
         </div>)
     }
+    const [openJoinBattle,setOpenJoinBattle] = useState(false);
+        const [joinBattleSelectedIndex,setJoinBattleSelectedIndex] = useState(-1);
+        
     const JoinBattle = () => {
+        
         return (<div>
+             <BattleToJoinModal
+            open={openJoinBattle}
+            setOpen={setOpenJoinBattle}
+            {...(joinBattleSelectedIndex>=0?battlesToJoin[joinBattleSelectedIndex]:{})}/>
+
             <div className="">
-                <div className="lg:flex  items-center justify-center py-6 px-4 space-y-6 sm:p-6">
+                <div className="flex flex-col  items-center justify-center py-6 px-4 space-y-6 sm:p-6">
 
                     {harmonyWhales && <>
 
-                        <div className="h-32 mt-4 -top-6 -left-8 w-96 relative text-md tracking-tight font-extrabold text-white sm:text-xl md:text-2xl flex items-center wallet-btn ">
+                        <div className="h-32 ml-10 mt-4 -top-6 -left-8 w-96 relative text-md tracking-tight font-extrabold text-white sm:text-xl md:text-2xl flex items-center wallet-btn ">
 
                             <select
                                 id="whale_create"
@@ -319,62 +319,26 @@ const Home = () => {
                 </div>
             </div>
 
-            <h3 className="text-xl text-white leading-6 font-bold">Battles to join appear here:</h3>
+            <h3 className=" text-center text-3xl my-8 text-white leading-6 font-bold">Battles to join appear here:</h3>
+         
 
-            <div className="flex pb-96 text-white text-xl flex-col">
-                <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-                    <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-                        <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg"></div>
-                        <table className="min-w-full divide-y divide-gray-200">
-                            <thead className="">
-
-                                <tr>
-                                    <th
-                                        scope="col"
-                                        className="px-6 py-3 text-left  uppercase tracking-wider"
-                                    >BattleID</th>
-                                    <th
-                                        scope="col"
-                                        className="px-6 py-3 text-left  uppercase tracking-wider"
-                                    >Creator</th>
-                                  
-                                    <th
-                                        scope="col"
-                                        className="px-6 py-3 text-left  uppercase tracking-wider"
-                                    >Amount</th>
-                                    <th
-                                        scope="col"
-                                        className="px-6 py-3 text-left  uppercase tracking-wider"
-                                    >Join</th>
-
-                                </tr>
-                            </thead>
-                            <tbody className="bg-transparent divide-y text-white divide-gray-200">
-                                {battlesToJoin?.length>0?battlesToJoin.map((e) => {
+          <div className="lg:px-16 grid md:grid-cols-2 lg:grid-cols-3 grid-cols-1">
+                                {battlesToJoin?.length>0?battlesToJoin.map((e,index) => {
+                                    const handleClick = ()=>{
+                                        handleJoinBattle(e.battleId, e.amount)
+                                    }
+                                    const handleDetail = ()=>{
+                                        setOpenJoinBattle(true)
+                
+                                    setJoinBattleSelectedIndex(index)
+                                        
+                                    }
                                     return (<>
-                                        <tr>
-                                            <td className="px-6 py-4 whitespace-nowrap">{e.battleId}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                <div className="flex items-center">
-                                                    <div className="flex-shrink-0 h-10 w-10">
-                                                        <img className="h-10 w-10 rounded-full" src={`https://harmony-whales-meta.herokuapp.com/token/image/${e.whaleId}`} alt="" />
-                                                    </div>
-                                                    <div className="ml-4">
-                                                        <div className="text0-sm">{e.owner.slice(0, 6)}...{e.owner.slice(-6)}</div>
-                                                        <div className="text-sm">Whale #{e.whaleId}</div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm ">{e.amount} ARB</td>
-                                            <td onClick={() => handleJoinBattle(e.battleId, e.amount)} className=" cursor-pointer">Join Battle</td>
-                                        </tr>
+                                                      <BattleToJoinCard handleClick={handleClick} handleDetail={handleDetail} join {...e}/>
+
                                     </>)
                                 }):<div>No Battles to Join!</div>}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+                            </div>
         </div>)
     }
     if (!account) {
@@ -390,86 +354,37 @@ const Home = () => {
             </div>)
     }
     return (<>
+    <WonSummary
+    {...wonSummary}
+    open={openWon}
+    setOpen={setOpenWon}/>
         {/* <img src={Ship} alt="" className="z-0 absolute w-full bottom-0" />
         <img src={BackgroundSand} alt="" className="  absolute w-full bottom-0" />
         <img src={Dinasour} alt="" className="dinasour  absolute  bottom-0 right-0" />
         <img src={Reef} alt="" className=" absolute  w-96 bottom-0 left-0" /> */}
         <div className="w-full">
         <div className="relative z-10">
-                <div className="text-2xl text-center font-bold mb-8 text-white">Battles In Progress</div>
-                <div className="flex flex-col">
-                    <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-                        <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-                            <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-                                <table className="min-w-full divide-y divide-gray-200">
-                                    <thead className="relative z-10 text-white text-2xl">
-                                        <tr>
-                                            <th
-                                                scope="col"
-                                                className="px-6 py-3 text-left  uppercase tracking-wider"
-                                            >BattleID</th>
-                                            <th
-                                                scope="col"
-                                                className="px-6 py-3 text-left  uppercase tracking-wider">Creator</th>
-                                             <th
-                                                scope="col"
-                                                className="px-6 py-3 text-left  uppercase tracking-wider">Challenger</th>
-
-                                            <th
-                                                scope="col"
-                                                className="px-6 py-3 text-left uppercase tracking-wider">Amount</th>
-                                           
-                                            <th
-                                                scope="col"
-                                                className="px-6 py-3 text-left uppercase tracking-wider">Status</th>
-                                        </tr>
-
-
-                                    </thead>
-                                    <tbody className=" divide-y text-white font-bold divide-gray-200">
-                                        {battlesToCommence?.length>0? battlesToCommence.map((e) => {
+               
+                {battlesToCommence?.length>0?<>
+                    <div className="text-2xl text-center font-bold mb-8 text-white">Battles In Progress</div>
+                <div className="lg:px-16 grid md:grid-cols-2 lg:grid-cols-3 grid-cols-1">
+                { battlesToCommence.map((e) => {
+                    const handleClick = ()=>{
+                        commenceBattle(e?.battleId, setOpenWon,setWonSummary);
+                    }
                                             return (<>
-                                                <tr>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-gray-200">{e.battleId}</td>
-                                                    <td className="px-6 py-4 whitespace-nowrap">
-                                                        <div className="flex items-center">
-                                                            <div className="flex-shrink-0 h-10 w-10">
-                                                                <img className="h-10 w-10 rounded-full" src={`https://harmony-whales-meta.herokuapp.com/token/image/${e.whaleId}`} alt="" />
-                                                            </div>
-                                                            <div className="ml-4">
-                                                                <div className=" font-medium text-gray-200">{e.owner.slice(0, 6)}...{e.owner.slice(-6)}</div>
-                                                                <div className="text-gray-200">Whale #{e.whaleId}</div>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td className="px-6 py-4 whitespace-nowrap">
-                                                        <div className="flex items-center">
-                                                            <div className="flex-shrink-0 h-10 w-10">
-                                                                <img className="h-10 w-10 rounded-full" src={`https://harmony-whales-meta.herokuapp.com/token/image/${e.whaleIdAccepted}`} alt="" />
-                                                            </div>
-                                                            <div className="ml-4">
-                                                                <div className=" font-medium text-gray-200">{e.acceptedBy.slice(0, 6)}...{e.acceptedBy.slice(-6)}</div>
-                                                                <div className="text-gray-200">Whale #{e.whaleIdAccepted}</div>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-
-                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-200">{e.amount} ARB</td>
-                                                    {parseInt(e.futureBlock)-parseInt(blockNumber)<=0? <td
-                                                        onClick={() => commenceBattle(e?.battleId)}
-
-                                                        className="cursor-pointer">End Battle</td>:<td>Battle in Progress!</td>}
-                                                   
-                                                </tr>
+                                               <BattleProgressCard
+                                               handleClick={handleClick}
+                                               {...e}
+                isComplete={parseInt(e.futureBlock)-parseInt(blockNumber)<=0}
+                />
                                             </>)
-                                        }):<div>No battles</div>}
+                                        })}
+                                        </div></>:""}
 
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+
+
+
 
             </div>
             <div

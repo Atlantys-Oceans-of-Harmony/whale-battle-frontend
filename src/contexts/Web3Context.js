@@ -307,9 +307,6 @@ export const Web3Provider = (props) => {
         return result?.filter(e => e?.toString() !== "0") || [];
     }
     functionsToExport.getAllBattles = async () => {
-        let result = await contractObjects?.battleStorageContract?.getBattlesByAddress(account);
-        let result2 = await contractObjects?.battleStorageContract?.getBattlesReadyToAccept();
-        console.log(result)
         try {
             let result = await contractObjects?.battleStorageContract?.getBattlesByAddress(account);
         let result2 = await contractObjects?.battleStorageContract?.getBattlesReadyToAccept();
@@ -376,7 +373,7 @@ export const Web3Provider = (props) => {
         return userTokens;
 
     }
-    functionsToExport.commenceBattle = async (battleId) => {
+    functionsToExport.commenceBattle = async (battleId,setOpen,setBattleSummary) => {
         toast(`Ending Battle #${battleId} (Placing Transaction)`)
 
         const newBattle = await contractObjects?.arbWhaleBattleContract?.commenceBattle(battleId);
@@ -397,6 +394,14 @@ export const Web3Provider = (props) => {
             //     xpLost += parseFloat(amount);
             // }
         })
+        const [battleSummary] = await functionsToExport.getBattleDetails([battleId])
+        console.log(account?.toString()?.toLowerCase()===battleSummary?.winner?.toString()?.toLowerCase())
+        console.log(account)
+        console.log(battleSummary.winner)
+        battleSummary.userWon = account?.toString()?.toLowerCase()===battleSummary?.winner?.toString()?.toLowerCase()
+        setBattleSummary(battleSummary)
+        setOpen(true)
+
         toast("Battle Ended!");
         setUpdate(update => update + 1);
     }
@@ -455,7 +460,7 @@ export const Web3Provider = (props) => {
         const newBattle = await contractObjects?.arbWhaleBattleContract?.accept(battleId, whaleId);
         toast(`Joining Battle #${battleId} (Transaction Placed)`)
 
-        const txn = newBattle.wait();
+        const txn = await newBattle.wait();
         console.log(txn);
         toast("Battle Joined!")
         setUpdate(update => update + 1);

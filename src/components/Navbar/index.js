@@ -83,7 +83,7 @@ const Navbar = () => {
 
                                 <Disclosure.Button
                                     id="nav"
-                                    className="flex relative z-50 items-center px-3 py-2  rounded text-white "
+                                    className="flex relative z-20 items-center px-3 py-2  rounded text-white "
                                 >
                                     <svg
                                         className="fill-current h-6 w-6"
@@ -97,7 +97,7 @@ const Navbar = () => {
 
                             </div>
                             <div className="hidden mb-4 menu w-full lg:flex  lg:items-center lg:w-auto lg:px-3 px-8 mr-16">
-                                <div className="text-md relative z-50 lg:flex justify-between w-full font-extrabold text-white sm:text-xl md:text-2xl">
+                                <div className="text-md relative z-10 lg:flex justify-between w-full font-extrabold text-white sm:text-xl md:text-2xl">
                                     {account && <>
                                         <div
                                             className="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-mintGreen px-4 py-2 rounded  mr-2"
@@ -140,7 +140,7 @@ const Navbar = () => {
                             <div className=" w-full mx-auto lg:flex lg:items-center lg:w-auto lg:px-3 px-8">
                                 <div className="text-md font-bold mx-auto text-white  ">
                                     <Disclosure.Button
-                                        className={`dropdown-bg relative z-50 w-full text-center h-36 block mt-4 lg:inline-block lg:mt-0 hover:text-white px-4 py-2 rounded hover:bg-blue-700 `}
+                                        className={`dropdown-bg relative z-10 w-full text-center h-36 block mt-4 lg:inline-block lg:mt-0 hover:text-white px-4 py-2 rounded hover:bg-blue-700 `}
                                         style={{}}
 
                                     >
