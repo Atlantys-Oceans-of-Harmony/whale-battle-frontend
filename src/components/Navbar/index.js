@@ -28,7 +28,7 @@ const Navbar = () => {
             setNavbar(false);
         }
     };
-    const { connectWallet, account, getArbTokenBalance, userExperience, update, today, wonBattles,lostBattles } = useContext(Web3Context);
+    const { connectWallet, account, getArbTokenBalance, userExperience, update, today, wonBattles, lostBattles } = useContext(Web3Context);
     useEffect(() => {
         getArbTokenBalance().then(e => setArbBalance(e));
     }, [account, update])
@@ -37,6 +37,7 @@ const Navbar = () => {
 
     useEffect(() => {
         window.addEventListener("scroll", changeBackground);
+        connectWallet()
     }, []);
 
 

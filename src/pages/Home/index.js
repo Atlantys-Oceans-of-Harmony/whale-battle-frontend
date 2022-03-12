@@ -29,8 +29,8 @@ const Home = () => {
         joinBattle, getArbTokenBalance,
         getAllHarmonyWhales, listenToCreatedBattles,
         listenToWonBattles, listenToCanceledBattles,
-        listenToAcceptedBattles, cancelBattle,getAllBattles,
-        getBattleDetails,getBattlesReadyToAccept,blockNumber, update,commenceBattle
+        listenToAcceptedBattles, cancelBattle, getAllBattles,
+        getBattleDetails, getBattlesReadyToAccept, blockNumber, update, commenceBattle
     } = useContext(Web3Context);
     const [createBattleForm, setCreateBattleForm] = useState({
         whaleId: "",
@@ -53,25 +53,26 @@ const Home = () => {
     function classNames(...classes) {
         return classes.filter(Boolean).join(' ')
     }
-    const [wonSummary,setWonSummary] = useState({});
+    const [wonSummary, setWonSummary] = useState({});
     const [openWon, setOpenWon] = useState(false);
     console.log(blockNumber);
     const [battlesToCommence, setBattleToCommence] = useState([]);
-    useEffect(()=>{
-        getBattlesReadyToAccept().then(e=>getBattleDetails(e).then(ee=>setBattlesToJoin(ee)));
-    },[blockNumber])
     useEffect(() => {
-        const timerId = setInterval(async ()=>{
-            const [readyToJoinBattleIds] = await Promise.all([getBattlesReadyToAccept()]) ;
+        getBattlesReadyToAccept().then(e => getBattleDetails(e).then(ee => setBattlesToJoin(ee)));
+    }, [blockNumber])
+    useEffect(() => {
 
-            const [readyToJoinbattles] =
-            await Promise.all([
-                getBattleDetails(readyToJoinBattleIds)])
-            setBattlesToJoin(readyToJoinbattles);
-        }, 10000);
-        return function cleanup() {
-            clearInterval(timerId);
-        };
+        // const timerId = setInterval(async () => {
+        //     const [readyToJoinBattleIds] = await Promise.all([getBattlesReadyToAccept()]);
+
+        //     const [readyToJoinbattles] =
+        //         await Promise.all([
+        //             getBattleDetails(readyToJoinBattleIds)])
+        //     setBattlesToJoin(readyToJoinbattles);
+        // }, 10000);
+        // return function cleanup() {
+        //     clearInterval(timerId);
+        // };
     }, []);
     useEffect(() => {
         const fetchStuff = async () => {
@@ -80,10 +81,10 @@ const Home = () => {
                 setCreateBattleForm({ ...createBattleForm, whaleId: res[0] });
                 setJoinBattleForm({ ...joinBattleForm, whaleId: res[0] });
             }).catch(e => { setHarmonyWhales([]) });
-            const [{wonBattles,lostBattles,readyToAcceptBattles,readyToCommenceBattles,cancelledBattles,forfeitedBattles},readyToJoinBattleIds] = await Promise.all([getAllBattles(),getBattlesReadyToAccept()]) ;
+            const [{ wonBattles, lostBattles, readyToAcceptBattles, readyToCommenceBattles, cancelledBattles, forfeitedBattles }, readyToJoinBattleIds] = await Promise.all([getAllBattles(), getBattlesReadyToAccept()]);
 
-            const [createdBattles,commenceBattles,readyToJoinbattles] =
-            await Promise.all([getBattleDetails(readyToAcceptBattles),
+            const [createdBattles, commenceBattles, readyToJoinbattles] =
+                await Promise.all([getBattleDetails(readyToAcceptBattles),
                 getBattleDetails(readyToCommenceBattles),
                 getBattleDetails(readyToJoinBattleIds)])
             // listenToCreatedBattles(handleOnCreateBattle);
@@ -91,13 +92,13 @@ const Home = () => {
             // listenToWonBattles(handleOnWinBattle);
             // listenToCanceledBattles(handleOnCancelledBattle);
             // listenToAcceptedBattles(handleOnJoinedBattle);
-            console.log("Battles Created:",createdBattles)
-            console.log("Battles to commence",commenceBattles)
-            console.log("Battles Ready to join",readyToJoinbattles);
+            console.log("Battles Created:", createdBattles)
+            console.log("Battles to commence", commenceBattles)
+            console.log("Battles Ready to join", readyToJoinbattles);
             setCreatedBattles(createdBattles);
             setBattleToCommence(commenceBattles);
             setBattlesToJoin(readyToJoinbattles);
-            
+
 
         }
         if (account) {
@@ -163,15 +164,15 @@ const Home = () => {
     const handleCancelBattle = async (battleId) => {
         await cancelBattle(battleId);
     }
-    const [openCreateBattle,setOpenCreateBattle] = useState(false);
-    const [createBattleSelectedIndex,setCreatedBattleSelectedIndex] = useState(-1);
+    const [openCreateBattle, setOpenCreateBattle] = useState(false);
+    const [createBattleSelectedIndex, setCreatedBattleSelectedIndex] = useState(-1);
 
     const CreateBattle = () => {
-        return (<div className="mb-96">
- <BattleToJoinModal
-            open={openCreateBattle}
-            setOpen={setOpenCreateBattle}
-            {...(createBattleSelectedIndex>=0?createdBattles[createBattleSelectedIndex]:{})}/>
+        return (<div className="">
+            <BattleToJoinModal
+                open={openCreateBattle}
+                setOpen={setOpenCreateBattle}
+                {...(createBattleSelectedIndex >= 0 ? createdBattles[createBattleSelectedIndex] : {})} />
 
             <div className="shadow sm:rounded-md sm:overflow-hidden">
                 <div className=" py-6 px-4 space-y-6 sm:p-6">
@@ -211,12 +212,12 @@ const Home = () => {
                         <div>
                             <div className="text-white sm:text-xl md:text-2xl font-extrabold">
 
-                                
-                                <h3 className="text-white sm:text-xl md:text-2xl font-extrabold">Enter Amount(ARB)</h3>
 
-                                <div className="h-32 mt-4  -top-6 -left-8 w-96 relative text-md tracking-tight font-extrabold text-white sm:text-xl md:text-2xl flex items-center ">
+                                <h3 className="text-white sm:text-xl md:text-2xl font-extrabold">Fighting Rewards (ARB)</h3>
+
+                                <div className="h-32 mt-4 mx-auto  -top-6 -left-8 w-64 relative text-md tracking-tight font-extrabold text-white sm:text-xl md:text-2xl flex items-center ">
                                     <input
-                                        className="text-black bg-white ml-8"
+                                        className="text-white border border-white text-center w-44 p-1 rounded-md bg-transparent ml-14"
                                         placeholder="Amount in ARB"
                                         type="text"
                                         pattern="^[0-9]*$"
@@ -247,43 +248,44 @@ const Home = () => {
             </div>
             <div className="relative z-10">
                 <div className="text-2xl text-center font-bold mb-8 text-white">Battles Created</div>
-                <div className="lg:px-16 grid md:grid-cols-2 lg:grid-cols-3 grid-cols-1">
 
-                {createdBattles?.length>0?createdBattles.map((e,index) => {
-                     const handleClick = ()=>{
-                        handleCancelBattle(e.battleId)
-                    }
-                    const handleDetail = ()=>{
-                        setOpenJoinBattle(false)
-                        setOpenCreateBattle(true)
+                {createdBattles?.length > 0 ? <div className="lg:px-16 grid md:grid-cols-2 lg:grid-cols-3 grid-cols-1">{
+                    createdBattles.map((e, index) => {
+                        const handleClick = () => {
+                            handleCancelBattle(e.battleId)
+                        }
+                        const handleDetail = () => {
+                            setOpenJoinBattle(false)
+                            setOpenCreateBattle(true)
 
-                        setCreatedBattleSelectedIndex(index)
-                        
-                    }
-                                            return (<>
-                                            <BattleToJoinCard
-                                            join={false}
-                                            handleClick={handleClick}
-                                            handleDetail={handleDetail}
-                                            {...e}/>
-                                                
-                                            </>)
-                                        }):<div>No Battles</div>}
-                                        </div>
+                            setCreatedBattleSelectedIndex(index)
+
+                        }
+                        return (<>
+                            <BattleToJoinCard
+                                join={false}
+                                handleClick={handleClick}
+                                handleDetail={handleDetail}
+                                {...e} />
+
+                        </>)
+                    })}          </div>
+                    : <div className="mx-auto pb-16  w-full text-center text-xl text-white">No Battles created yet!</div>}
+
 
             </div>
         </div>)
     }
-    const [openJoinBattle,setOpenJoinBattle] = useState(false);
-        const [joinBattleSelectedIndex,setJoinBattleSelectedIndex] = useState(-1);
-        
+    const [openJoinBattle, setOpenJoinBattle] = useState(false);
+    const [joinBattleSelectedIndex, setJoinBattleSelectedIndex] = useState(-1);
+
     const JoinBattle = () => {
-        
+
         return (<div>
-             <BattleToJoinModal
-            open={openJoinBattle}
-            setOpen={setOpenJoinBattle}
-            {...(joinBattleSelectedIndex>=0?battlesToJoin[joinBattleSelectedIndex]:{})}/>
+            <BattleToJoinModal
+                open={openJoinBattle}
+                setOpen={setOpenJoinBattle}
+                {...(joinBattleSelectedIndex >= 0 ? battlesToJoin[joinBattleSelectedIndex] : {})} />
 
             <div className="">
                 <div className="flex flex-col  items-center justify-center py-6 px-4 space-y-6 sm:p-6">
@@ -320,25 +322,25 @@ const Home = () => {
             </div>
 
             <h3 className=" text-center text-3xl my-8 text-white leading-6 font-bold">Battles to join appear here:</h3>
-         
 
-          <div className="lg:px-16 grid md:grid-cols-2 lg:grid-cols-3 grid-cols-1">
-                                {battlesToJoin?.length>0?battlesToJoin.map((e,index) => {
-                                    const handleClick = ()=>{
-                                        handleJoinBattle(e.battleId, e.amount)
-                                    }
-                                    const handleDetail = ()=>{
-                                        setOpenJoinBattle(true)
-                
-                                    setJoinBattleSelectedIndex(index)
-                                        
-                                    }
-                                    return (<>
-                                                      <BattleToJoinCard handleClick={handleClick} handleDetail={handleDetail} join {...e}/>
 
-                                    </>)
-                                }):<div>No Battles to Join!</div>}
-                            </div>
+            <div className="lg:px-16 grid md:grid-cols-2 lg:grid-cols-3 grid-cols-1">
+                {battlesToJoin?.length > 0 ? battlesToJoin.map((e, index) => {
+                    const handleClick = () => {
+                        handleJoinBattle(e.battleId, e.amount)
+                    }
+                    const handleDetail = () => {
+                        setOpenJoinBattle(true)
+
+                        setJoinBattleSelectedIndex(index)
+
+                    }
+                    return (<>
+                        <BattleToJoinCard handleClick={handleClick} handleDetail={handleDetail} join {...e} />
+
+                    </>)
+                }) : <div>No Battles to Join!</div>}
+            </div>
         </div>)
     }
     if (!account) {
@@ -347,40 +349,40 @@ const Home = () => {
                 <div className="text-4xl font-bold">Connect to a wallet first!</div>
             </div>)
     }
-    if (harmonyWhales?.length<=0) {
+    if (harmonyWhales?.length <= 0) {
         return (
             <div className="flex flex-col items-center justify-center h-screen">
-                 <div className="text-4xl text-white font-bold">You need to have atleast 1 Gen 1 Whale!</div>
+                <div className="text-4xl text-white font-bold">You need to have atleast 1 Gen 1 Whale!</div>
             </div>)
     }
     return (<>
-    <WonSummary
-    {...wonSummary}
-    open={openWon}
-    setOpen={setOpenWon}/>
+        <WonSummary
+            {...wonSummary}
+            open={openWon}
+            setOpen={setOpenWon} />
         {/* <img src={Ship} alt="" className="z-0 absolute w-full bottom-0" />
         <img src={BackgroundSand} alt="" className="  absolute w-full bottom-0" />
         <img src={Dinasour} alt="" className="dinasour  absolute  bottom-0 right-0" />
         <img src={Reef} alt="" className=" absolute  w-96 bottom-0 left-0" /> */}
         <div className="w-full">
-        <div className="relative z-10">
-               
-                {battlesToCommence?.length>0?<>
+            <div className="relative z-10">
+
+                {battlesToCommence?.length > 0 ? <>
                     <div className="text-2xl text-center font-bold mb-8 text-white">Battles In Progress</div>
-                <div className="lg:px-16 grid md:grid-cols-2 lg:grid-cols-3 grid-cols-1">
-                { battlesToCommence.map((e) => {
-                    const handleClick = ()=>{
-                        commenceBattle(e?.battleId, setOpenWon,setWonSummary);
-                    }
-                                            return (<>
-                                               <BattleProgressCard
-                                               handleClick={handleClick}
-                                               {...e}
-                isComplete={parseInt(e.futureBlock)-parseInt(blockNumber)<=0}
-                />
-                                            </>)
-                                        })}
-                                        </div></>:""}
+                    <div className="lg:px-16 grid md:grid-cols-2 lg:grid-cols-3 grid-cols-1">
+                        {battlesToCommence.map((e) => {
+                            const handleClick = () => {
+                                commenceBattle(e?.battleId, setOpenWon, setWonSummary);
+                            }
+                            return (<>
+                                <BattleProgressCard
+                                    handleClick={handleClick}
+                                    {...e}
+                                    isComplete={parseInt(e.futureBlock) - parseInt(blockNumber) <= 0}
+                                />
+                            </>)
+                        })}
+                    </div></> : ""}
 
 
 
@@ -402,7 +404,7 @@ const Home = () => {
 
         {gameState.index === 0 ? CreateBattle() : JoinBattle()}
 
-        
+
     </>)
 }
 export default Home;

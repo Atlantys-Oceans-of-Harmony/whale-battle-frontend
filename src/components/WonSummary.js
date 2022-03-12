@@ -3,8 +3,8 @@ import { Fragment, useRef, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { ExclamationIcon } from '@heroicons/react/outline'
 
-export default function WonSummary({battleId=24,amount=555, whaleId=7,whaleIdAccepted=8,ownerTotalPoints,acceptedTotalPoints,acceptedBy, owner="0xxx",open,setOpen, userWon}) {
-console.log(open)
+export default function WonSummary({ battleId = 24, amount = 555, whaleId = 7, whaleIdAccepted = 8, ownerTotalPoints, acceptedTotalPoints, acceptedBy, owner = "0xxx", open, setOpen, userWon }) {
+  console.log(open)
   const cancelButtonRef = useRef(null)
 
   return (
@@ -37,21 +37,25 @@ console.log(open)
             leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
           >
             <div className="relative py-8 px-8 z-50 inline-block align-bottom bg-black bg-opacity-70 rounded-lg text-center transform transition-all sm:my-8 sm:align-middle max-w-3xl">
-            <div className="font-bold text-3xl my-3 cursor-pointer text-white text-center mx-auto">Battle #{battleId} Summary</div>
-            <div className="font-bold text-3xl my-3 cursor-pointer text-white text-center mx-auto">You {userWon?"Won":"Lost"}</div>
+              <div className="font-bold text-3xl my-3 cursor-pointer text-white text-center mx-auto">Battle #{battleId} Summary</div>
+              <div className="font-bold text-3xl my-3 cursor-pointer text-white text-center mx-auto">You {userWon ? "Won" : "Lost"}</div>
 
-            <div className="flex w-full justify-center items-center">
-          <img className=" mx-2 w-1/3 flex-1 rounded-lg cursor-pointer" src={`https://harmony-whales-meta.herokuapp.com/token/image/${whaleId}`} alt="" />
-          <div className="text-xl text-white px-1 font-bold">VS</div>
-          <img className=" mx-2 flex-1 w-1/3 rounded-lg cursor-pointer" src={`https://harmony-whales-meta.herokuapp.com/token/image/${whaleIdAccepted}`} alt="" />
-          </div>
-<div className="font-semibold text-xl cursor-pointer text-white text-center mx-auto">Amount {amount} ARB</div>
-<div className="font-semibold text-xl cursor-pointer text-white text-center mx-auto">Creator {owner}</div>
-<div className="font-semibold text-xl cursor-pointer text-white text-center mx-auto">Challenger {acceptedBy}</div>
-<div className="font-semibold text-xl cursor-pointer text-white text-center mx-auto">Creator Points {ownerTotalPoints}</div>
-<div className="font-semibold text-xl cursor-pointer text-white text-center mx-auto">Challenger Points {acceptedTotalPoints}</div>
+              <div className="flex w-full justify-center items-center">
+                <img className=" mx-2 w-1/3 flex-1 rounded-lg cursor-pointer" src={`https://harmony-whales-meta.herokuapp.com/token/image/${whaleId}`} alt="" />
+                <div className="text-xl text-white px-1 font-bold">VS</div>
+                <img className=" mx-2 flex-1 w-1/3 rounded-lg cursor-pointer" src={`https://harmony-whales-meta.herokuapp.com/token/image/${whaleIdAccepted}`} alt="" />
+              </div>
+              <br />
+              <div className="font-semibold text-xl cursor-pointer text-white text-center mx-auto">Winnings: {amount} ARB</div>
+              <div className="font-semibold text-xl cursor-pointer text-white text-center mx-auto">Battle Host: {owner.slice(0, 4)}...{owner.slice(-4)}</div>
+              <div className="font-semibold text-xl cursor-pointer text-white text-center mx-auto">Challenger: {acceptedBy.slice(0, 4)}...{acceptedBy.slice(-4)}</div>
+              <br />
 
-</div>
+              <div className="font-semibold text-xl cursor-pointer text-white text-center mx-auto">Points</div>
+              <div className="font-semibold text-xl cursor-pointer text-white text-center mx-auto">Host: {ownerTotalPoints}</div>
+              <div className="font-semibold text-xl cursor-pointer text-white text-center mx-auto">Challenger: {acceptedTotalPoints}</div>
+
+            </div>
           </Transition.Child>
         </div>
       </Dialog>
