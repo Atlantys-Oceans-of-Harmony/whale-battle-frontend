@@ -57,9 +57,7 @@ const Home = () => {
     const [openWon, setOpenWon] = useState(false);
     console.log(blockNumber);
     const [battlesToCommence, setBattleToCommence] = useState([]);
-    useEffect(() => {
-        getBattlesReadyToAccept().then(e => getBattleDetails(e).then(ee => setBattlesToJoin(ee)));
-    }, [blockNumber])
+
     useEffect(() => {
 
         // const timerId = setInterval(async () => {
@@ -97,14 +95,14 @@ const Home = () => {
             console.log("Battles Ready to join", readyToJoinbattles);
             setCreatedBattles(createdBattles);
             setBattleToCommence(commenceBattles);
-            setBattlesToJoin(readyToJoinbattles);
+            setBattlesToJoin(readyToJoinbattles.filter(eee => !eee.isOwner));
 
 
         }
         if (account) {
             fetchStuff();
         }
-    }, [account, update])
+    }, [account, update, blockNumber])
     const handleOnWinBattle = async (data) => {
         console.log(data.battleId + ":WOn")
         if (battlesWon.filter((e) => e.battleId === data.battleId).length === 0) {
@@ -279,6 +277,7 @@ const Home = () => {
     const [openJoinBattle, setOpenJoinBattle] = useState(false);
     const [joinBattleSelectedIndex, setJoinBattleSelectedIndex] = useState(-1);
 
+
     const JoinBattle = () => {
 
         return (<div>
@@ -339,7 +338,7 @@ const Home = () => {
                         <BattleToJoinCard handleClick={handleClick} handleDetail={handleDetail} join {...e} />
 
                     </>)
-                }) : <div>No Battles to Join!</div>}
+                }) : <div className="mx-auto pb-16  w-full text-center text-xl text-white">No Battles created yet!</div>}
             </div>
         </div>)
     }
@@ -352,7 +351,7 @@ const Home = () => {
     if (harmonyWhales?.length <= 0) {
         return (
             <div className="flex flex-col items-center justify-center h-screen">
-                <div className="text-4xl text-white font-bold">You need to have atleast 1 Gen 1 Whale!</div>
+                <div className="text-4xl text-white font-bold">You need to have Gen1 Whales to battle!</div>
             </div>)
     }
     return (<>

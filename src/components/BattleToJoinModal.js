@@ -42,7 +42,7 @@ export default function BattleToJoinModal({ battleId = 24, amount = 555, handleC
               <div className="font-bold text-2xl cursor-pointer text-white text-center mx-auto">Battle #{battleId}</div>
               <br />
               <div className="font-semibold text-xl cursor-pointer text-white text-center mx-auto">Amount {amount} ARB</div>
-              <div className="font-semibold text-xl cursor-pointer text-white text-center mx-auto">Battle Host: {owner.slice(0, 4)}...{owner.slice(-4)}</div>
+              <div className="font-semibold text-xl cursor-pointer text-white text-center mx-auto">Battle Host: {owner?.slice(0, 4)}...{owner?.slice(-4)}</div>
 
             </div>
           </Transition.Child>

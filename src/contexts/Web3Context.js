@@ -18,22 +18,42 @@ const DEFAULT_ACCOUNTS = [
 
 const Web3Context = createContext();
 
-const RPC_URL = "https://api.s0.b.hmny.io";
-const CHAIN_ID = 1666700000;
+const RPC_URL = "https://api.harmony.one";
+const CHAIN_ID = 1666600000;
 const NATIVE_CURRENCY = {
     name: "one",
     symbol: "ONE", // 2-6 characters long
     decimals: 18,
 }
-const MULTI_CALL_ADDRESS = "0xd078799c53396616844e2fa97f0dd2b4c145a685";
-const CHAIN_NAME = "Harmony Testnet";
-const ARB_TOKEN_CONTRACT_ADDRESS = "0xbC34E7EA5Dce05bAc24a54759386067Cb461b7dd";
-const ARB_WHALE_BATTLE_CONTRACT_ADDRESS = "0x4C34D0dE1876E62f0d89de0e11404F1550C506D8";
-const HARMONY_WHALES_CONTRACT_ADDRfESS = "0x35BCB2a29F8f6D8F616c3827AabB0e9F5D0e749B";
-const HARMONY_WHALES_V2_CONTRACT_ADDRESS = "0x35BCB2a29F8f6D8F616c3827AabB0e9F5D0e749B";
-const BATTLE_STORAGE_CONTRACT_ADDRESS = "0x9eeC380533392663AD1f528e8681025BF3139c7B";
+const MULTI_CALL_ADDRESS = "0x34b415f4d3b332515e66f70595ace1dcf36254c5";
+const CHAIN_NAME = "Harmony Mainnet";
+const ARB_TOKEN_CONTRACT_ADDRESS = "0x044246137670a03ca790d7ed20af0c552c88117c";
+const ARB_WHALE_BATTLE_CONTRACT_ADDRESS = "0x707b8B324DE71D21218d52EB1bd942E27B7044ac";
+const HARMONY_WHALES_CONTRACT_ADDRfESS = "0x289FF2F47cD7575c62FDcf45B62451EA9b2420dD";
+const HARMONY_WHALES_V2_CONTRACT_ADDRESS = "0x289FF2F47cD7575c62FDcf45B62451EA9b2420dD";
+const BATTLE_STORAGE_CONTRACT_ADDRESS = "0x492174791Faa6768969a8935A1954Dc161f97D81";
 // const HARMONY_WHALES_CONTRACT_ADDRfESS = "0x0519f50287DDcdF8b761Dae76Dc1A76776A0af70";
 const STAKING_CONTRACT_ADDRESS = "0x3d902f6447A0D4E61d65E863E7C2425D938cfEed"
+
+
+
+
+// const RPC_URL = "https://api.s0.b.hmny.io";
+// const CHAIN_ID = 1666700000;
+// const NATIVE_CURRENCY = {
+//     name: "one",
+//     symbol: "ONE", // 2-6 characters long
+//     decimals: 18,
+// }
+// const MULTI_CALL_ADDRESS = "0xd078799c53396616844e2fa97f0dd2b4c145a685";
+// const CHAIN_NAME = "Harmony Testnet";
+// const ARB_TOKEN_CONTRACT_ADDRESS = "0xbC34E7EA5Dce05bAc24a54759386067Cb461b7dd";
+// const ARB_WHALE_BATTLE_CONTRACT_ADDRESS = "0x4C34D0dE1876E62f0d89de0e11404F1550C506D8";
+// const HARMONY_WHALES_CONTRACT_ADDRfESS = "0x35BCB2a29F8f6D8F616c3827AabB0e9F5D0e749B";
+// const HARMONY_WHALES_V2_CONTRACT_ADDRESS = "0x35BCB2a29F8f6D8F616c3827AabB0e9F5D0e749B";
+// const BATTLE_STORAGE_CONTRACT_ADDRESS = "0x9eeC380533392663AD1f528e8681025BF3139c7B";
+// // const HARMONY_WHALES_CONTRACT_ADDRfESS = "0x0519f50287DDcdF8b761Dae76Dc1A76776A0af70";
+// const STAKING_CONTRACT_ADDRESS = "0x3d902f6447A0D4E61d65E863E7C2425D938cfEed"
 
 
 export const Web3Provider = (props) => {
@@ -172,7 +192,7 @@ export const Web3Provider = (props) => {
             console.log(account);
             const result = await contractObjects?.arbTokenContract?.balanceOf(account);
             console.log(result);
-            return result.toString();
+            return utils.formatEther(result?.toString() || "0");
         }
         catch (e) {
             console.log(e);
@@ -186,7 +206,7 @@ export const Web3Provider = (props) => {
     functionsToExport.getAllHarmonyWhales = async () => {
         try {
             const userBalance = parseInt((await contractObjects?.harmonyWhaleContract?.balanceOf(account)).toString());
-            console.log("Whales",userBalance);
+            console.log("Whales", userBalance);
             const [multicallProvider, multicallContract] = await setupMultiCallContract(HARMONY_WHALES_CONTRACT_ADDRfESS, harmonyWhalesAbi);
             let tokenCalls = []
             for (let i = 0; i < userBalance; i++) {
@@ -309,9 +329,9 @@ export const Web3Provider = (props) => {
     functionsToExport.getAllBattles = async () => {
         try {
             let result = await contractObjects?.battleStorageContract?.getBattlesByAddress(account);
-        let result2 = await contractObjects?.battleStorageContract?.getBattlesReadyToAccept();
-        console.log(result)
-        
+            let result2 = await contractObjects?.battleStorageContract?.getBattlesReadyToAccept();
+            console.log(result)
+
 
             // console.log(result)
 
@@ -336,12 +356,14 @@ export const Web3Provider = (props) => {
         }
         catch (e) {
             console.log(e)
-            return({wonBattles: 0,
+            return ({
+                wonBattles: 0,
                 lostBattles: 0,
-                readyToAcceptBattles:[],
-                readyToCommenceBattles:[],
+                readyToAcceptBattles: [],
+                readyToCommenceBattles: [],
                 cancelledBattles: 0,
-                forfeitedBattles: 0})
+                forfeitedBattles: 0
+            })
         }
     }
     functionsToExport.getBattleDetails = async (battleIds = []) => {
@@ -365,6 +387,7 @@ export const Web3Provider = (props) => {
                 endDate: args[9].toString(),
                 futureBlock: args[10].toString(),
                 inProgress: args[11],
+                isOwner: args[2]?.toString()?.toLowerCase() === account?.toLowerCase()
 
             }
             return data;
@@ -373,97 +396,120 @@ export const Web3Provider = (props) => {
         return userTokens;
 
     }
-    functionsToExport.commenceBattle = async (battleId,setOpen,setBattleSummary) => {
-        toast(`Ending Battle #${battleId} (Placing Transaction)`)
+    functionsToExport.commenceBattle = async (battleId, setOpen, setBattleSummary) => {
+        try {
+            toast(`Ending Battle #${battleId} (Placing Transaction)`)
 
-        const newBattle = await contractObjects?.arbWhaleBattleContract?.commenceBattle(battleId);
-        console.log(newBattle);
-        console.log(newBattle.value.toString());
-        toast(`Ending Battle #${battleId} (Transaction Placed)`);
-        const newBattleId = await newBattle.wait();
-        console.log(newBattleId);
-        newBattleId?.events?.map((eventElement) => {
-            const { event, args } = eventElement;
-            console.log(event)
-            console.log(args)
-            // const amount = args[1];
-            // if (event === "xpGained") {
-            //     xpGained += parseFloat(amount);
-            // }
-            // else if (event === "xpLost") {
-            //     xpLost += parseFloat(amount);
-            // }
-        })
-        const [battleSummary] = await functionsToExport.getBattleDetails([battleId])
-        console.log(account?.toString()?.toLowerCase()===battleSummary?.winner?.toString()?.toLowerCase())
-        console.log(account)
-        console.log(battleSummary.winner)
-        battleSummary.userWon = account?.toString()?.toLowerCase()===battleSummary?.winner?.toString()?.toLowerCase()
-        setBattleSummary(battleSummary)
-        setOpen(true)
+            const newBattle = await contractObjects?.arbWhaleBattleContract?.commenceBattle(battleId);
+            console.log(newBattle);
+            console.log(newBattle.value.toString());
+            toast(`Ending Battle #${battleId} (Transaction Placed)`);
+            const newBattleId = await newBattle.wait();
+            console.log(newBattleId);
+            newBattleId?.events?.map((eventElement) => {
+                const { event, args } = eventElement;
+                console.log(event)
+                console.log(args)
+                // const amount = args[1];
+                // if (event === "xpGained") {
+                //     xpGained += parseFloat(amount);
+                // }
+                // else if (event === "xpLost") {
+                //     xpLost += parseFloat(amount);
+                // }
+            })
+            const [battleSummary] = await functionsToExport.getBattleDetails([battleId])
+            console.log(account?.toString()?.toLowerCase() === battleSummary?.winner?.toString()?.toLowerCase())
+            console.log(account)
+            console.log(battleSummary.winner)
+            battleSummary.userWon = account?.toString()?.toLowerCase() === battleSummary?.winner?.toString()?.toLowerCase()
+            setBattleSummary(battleSummary)
+            setOpen(true)
 
-        toast("Battle Ended!");
-        setUpdate(update => update + 1);
+            toast("Battle Ended!");
+            setUpdate(update => update + 1);
+        }
+        catch (e) {
+            toast.error(e?.data?.message || "Transaction Failed")
+            console.log(e);
+        }
     }
     functionsToExport.cancelBattle = async (battleId) => {
-        toast(`Cancelling Battle #${battleId} (Placing Transaction)`)
+        try {
+            toast(`Cancelling Battle #${battleId} (Placing Transaction)`)
 
-        const newBattle = await contractObjects?.arbWhaleBattleContract?.cancel(battleId);
-        console.log(newBattle);
-        console.log(newBattle.value.toString());
-        toast(`Cancelling Battle #${battleId} (Transaction Placed)`);
-        const newBattleId = await newBattle.wait();
-        console.log(newBattleId);
-        toast("Battle Cancelled");
-        setUpdate(update => update + 1);
+            const newBattle = await contractObjects?.arbWhaleBattleContract?.cancel(battleId);
+            console.log(newBattle);
+            console.log(newBattle.value.toString());
+            toast(`Cancelling Battle #${battleId} (Transaction Placed)`);
+            const newBattleId = await newBattle.wait();
+            console.log(newBattleId);
+            toast("Battle Cancelled");
+            setUpdate(update => update + 1);
+        }
+        catch (e) {
+            toast.error(e?.data?.message || "Transaction Failed")
+            console.log(e);
+        }
 
 
     }
 
     functionsToExport.createBattle = async ({ whaleId, duration, amount }, onCreate) => {
-        amount = utils.parseEther(amount)
-        const requiredAmount = BigNumber.from(amount)
-        const availableBalance = await contractObjects?.arbTokenContract.allowance(account, ARB_WHALE_BATTLE_CONTRACT_ADDRESS);
-        if (availableBalance.lt(requiredAmount)) {
-            toast(`Increasing Allowance for Battle (Placing Transaction)`)
+        try {
+            amount = utils.parseEther(amount)
+            const requiredAmount = BigNumber.from(amount)
+            const availableBalance = await contractObjects?.arbTokenContract.allowance(account, ARB_WHALE_BATTLE_CONTRACT_ADDRESS);
+            if (availableBalance.lt(requiredAmount)) {
+                toast(`Increasing Allowance for Battle (Placing Transaction)`)
 
-            const increaseBal = await contractObjects?.arbTokenContract.increaseAllowance(ARB_WHALE_BATTLE_CONTRACT_ADDRESS, requiredAmount.mul(10));
-            const result = await increaseBal.wait()
+                const increaseBal = await contractObjects?.arbTokenContract.increaseAllowance(ARB_WHALE_BATTLE_CONTRACT_ADDRESS, requiredAmount.mul(10));
+                const result = await increaseBal.wait()
 
+            }
+            toast(`Creating Battle (Placing Transaction)`)
+
+            const newBattle = await contractObjects?.arbWhaleBattleContract?.create(whaleId, "1", amount);
+            console.log(newBattle);
+            console.log(newBattle.value.toString());
+            toast(`Creating Battle (Transaction Placed)`);
+
+            const newBattleId = await newBattle.wait();
+            console.log(newBattleId);
+            toast("Battle Created!")
+            setUpdate(update => update + 1);
         }
-        toast(`Creating Battle (Placing Transaction)`)
-
-        const newBattle = await contractObjects?.arbWhaleBattleContract?.create(whaleId, "1", amount);
-        console.log(newBattle);
-        console.log(newBattle.value.toString());
-        toast(`Creating Battle (Transaction Placed)`);
-
-        const newBattleId = await newBattle.wait();
-        console.log(newBattleId);
-        toast("Battle Created!")
-        setUpdate(update => update + 1);
+        catch (e) {
+            toast.error(e?.data?.message || "Transaction Failed")
+            console.log(e);
+        }
 
     }
     functionsToExport.joinBattle = async ({ whaleId, battleId, amount }) => {
+        try {
+            const requiredAmount = BigNumber.from(utils.parseEther(amount))
+            const availableBalance = await contractObjects?.arbTokenContract.allowance(account, ARB_WHALE_BATTLE_CONTRACT_ADDRESS);
+            if (availableBalance.lt(requiredAmount)) {
+                toast(`Increasing Allowance for #${battleId} (Placing Transaction)`)
 
-        const requiredAmount = BigNumber.from(utils.parseEther(amount))
-        const availableBalance = await contractObjects?.arbTokenContract.allowance(account, ARB_WHALE_BATTLE_CONTRACT_ADDRESS);
-        if (availableBalance.lt(requiredAmount)) {
-            toast(`Increasing Allowance for #${battleId} (Placing Transaction)`)
+                const increaseBal = await contractObjects?.arbTokenContract.increaseAllowance(ARB_WHALE_BATTLE_CONTRACT_ADDRESS, requiredAmount.mul(10));
+                const result = await increaseBal.wait()
 
-            const increaseBal = await contractObjects?.arbTokenContract.increaseAllowance(ARB_WHALE_BATTLE_CONTRACT_ADDRESS, requiredAmount.mul(10));
-            const result = await increaseBal.wait()
+            }
+            toast(`Joining Battle #${battleId} (Placing Transaction)`)
 
+            const newBattle = await contractObjects?.arbWhaleBattleContract?.accept(battleId, whaleId);
+            toast(`Joining Battle #${battleId} (Transaction Placed)`)
+
+            const txn = await newBattle.wait();
+            console.log(txn);
+            toast("Battle Joined!")
+            setUpdate(update => update + 1);
         }
-        toast(`Joining Battle #${battleId} (Placing Transaction)`)
-
-        const newBattle = await contractObjects?.arbWhaleBattleContract?.accept(battleId, whaleId);
-        toast(`Joining Battle #${battleId} (Transaction Placed)`)
-
-        const txn = await newBattle.wait();
-        console.log(txn);
-        toast("Battle Joined!")
-        setUpdate(update => update + 1);
+        catch (e) {
+            toast.error(e?.data?.message || "Transaction Failed")
+            console.log(e);
+        }
 
     }
     functionsToExport.getReadyToAcceptBattles = async () => {

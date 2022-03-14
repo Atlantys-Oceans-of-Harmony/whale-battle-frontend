@@ -30,7 +30,7 @@ const Navbar = () => {
     };
     const { connectWallet, account, getArbTokenBalance, userExperience, update, today, wonBattles, lostBattles } = useContext(Web3Context);
     useEffect(() => {
-        getArbTokenBalance().then(e => setArbBalance(e));
+        getArbTokenBalance().then(e => setArbBalance(parseFloat(e || "0").toFixed(3)));
     }, [account, update])
 
 
@@ -52,7 +52,7 @@ const Navbar = () => {
                     href="#"
                     className="w-full font-extrabold cursor-pointer flex items-center justify-center px-16 py-3 mb-3 "
                 >
-                    {account ? `${account.slice(0, 5)}...${account.slice(-5)}` : "Connect Wallet"}
+                    {account ? `${account?.slice(0, 5)}...${account?.slice(-5)}` : "Connect Wallet"}
                 </button>
             </div>
         );
@@ -103,7 +103,7 @@ const Navbar = () => {
                                         <div
                                             className="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-mintGreen px-4 py-2 rounded  mr-2"
                                         >
-                                            Wins/Loses: {wonBattles}/{lostBattles}
+                                            Wins vs Loses: {wonBattles}/{lostBattles}
                                         </div>
 
                                         <div
@@ -151,13 +151,9 @@ const Navbar = () => {
                                             <div
                                                 className="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-mintGreen px-4 py-2 rounded  mr-2"
                                             >
-                                                Total Exp: {userExperience}
+                                                Wins vs Loses: {wonBattles}/{lostBattles}
                                             </div>
-                                            <div
-                                                className="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-mintGreen px-4 py-2 rounded  mr-2"
-                                            >
-                                                Day: {today}
-                                            </div>
+
                                             <div
                                                 className="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-mintGreen px-4 py-2 rounded  mr-2"
                                             >
