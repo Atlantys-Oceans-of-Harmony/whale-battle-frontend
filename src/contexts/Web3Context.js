@@ -18,7 +18,7 @@ const DEFAULT_ACCOUNTS = [
 
 const Web3Context = createContext();
 
-const RPC_URL = "https://api.harmony.one";
+const RPC_URL = "https://rpc.hermesdefi.io/";
 const CHAIN_ID = 1666600000;
 const NATIVE_CURRENCY = {
     name: "one",

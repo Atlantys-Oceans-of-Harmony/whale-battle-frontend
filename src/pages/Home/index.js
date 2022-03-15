@@ -247,27 +247,29 @@ const Home = () => {
             <div className="relative z-10">
                 <div className="text-2xl text-center font-bold mb-8 text-white">Battles Created</div>
 
-                {createdBattles?.length > 0 ? <div className="lg:px-16 grid md:grid-cols-2 lg:grid-cols-3 grid-cols-1">{
-                    createdBattles.map((e, index) => {
-                        const handleClick = () => {
-                            handleCancelBattle(e.battleId)
-                        }
-                        const handleDetail = () => {
-                            setOpenJoinBattle(false)
-                            setOpenCreateBattle(true)
+                {createdBattles?.length > 0 ?
+                    <div className="px-16 lg:px-8 grid md:grid-cols-2 lg:grid-cols-3 grid-cols-1 max-w-7xl mx-auto">
+                        {
+                            createdBattles.map((e, index) => {
+                                const handleClick = () => {
+                                    handleCancelBattle(e.battleId)
+                                }
+                                const handleDetail = () => {
+                                    setOpenJoinBattle(false)
+                                    setOpenCreateBattle(true)
 
-                            setCreatedBattleSelectedIndex(index)
+                                    setCreatedBattleSelectedIndex(index)
 
-                        }
-                        return (<>
-                            <BattleToJoinCard
-                                join={false}
-                                handleClick={handleClick}
-                                handleDetail={handleDetail}
-                                {...e} />
+                                }
+                                return (<>
+                                    <BattleToJoinCard
+                                        join={false}
+                                        handleClick={handleClick}
+                                        handleDetail={handleDetail}
+                                        {...e} />
 
-                        </>)
-                    })}          </div>
+                                </>)
+                            })}          </div>
                     : <div className="mx-auto pb-16  w-full text-center text-xl text-white">No Battles created yet!</div>}
 
 
@@ -323,7 +325,7 @@ const Home = () => {
             <h3 className=" text-center text-3xl my-8 text-white leading-6 font-bold">Battles to join appear here:</h3>
 
 
-            <div className="lg:px-16 grid md:grid-cols-2 lg:grid-cols-3 grid-cols-1">
+            <div className="px-16 lg:px-8 grid md:grid-cols-2 lg:grid-cols-3 grid-cols-1 max-w-7xl mx-auto">
                 {battlesToJoin?.length > 0 ? battlesToJoin.map((e, index) => {
                     const handleClick = () => {
                         handleJoinBattle(e.battleId, e.amount)
