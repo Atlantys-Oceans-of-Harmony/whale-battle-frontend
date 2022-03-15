@@ -74,11 +74,13 @@ const Home = () => {
     }, []);
     useEffect(() => {
         const fetchStuff = async () => {
-            getAllHarmonyWhales().then(res => {
-                setHarmonyWhales(res)
-                setCreateBattleForm({ ...createBattleForm, whaleId: res[0] });
-                setJoinBattleForm({ ...joinBattleForm, whaleId: res[0] });
-            }).catch(e => { setHarmonyWhales([]) });
+            if (!harmonyWhales) {
+                getAllHarmonyWhales().then(res => {
+                    setHarmonyWhales(res)
+                    setCreateBattleForm({ ...createBattleForm, whaleId: res[0] });
+                    setJoinBattleForm({ ...joinBattleForm, whaleId: res[0] });
+                }).catch(e => { setHarmonyWhales([]) });
+            }
             const [{ wonBattles, lostBattles, readyToAcceptBattles, readyToCommenceBattles, cancelledBattles, forfeitedBattles }, readyToJoinBattleIds] = await Promise.all([getAllBattles(), getBattlesReadyToAccept()]);
 
             const [createdBattles, commenceBattles, readyToJoinbattles] =
@@ -248,7 +250,7 @@ const Home = () => {
                 <div className="text-2xl text-center font-bold mb-8 text-white">Battles Created</div>
 
                 {createdBattles?.length > 0 ?
-                    <div className="px-16 lg:px-8 grid md:grid-cols-2 lg:grid-cols-3 grid-cols-1 max-w-7xl mx-auto">
+                    <div className="px-16 lg:px-8 grid md:grid-cols-2 lg:grid-cols-4 grid-cols-1 max-w-7xl mx-auto">
                         {
                             createdBattles.map((e, index) => {
                                 const handleClick = () => {
@@ -325,7 +327,7 @@ const Home = () => {
             <h3 className=" text-center text-3xl my-8 text-white leading-6 font-bold">Battles to join appear here:</h3>
 
 
-            <div className="px-16 lg:px-8 grid md:grid-cols-2 lg:grid-cols-3 grid-cols-1 max-w-7xl mx-auto">
+            <div className="px-16 lg:px-8 grid md:grid-cols-2 lg:grid-cols-4 grid-cols-1 max-w-7xl mx-auto">
                 {battlesToJoin?.length > 0 ? battlesToJoin.map((e, index) => {
                     const handleClick = () => {
                         handleJoinBattle(e.battleId, e.amount)

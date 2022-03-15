@@ -326,6 +326,60 @@ export const Web3Provider = (props) => {
 
         return result?.filter(e => e?.toString() !== "0") || [];
     }
+    functionsToExport.getAllUserBattles = async () => {
+        try {
+            let result = await contractObjects?.battleStorageContract?.getBattlesByAddress(account);
+
+
+            // console.log(result)
+
+            let _wonBattles = result[4]?.filter(e => e.toString() !== "0")
+            let _lostBattles = result[5]?.filter(e => e.toString() !== "0")
+            const _cancelledBattles = result[8]?.filter(e => e.toString() !== "0")
+            const _forfeitedBattles = result[9]?.filter(e => e.toString() !== "0")
+            let allBattles = [..._wonBattles, ..._lostBattles, ..._cancelledBattles, ..._forfeitedBattles];
+            allBattles = allBattles.map(e => parseInt(e.toString()));
+            _wonBattles = _wonBattles.map(e => parseInt(e.toString()));
+            _lostBattles = _lostBattles.map(e => parseInt(e.toString()));
+            setWonBattles(_wonBattles.length)
+            setLostBattles(_lostBattles.length)
+            allBattles.sort(function (a, b) {
+                return a - b;
+            })
+            _wonBattles.sort(function (a, b) {
+                return a - b;
+            })
+            _lostBattles.sort(function (a, b) {
+                return a - b;
+            })
+            _wonBattles.reverse()
+            _lostBattles.reverse()
+            allBattles.reverse()
+            allBattles = allBattles.map(e => e.toString());
+            _wonBattles = _wonBattles.map(e => e.toString());
+            _lostBattles = _lostBattles.map(e => e.toString());
+
+
+            return ({
+                wonBattles: _wonBattles,
+                lostBattles: _lostBattles,
+                cancelledBattles: _cancelledBattles,
+                forfeitedBattles: _forfeitedBattles,
+                allBattles,
+            })
+        }
+        catch (e) {
+            console.log(e)
+            return ({
+                wonBattles: 0,
+                lostBattles: 0,
+                readyToAcceptBattles: [],
+                readyToCommenceBattles: [],
+                cancelledBattles: 0,
+                forfeitedBattles: 0
+            })
+        }
+    }
     functionsToExport.getAllBattles = async () => {
         try {
             let result = await contractObjects?.battleStorageContract?.getBattlesByAddress(account);
@@ -387,7 +441,8 @@ export const Web3Provider = (props) => {
                 endDate: args[9].toString(),
                 futureBlock: args[10].toString(),
                 inProgress: args[11],
-                isOwner: args[2]?.toString()?.toLowerCase() === account?.toLowerCase()
+                isOwner: args[2]?.toString()?.toLowerCase() === account?.toLowerCase(),
+                userWon: account?.toString()?.toLowerCase() === args[8]?.toString()?.toLowerCase()
 
             }
             return data;

@@ -6,6 +6,7 @@ import Home from 'pages/Home/index';
 import Navbar from 'components/Navbar/index';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import AllBattles from "pages/AllBattles/index";
 
 function App() {
   return (
@@ -18,7 +19,11 @@ function App() {
             <ToastContainer />
 
             <Navbar />
-            <Home />
+            <Routes>
+              <Route path="/battles" element={<AllBattles />} />
+
+              <Route path="/" element={<Home />} />
+            </Routes>
           </Web3Provider>
 
         </Router>

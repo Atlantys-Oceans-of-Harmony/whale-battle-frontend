@@ -100,6 +100,12 @@ const Navbar = () => {
                             <div className="hidden mb-4 menu w-full lg:flex  lg:items-center lg:w-auto lg:px-3 px-8 mr-16">
                                 <div className="text-md relative z-10 lg:flex justify-between w-full font-extrabold text-white sm:text-xl md:text-2xl">
                                     {account && <>
+                                        <Link
+                                            to="/battles"
+                                            className="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-mintGreen px-4 py-2 rounded  mr-2"
+                                        >
+                                            My Battles
+                                        </Link>
                                         <div
                                             className="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-mintGreen px-4 py-2 rounded  mr-2"
                                         >
@@ -148,6 +154,13 @@ const Navbar = () => {
 
                                         <Link as="div" to={"/"} className="mb-4 font-bold text-xl"> Home</Link>
                                         {account && <>
+                                            <Link
+                                                to="/battles"
+
+                                                className="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-mintGreen px-4 py-2 rounded  mr-2"
+                                            >
+                                                My Battles
+                                            </Link>
                                             <div
                                                 className="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-mintGreen px-4 py-2 rounded  mr-2"
                                             >
