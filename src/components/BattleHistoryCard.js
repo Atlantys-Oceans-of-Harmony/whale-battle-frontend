@@ -1,7 +1,8 @@
-const BattleProgressCard = ({ handleClick, battleId, amount, whaleId = 7, whaleIdAccepted = -1, isComplete, ownerTotalPoints, acceptedTotalPoints, userWon }) => {
+const BattleProgressCard = ({ handleClick, hideWin, battleId, amount, whaleId = 7, whaleIdAccepted = -1, isComplete, ownerTotalPoints, acceptedTotalPoints, userWon }) => {
     return (<>
         <div className="px-2 pt-4 m-2 border-2 rounded-md">
-            <div className="font-bold text-2xl my-3 cursor-pointer text-white text-center mx-auto">{whaleIdAccepted?.toString() == "0" ? "Battle Cancelled" : ownerTotalPoints?.toString() === acceptedTotalPoints?.toString() && ownerTotalPoints?.toString() == "0" ? <>Battle Forfeited</> : <> You {userWon ? "Won" : "Lost"}</>}</div>
+
+            {!hideWin && <div className="font-bold text-2xl my-3 cursor-pointer text-white text-center mx-auto">{whaleIdAccepted?.toString() == "0" ? "Battle Cancelled" : ownerTotalPoints?.toString() === acceptedTotalPoints?.toString() && ownerTotalPoints?.toString() == "0" ? <>Battle Forfeited</> : <> You {userWon ? "Won" : "Lost"}</>}</div>}
 
             <div className="flex w-full justify-center items-center">
 

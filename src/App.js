@@ -7,6 +7,7 @@ import Navbar from 'components/Navbar/index';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import AllBattles from "pages/AllBattles/index";
+import BattleDetails from "pages/BattleDetail/index";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
             <Navbar />
             <Routes>
               <Route path="/battles" element={<AllBattles />} />
+              <Route path="/detail" element={<BattleDetails />} />
 
               <Route path="/" element={<Home />} />
             </Routes>

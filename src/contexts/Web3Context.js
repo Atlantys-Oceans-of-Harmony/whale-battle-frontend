@@ -465,15 +465,62 @@ export const Web3Provider = (props) => {
                 const { event, args } = eventElement;
                 console.log(event)
                 console.log(args)
-                // const amount = args[1];
-                // if (event === "xpGained") {
-                //     xpGained += parseFloat(amount);
+                // if (event === "BattleWon") {
+                //     console.log(args)
+                //     battleSummary = {
+                //         battleId: battleId,
+                //         whaleId: args[0].toString(),
+                //         gen: args[1].toString(),
+                //         owner: args[2].toString(),
+                //         amount: utils.formatEther(args[3].toString()),
+                //         ownerTotalPoints: args[4].toString(),
+                //         acceptedBy: args[5].toString(),
+                //         whaleIdAccepted: args[6].toString(),
+                //         acceptedTotalPoints: args[7].toString(),
+                //         winner: args[8].toString(),
+                //         endDate: args[9].toString(),
+                //         futureBlock: args[10].toString(),
+                //         inProgress: args[11],
+                //         isOwner: args[2]?.toString()?.toLowerCase() === account?.toLowerCase(),
+                //         userWon: account?.toString()?.toLowerCase() === args[8]?.toString()?.toLowerCase()
+
+                //     }
                 // }
-                // else if (event === "xpLost") {
-                //     xpLost += parseFloat(amount);
+                // else if (event === "BattleForfeited") {
+                //     battleSummary = {
+                //         battleId: battleId,
+                //         whaleId: args[0].toString(),
+                //         gen: args[1].toString(),
+                //         owner: args[2].toString(),
+                //         amount: utils.formatEther(args[3].toString()),
+                //         ownerTotalPoints: args[4].toString(),
+                //         acceptedBy: args[5].toString(),
+                //         whaleIdAccepted: args[6].toString(),
+                //         acceptedTotalPoints: args[7].toString(),
+                //         winner: args[8].toString(),
+                //         endDate: args[9].toString(),
+                //         futureBlock: args[10].toString(),
+                //         inProgress: args[11],
+                //         isOwner: args[2]?.toString()?.toLowerCase() === account?.toLowerCase(),
+                //         userWon: account?.toString()?.toLowerCase() === args[8]?.toString()?.toLowerCase()
+
+                //     }
                 // }
-            })
+            });
+            let a = 0;
+            while (true) {
+                const reuls = await contractObjects?.battleStorageContract?.getBattleHasEndedById(battleId);
+                a += 1
+                if (reuls) {
+                    break;
+                }
+                if (a > 4) {
+                    throw "Error";
+                }
+            }
             const [battleSummary] = await functionsToExport.getBattleDetails([battleId])
+
+
             console.log(account?.toString()?.toLowerCase() === battleSummary?.winner?.toString()?.toLowerCase())
             console.log(account)
             console.log(battleSummary.winner)

@@ -65,7 +65,7 @@ const Navbar = () => {
             >
                 <Disclosure
                     as="nav"
-                    className={`flex items-center justify-between flex-wrap   container  mx-auto`}
+                    className={`flex items-center justify-between    container  mx-auto`}
                 >
                     {({ open }) => (<>
 
@@ -75,7 +75,7 @@ const Navbar = () => {
                                 className="flex items-center flex-shrink-0 text-gray-800  ml-16 mb-3"
                             >
                                 {/* <img src={Logo} className="w-56" alt="" /> */}
-                                <h1 className="text-md tracking-tight font-extrabold text-white sm:text-xl md:text-2xl">
+                                <h1 className="text-md tracking-tight font-extrabold text-white sm:text-xl">
                                     <span className="block xl:inline">Whale Battles</span>{' '}
                                     <span className="block text-mintGreen xl:inline"></span>
                                 </h1>
@@ -98,13 +98,19 @@ const Navbar = () => {
 
                             </div>
                             <div className="hidden mb-4 menu w-full lg:flex  lg:items-center lg:w-auto lg:px-3 px-8 mr-16">
-                                <div className="text-md relative z-10 lg:flex justify-between w-full font-extrabold text-white sm:text-xl md:text-2xl">
+                                <div className="text-md relative z-10 lg:flex justify-between w-full font-extrabold text-white sm:text-xl ">
                                     {account && <>
                                         <Link
                                             to="/battles"
                                             className="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-mintGreen px-4 py-2 rounded  mr-2"
                                         >
                                             My Battles
+                                        </Link>
+                                        <Link
+                                            to="/detail"
+                                            className="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-mintGreen px-4 py-2 rounded  mr-2"
+                                        >
+                                            Battle Detail
                                         </Link>
                                         <div
                                             className="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-mintGreen px-4 py-2 rounded  mr-2"

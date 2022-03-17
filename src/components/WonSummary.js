@@ -3,7 +3,7 @@ import { Fragment, useRef, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { ExclamationIcon } from '@heroicons/react/outline'
 
-export default function WonSummary({ battleId = 24, amount = 555, whaleId = 7, whaleIdAccepted = -1, ownerTotalPoints, acceptedTotalPoints, acceptedBy, owner = "0xxx", open, setOpen, userWon }) {
+export default function WonSummary({ battleId = 24, hideWin, amount = 555, whaleId = 7, whaleIdAccepted = -1, ownerTotalPoints, acceptedTotalPoints, acceptedBy, owner = "0xxx", open, setOpen, userWon }) {
   console.log(open)
   const cancelButtonRef = useRef(null)
 
@@ -38,7 +38,7 @@ export default function WonSummary({ battleId = 24, amount = 555, whaleId = 7, w
           >
             <div className="relative py-8 px-8 z-50 inline-block align-bottom bg-black bg-opacity-70 rounded-lg text-center transform transition-all sm:my-8 sm:align-middle max-w-3xl">
               <div className="font-bold text-3xl my-3 cursor-pointer text-white text-center mx-auto">Battle #{battleId} Summary</div>
-              <div className="font-bold text-3xl my-3 cursor-pointer text-white text-center mx-auto">{whaleIdAccepted?.toString() == "0" ? "Battle Cancelled" : ownerTotalPoints?.toString() === acceptedTotalPoints?.toString() && ownerTotalPoints?.toString() == "0" ? <>Battle Forfeited</> : <> You {userWon ? "Won" : "Lost"}</>}</div>
+              {!hideWin && < div className="font-bold text-3xl my-3 cursor-pointer text-white text-center mx-auto">{whaleIdAccepted?.toString() == "0" ? "Battle Cancelled" : ownerTotalPoints?.toString() === acceptedTotalPoints?.toString() && ownerTotalPoints?.toString() == "0" ? <>Battle Forfeited</> : <> You {userWon ? "Won" : "Lost"}</>}</div>}
 
               <div className="flex w-full justify-center items-center">
                 <img className=" mx-2 w-1/3 flex-1 rounded-lg cursor-pointer" src={`https://harmony-whales-meta.herokuapp.com/token/image/${whaleId}`} alt="" />
@@ -61,7 +61,7 @@ export default function WonSummary({ battleId = 24, amount = 555, whaleId = 7, w
             </div>
           </Transition.Child>
         </div>
-      </Dialog>
-    </Transition.Root>
+      </Dialog >
+    </Transition.Root >
   )
 }
