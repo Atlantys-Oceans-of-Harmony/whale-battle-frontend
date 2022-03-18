@@ -335,12 +335,14 @@ export const Web3Provider = (props) => {
 
             let _wonBattles = result[4]?.filter(e => e.toString() !== "0")
             let _lostBattles = result[5]?.filter(e => e.toString() !== "0")
-            const _cancelledBattles = result[8]?.filter(e => e.toString() !== "0")
-            const _forfeitedBattles = result[9]?.filter(e => e.toString() !== "0")
+            let _cancelledBattles = result[8]?.filter(e => e.toString() !== "0")
+            let _forfeitedBattles = result[9]?.filter(e => e.toString() !== "0")
             let allBattles = [..._wonBattles, ..._lostBattles, ..._cancelledBattles, ..._forfeitedBattles];
             allBattles = allBattles.map(e => parseInt(e.toString()));
             _wonBattles = _wonBattles.map(e => parseInt(e.toString()));
             _lostBattles = _lostBattles.map(e => parseInt(e.toString()));
+            _cancelledBattles = _cancelledBattles.map(e => parseInt(e.toString()));
+            _forfeitedBattles = _forfeitedBattles.map(e => parseInt(e.toString()));
             setWonBattles(_wonBattles.length)
             setLostBattles(_lostBattles.length)
             allBattles.sort(function (a, b) {
@@ -352,9 +354,18 @@ export const Web3Provider = (props) => {
             _lostBattles.sort(function (a, b) {
                 return a - b;
             })
+            _cancelledBattles.sort(function (a, b) {
+                return a - b;
+            })
+            _forfeitedBattles.sort(function (a, b) {
+                return a - b;
+            })
+
             _wonBattles.reverse()
             _lostBattles.reverse()
-            allBattles.reverse()
+            _cancelledBattles.reverse()
+            _lostBattles.reverse()
+            _forfeitedBattles.reverse()
             allBattles = allBattles.map(e => e.toString());
             _wonBattles = _wonBattles.map(e => e.toString());
             _lostBattles = _lostBattles.map(e => e.toString());

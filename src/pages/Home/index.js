@@ -368,6 +368,21 @@ const Home = () => {
         <img src={Dinasour} alt="" className="dinasour  absolute  bottom-0 right-0" />
         <img src={Reef} alt="" className=" absolute  w-96 bottom-0 left-0" /> */}
         <div className="w-full">
+
+            <div className="flex w-full mt-8 justify-between items-center">
+                <div className="w-96 "></div>
+                <div className=" text-white text-center  text-3xl font-extrabold">{gameState.title}</div>
+
+                <div
+                    className=" h-36 w-96 relative text- tracking-tight font-extrabold focus-visible:border-0 focus:border-0 text-white sm:text-xl md:text-2xl flex items-center wallet-btn ">
+                    <button
+                        onClick={() => { setGameState(GAME_STATES[(gameState.index + 1) % 2]) }}
+                        className="w-full font-extrabold text-lg cursor-pointer flex items-center justify-center px- py-3 mb-3 "
+                    >
+                        Switch to {GAME_STATES[(gameState.index + 1) % 2].title}
+                    </button>
+                </div>
+            </div>
             <div className="relative z-10">
 
                 {battlesToCommence?.length > 0 ? <>
@@ -392,16 +407,7 @@ const Home = () => {
 
 
             </div>
-            <div
-                className=" mx-auto h-36 w-96 relative text- tracking-tight font-extrabold focus-visible:border-0 focus:border-0 text-white sm:text-xl md:text-2xl flex items-center wallet-btn ">
-                <button
-                    onClick={() => { setGameState(GAME_STATES[(gameState.index + 1) % 2]) }}
-                    className="w-full font-extrabold text-lg cursor-pointer flex items-center justify-center px- py-3 mb-3 "
-                >
-                    Switch to {GAME_STATES[(gameState.index + 1) % 2].title}
-                </button>
-            </div>
-            <div className="mx-auto text-white text-center mt-8 text-3xl font-extrabold">{gameState.title}</div>
+
         </div>
 
 

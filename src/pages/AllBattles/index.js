@@ -60,16 +60,26 @@ const AllBattles = () => {
     const [allBattles, setAllBattles] = useState([]);
     const [wonBattles, setWonBattles] = useState([]);
     const [lostBattles, setLostBattles] = useState([]);
+    const [cancelledBattles, setCancelledBattles] = useState([]);
+    const [forfeitedBattles, setForfeitedBattles] = useState([]);
     const [selectedIndex, setSelectedIndex] = useState(0)
 
 
     useEffect(() => {
         const fetchStuff = async () => {
-            const { allBattles, wonBattles: _wonBattles, lostBattles: _lostBattles } = await getAllUserBattles();
-            const [_allBattleDetails, _wonBattleDetails, _lostBattleDetails] = await Promise.all([getBattleDetails(allBattles), getBattleDetails(_wonBattles), getBattleDetails(_lostBattles)]);
+            const { allBattles, wonBattles: _wonBattles, lostBattles: _lostBattles, cancelledBattles: _cancelledBattles, forfeitedBattles: _forfeitedBattles } = await getAllUserBattles();
+            const [_allBattleDetails, _wonBattleDetails, _lostBattleDetails, _cancelledBattleDetails, _forfeitedBattleDetails] = await Promise.all([
+                getBattleDetails(allBattles),
+                getBattleDetails(_wonBattles),
+                getBattleDetails(_lostBattles),
+                getBattleDetails(_cancelledBattles),
+                getBattleDetails(_forfeitedBattles),
+            ]);
             setAllBattles(_allBattleDetails);
             setWonBattles(_wonBattleDetails);
             setLostBattles(_lostBattleDetails);
+            setCancelledBattles(_cancelledBattleDetails);
+            setForfeitedBattles(_forfeitedBattleDetails);
             setBattlesToShow(_allBattleDetails);
 
             setSelectedIndex(0)
@@ -91,6 +101,8 @@ const AllBattles = () => {
         { title: "All Battles", onClick: () => { setBattlesToShow(allBattles) } },
         { title: "Won Battles", onClick: () => { setBattlesToShow(wonBattles) } },
         { title: "Lost Battles", onClick: () => { setBattlesToShow(lostBattles) } },
+        { title: "Cancelled Battles", onClick: () => { setBattlesToShow(cancelledBattles) } },
+        { title: "Forfeited Battles", onClick: () => { setBattlesToShow(forfeitedBattles) } },
     ]
 
     return (<>
