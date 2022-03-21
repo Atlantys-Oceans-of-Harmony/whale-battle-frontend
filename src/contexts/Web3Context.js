@@ -8,6 +8,7 @@ import battleStorageAbi from "abis/battleStorage.json";
 import { Provider as MulticallProvider, Contract as MulticallContract } from "ethers-multicall";
 import { BigNumber } from "../../node_modules/ethers/lib/ethers";
 import { toast } from 'react-toastify';
+import axios from 'axios';
 
 
 const DEFAULT_ACCOUNTS = [
@@ -18,42 +19,42 @@ const DEFAULT_ACCOUNTS = [
 
 const Web3Context = createContext();
 
-// const RPC_URL = "https://rpc.hermesdefi.io/";
-// const CHAIN_ID = 1666600000;
-// const NATIVE_CURRENCY = {
-//     name: "one",
-//     symbol: "ONE", // 2-6 characters long
-//     decimals: 18,
-// }
-// const MULTI_CALL_ADDRESS = "0x34b415f4d3b332515e66f70595ace1dcf36254c5";
-// const CHAIN_NAME = "Harmony Mainnet";
-// const ARB_TOKEN_CONTRACT_ADDRESS = "0x044246137670a03ca790d7ed20af0c552c88117c";
-// const ARB_WHALE_BATTLE_CONTRACT_ADDRESS = "0x707b8B324DE71D21218d52EB1bd942E27B7044ac";
-// const HARMONY_WHALES_CONTRACT_ADDRfESS = "0x289FF2F47cD7575c62FDcf45B62451EA9b2420dD";
-// const HARMONY_WHALES_V2_CONTRACT_ADDRESS = "0x289FF2F47cD7575c62FDcf45B62451EA9b2420dD";
-// const BATTLE_STORAGE_CONTRACT_ADDRESS = "0x492174791Faa6768969a8935A1954Dc161f97D81";
-// // const HARMONY_WHALES_CONTRACT_ADDRfESS = "0x0519f50287DDcdF8b761Dae76Dc1A76776A0af70";
-// const STAKING_CONTRACT_ADDRESS = "0x3d902f6447A0D4E61d65E863E7C2425D938cfEed"
-
-
-
-
-const RPC_URL = "https://api.s0.b.hmny.io";
-const CHAIN_ID = 1666700000;
+const RPC_URL = "https://rpc.hermesdefi.io/";
+const CHAIN_ID = 1666600000;
 const NATIVE_CURRENCY = {
     name: "one",
     symbol: "ONE", // 2-6 characters long
     decimals: 18,
 }
-const MULTI_CALL_ADDRESS = "0xd078799c53396616844e2fa97f0dd2b4c145a685";
-const CHAIN_NAME = "Harmony Testnet";
-const ARB_TOKEN_CONTRACT_ADDRESS = "0xbC34E7EA5Dce05bAc24a54759386067Cb461b7dd";
-const ARB_WHALE_BATTLE_CONTRACT_ADDRESS = "0x4C34D0dE1876E62f0d89de0e11404F1550C506D8";
-const HARMONY_WHALES_CONTRACT_ADDRfESS = "0x35BCB2a29F8f6D8F616c3827AabB0e9F5D0e749B";
-const HARMONY_WHALES_V2_CONTRACT_ADDRESS = "0x35BCB2a29F8f6D8F616c3827AabB0e9F5D0e749B";
-const BATTLE_STORAGE_CONTRACT_ADDRESS = "0x9eeC380533392663AD1f528e8681025BF3139c7B";
+const MULTI_CALL_ADDRESS = "0x34b415f4d3b332515e66f70595ace1dcf36254c5";
+const CHAIN_NAME = "Harmony Mainnet";
+const ARB_TOKEN_CONTRACT_ADDRESS = "0x1A5b1109F04Cc3f45d4C533685a347656d0983E4";
+const ARB_WHALE_BATTLE_CONTRACT_ADDRESS = "0x707b8B324DE71D21218d52EB1bd942E27B7044ac";
+const HARMONY_WHALES_CONTRACT_ADDRfESS = "0x289FF2F47cD7575c62FDcf45B62451EA9b2420dD";
+const HARMONY_WHALES_V2_CONTRACT_ADDRESS = "0x289FF2F47cD7575c62FDcf45B62451EA9b2420dD";
+const BATTLE_STORAGE_CONTRACT_ADDRESS = "0x492174791Faa6768969a8935A1954Dc161f97D81";
 // const HARMONY_WHALES_CONTRACT_ADDRfESS = "0x0519f50287DDcdF8b761Dae76Dc1A76776A0af70";
 const STAKING_CONTRACT_ADDRESS = "0x3d902f6447A0D4E61d65E863E7C2425D938cfEed"
+
+
+
+
+// const RPC_URL = "https://api.s0.b.hmny.io";
+// const CHAIN_ID = 1666700000;
+// const NATIVE_CURRENCY = {
+//     name: "one",
+//     symbol: "ONE", // 2-6 characters long
+//     decimals: 18,
+// }
+// const MULTI_CALL_ADDRESS = "0xd078799c53396616844e2fa97f0dd2b4c145a685";
+// const CHAIN_NAME = "Harmony Testnet";
+// const ARB_TOKEN_CONTRACT_ADDRESS = "0xbC34E7EA5Dce05bAc24a54759386067Cb461b7dd";
+// const ARB_WHALE_BATTLE_CONTRACT_ADDRESS = "0x4C34D0dE1876E62f0d89de0e11404F1550C506D8";
+// const HARMONY_WHALES_CONTRACT_ADDRfESS = "0x35BCB2a29F8f6D8F616c3827AabB0e9F5D0e749B";
+// const HARMONY_WHALES_V2_CONTRACT_ADDRESS = "0x35BCB2a29F8f6D8F616c3827AabB0e9F5D0e749B";
+// const BATTLE_STORAGE_CONTRACT_ADDRESS = "0x9eeC380533392663AD1f528e8681025BF3139c7B";
+// // const HARMONY_WHALES_CONTRACT_ADDRfESS = "0x0519f50287DDcdF8b761Dae76Dc1A76776A0af70";
+// const STAKING_CONTRACT_ADDRESS = "0x3d902f6447A0D4E61d65E863E7C2425D938cfEed"
 
 
 export const Web3Provider = (props) => {
@@ -597,6 +598,10 @@ export const Web3Provider = (props) => {
             console.log(e);
         }
 
+    }
+    functionsToExport.getLeaderboard = async () => {
+        const leaderboard = await axios.get('https://desolate-scrubland-76195.herokuapp.com/leaderboard');
+        return leaderboard;
     }
     functionsToExport.joinBattle = async ({ whaleId, battleId, amount }) => {
         try {

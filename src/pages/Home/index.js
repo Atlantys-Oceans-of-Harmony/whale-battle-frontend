@@ -213,12 +213,12 @@ const Home = () => {
                             <div className="text-white sm:text-xl md:text-2xl font-extrabold">
 
 
-                                <h3 className="text-white sm:text-xl md:text-2xl font-extrabold">Fighting Rewards (ARB)</h3>
+                                <h3 className="text-white sm:text-xl md:text-2xl font-extrabold">Fighting Rewards (AQUA)</h3>
 
                                 <div className="h-32 mt-4 mx-auto  -top-6 -left-8 w-64 relative text-md tracking-tight font-extrabold text-white sm:text-xl md:text-2xl flex items-center ">
                                     <input
                                         className="text-white border border-white text-center w-44 p-1 rounded-md bg-transparent ml-14"
-                                        placeholder="Amount in ARB"
+                                        placeholder="Amount in AQUA"
                                         type="text"
                                         pattern="^[0-9]*$"
                                         value={createBattleForm["amount"]}

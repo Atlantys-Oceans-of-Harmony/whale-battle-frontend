@@ -8,12 +8,14 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import AllBattles from "pages/AllBattles/index";
 import BattleDetails from "pages/BattleDetail/index";
+import ArbDownPage from "pages/ArbDownPage/index";
+import Leaderboard from "pages/Leaderboard/index";
 
 function App() {
   return (
     <>
       <div className="bg-image font-sans relative  w-full" style={{ minHeight: "100vh" }}>
-
+        {/* <ArbDownPage /> */}
         <Router>
 
           <Web3Provider>
@@ -23,6 +25,7 @@ function App() {
             <Routes>
               <Route path="/battles" element={<AllBattles />} />
               <Route path="/detail" element={<BattleDetails />} />
+              <Route path="/leaderboard" element={<Leaderboard />} />
 
               <Route path="/" element={<Home />} />
             </Routes>

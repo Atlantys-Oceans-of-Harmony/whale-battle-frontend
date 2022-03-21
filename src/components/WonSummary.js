@@ -49,7 +49,7 @@ export default function WonSummary({ battleId = 24, hideWin, amount = 555, whale
 
               </div>
               <br />
-              <div className="font-semibold text-xl cursor-pointer text-white text-center mx-auto">Winnings: {amount} ARB</div>
+              <div className="font-semibold text-xl cursor-pointer text-white text-center mx-auto">Winnings: {amount} AQUA</div>
               <div className="font-semibold text-xl cursor-pointer text-white text-center mx-auto">Battle Host: {owner?.slice(0, 4)}...{owner?.slice(-4)}</div>
               <div className="font-semibold text-xl cursor-pointer text-white text-center mx-auto">Challenger: {acceptedBy?.slice(0, 4)}...{acceptedBy?.slice(-4)}</div>
               <br />
