@@ -15,8 +15,8 @@ function App() {
   return (
     <>
       <div className="bg-image font-sans relative  w-full" style={{ minHeight: "100vh" }}>
-        <ArbDownPage />
-        {/* <Router>
+        {/* <ArbDownPage /> */}
+        <Router>
 
           <Web3Provider>
             <ToastContainer />
@@ -31,7 +31,7 @@ function App() {
             </Routes>
           </Web3Provider>
 
-        </Router> */}
+        </Router>
       </div>
     </>
   );
