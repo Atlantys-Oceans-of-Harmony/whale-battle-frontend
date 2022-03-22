@@ -414,11 +414,11 @@ export const Web3Provider = (props) => {
             const _forfeitedBattles = result[8]?.filter(e => e.toString() !== "0").length
             readyToAcceptBattles
                 .sort(function (a, b) {
-                    return a - b;
+                    return parseInt(a.toString()) - parseInt(b.toString());
                 })
             readyToAcceptBattles.reverse();
             readyToCommenceBattles.sort(function (a, b) {
-                return a - b;
+                return parseInt(a.toString()) - parseInt(b.toString());
             })
             readyToCommenceBattles.reverse()
             setWonBattles(_wonBattles)
