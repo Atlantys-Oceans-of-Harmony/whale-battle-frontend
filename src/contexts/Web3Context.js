@@ -328,9 +328,15 @@ export const Web3Provider = (props) => {
         })
     }
     functionsToExport.getBattlesReadyToAccept = async () => {
-        const result = await contractObjects?.battleStorageContract?.getBattlesReadyToAccept();
+        let result = await contractObjects?.battleStorageContract?.getBattlesReadyToAccept();
 
-        return result?.filter(e => e?.toString() !== "0") || [];
+        result = result?.filter(e => e?.toString() !== "0") || [];
+        result.sort(function (a, b) {
+            return (parseInt(a?.toString()) - parseInt(b?.toString()));
+        })
+        result.reverse();
+        console.log(result)
+        return result;
     }
     functionsToExport.getAllUserBattles = async () => {
         try {
