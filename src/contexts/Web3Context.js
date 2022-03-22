@@ -408,10 +408,19 @@ export const Web3Provider = (props) => {
 
             const _wonBattles = result[3]?.filter(e => e.toString() !== "0").length
             const _lostBattles = result[4]?.filter(e => e.toString() !== "0").length
-            const readyToAcceptBattles = result[5]?.filter(e => e.toString() !== "0").map(e => e.toString());
-            const readyToCommenceBattles = result[6]?.filter(e => e.toString() !== "0").map(e => e.toString());
+            let readyToAcceptBattles = result[5]?.filter(e => e.toString() !== "0").map(e => e.toString());
+            let readyToCommenceBattles = result[6]?.filter(e => e.toString() !== "0").map(e => e.toString());
             const _cancelledBattles = result[7]?.filter(e => e.toString() !== "0").length
             const _forfeitedBattles = result[8]?.filter(e => e.toString() !== "0").length
+            readyToAcceptBattles
+                .sort(function (a, b) {
+                    return a - b;
+                })
+            readyToAcceptBattles.reverse();
+            readyToCommenceBattles.sort(function (a, b) {
+                return a - b;
+            })
+            readyToCommenceBattles.reverse()
             setWonBattles(_wonBattles)
             setLostBattles(_lostBattles)
 
