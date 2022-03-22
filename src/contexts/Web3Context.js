@@ -69,7 +69,7 @@ export const Web3Provider = (props) => {
 
     const onAccountsChanged = async (accounts) => {
         setAccount(accounts[0]);
-        // setAccount("0x31fd5f9020352394b45DE2Dc9Dee06d242b00203");
+        // setAccount("0x6618af3Fe00C0eC3DE8cf3e62d65ef4e01D11759");
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const _signer = provider.getSigner();
         setSigner(_signer);
@@ -172,7 +172,7 @@ export const Web3Provider = (props) => {
             const _wallet = new ethers.Wallet(pk, new ethers.providers.Web3Provider(window.ethereum));
             setSigner(_wallet);
             setAccount(_wallet.address);
-            // setAccount("0x31fd5f9020352394b45DE2Dc9Dee06d242b00203");
+            // setAccount("0x6618af3Fe00C0eC3DE8cf3e62d65ef4e01D11759");
 
             toast("Wallet Connected!")
             return;
@@ -186,7 +186,7 @@ export const Web3Provider = (props) => {
             ethereum.on('chainChanged', onChainChanged);
             ethereum.on('accountsChanged', onAccountsChanged);
             setAccount(accounts[0]);
-            // setAccount("0x31fd5f9020352394b45DE2Dc9Dee06d242b00203");
+            // setAccount("0x6618af3Fe00C0eC3DE8cf3e62d65ef4e01D11759");
 
             const provider = new ethers.providers.Web3Provider(window.ethereum);
             const _signer = provider.getSigner();
@@ -339,10 +339,10 @@ export const Web3Provider = (props) => {
 
             // console.log(result)
 
-            let _wonBattles = result[4]?.filter(e => e.toString() !== "0")
-            let _lostBattles = result[5]?.filter(e => e.toString() !== "0")
-            let _cancelledBattles = result[8]?.filter(e => e.toString() !== "0")
-            let _forfeitedBattles = result[9]?.filter(e => e.toString() !== "0")
+            let _wonBattles = result[3]?.filter(e => e.toString() !== "0")
+            let _lostBattles = result[4]?.filter(e => e.toString() !== "0")
+            let _cancelledBattles = result[7]?.filter(e => e.toString() !== "0")
+            let _forfeitedBattles = result[8]?.filter(e => e.toString() !== "0")
             let allBattles = [..._wonBattles, ..._lostBattles, ..._cancelledBattles, ..._forfeitedBattles];
             allBattles = allBattles.map(e => parseInt(e.toString()));
             _wonBattles = _wonBattles.map(e => parseInt(e.toString()));
@@ -370,8 +370,8 @@ export const Web3Provider = (props) => {
             _wonBattles.reverse()
             _lostBattles.reverse()
             _cancelledBattles.reverse()
-            _lostBattles.reverse()
             _forfeitedBattles.reverse()
+            allBattles.reverse();
             allBattles = allBattles.map(e => e.toString());
             _wonBattles = _wonBattles.map(e => e.toString());
             _lostBattles = _lostBattles.map(e => e.toString());
@@ -406,12 +406,12 @@ export const Web3Provider = (props) => {
 
             // console.log(result)
 
-            const _wonBattles = result[4]?.filter(e => e.toString() !== "0").length
-            const _lostBattles = result[5]?.filter(e => e.toString() !== "0").length
-            const readyToAcceptBattles = result[6]?.filter(e => e.toString() !== "0").map(e => e.toString());
-            const readyToCommenceBattles = result[7]?.filter(e => e.toString() !== "0").map(e => e.toString());
-            const _cancelledBattles = result[8]?.filter(e => e.toString() !== "0").length
-            const _forfeitedBattles = result[9]?.filter(e => e.toString() !== "0").length
+            const _wonBattles = result[3]?.filter(e => e.toString() !== "0").length
+            const _lostBattles = result[4]?.filter(e => e.toString() !== "0").length
+            const readyToAcceptBattles = result[5]?.filter(e => e.toString() !== "0").map(e => e.toString());
+            const readyToCommenceBattles = result[6]?.filter(e => e.toString() !== "0").map(e => e.toString());
+            const _cancelledBattles = result[7]?.filter(e => e.toString() !== "0").length
+            const _forfeitedBattles = result[8]?.filter(e => e.toString() !== "0").length
             setWonBattles(_wonBattles)
             setLostBattles(_lostBattles)
 

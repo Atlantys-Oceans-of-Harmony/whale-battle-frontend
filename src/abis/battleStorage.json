@@ -35,7 +35,7 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "_msgSender",
+        "name": "_address",
         "type": "address"
       },
       {
@@ -186,7 +186,7 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "_playerAddress",
+        "name": "_address",
         "type": "address"
       }
     ],
@@ -207,11 +207,6 @@
           {
             "internalType": "uint256",
             "name": "CancelledIndex",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "CommenceIndex",
             "type": "uint256"
           },
           {
@@ -254,6 +249,42 @@
     "type": "function"
   },
   {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "whaleId",
+        "type": "uint256"
+      }
+    ],
+    "name": "getBattlesByWhale",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "bool",
+            "name": "Exists",
+            "type": "bool"
+          },
+          {
+            "internalType": "uint256[]",
+            "name": "Won",
+            "type": "uint256[]"
+          },
+          {
+            "internalType": "uint256[]",
+            "name": "Lost",
+            "type": "uint256[]"
+          }
+        ],
+        "internalType": "struct BattleStorage.BattlesOfWhale",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "getBattlesReadyToAccept",
     "outputs": [
@@ -274,6 +305,19 @@
         "internalType": "uint256[]",
         "name": "",
         "type": "uint256[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getOldContractToMigrateFrom",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
       }
     ],
     "stateMutability": "view",
@@ -354,7 +398,7 @@
       },
       {
         "internalType": "address",
-        "name": "_playerAddress",
+        "name": "_address",
         "type": "address"
       }
     ],
@@ -471,7 +515,7 @@
       },
       {
         "internalType": "address",
-        "name": "_msgSender",
+        "name": "_address",
         "type": "address"
       },
       {
@@ -481,24 +525,6 @@
       }
     ],
     "name": "updateBattleOnAccept",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "newBattleId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "address",
-        "name": "_msgSender",
-        "type": "address"
-      }
-    ],
-    "name": "updateBattleOnCreate",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
