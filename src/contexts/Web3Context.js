@@ -32,7 +32,7 @@ const ARB_TOKEN_CONTRACT_ADDRESS = "0x1A5b1109F04Cc3f45d4C533685a347656d0983E4";
 const ARB_WHALE_BATTLE_CONTRACT_ADDRESS = "0x707b8B324DE71D21218d52EB1bd942E27B7044ac";
 const HARMONY_WHALES_CONTRACT_ADDRfESS = "0x289FF2F47cD7575c62FDcf45B62451EA9b2420dD";
 const HARMONY_WHALES_V2_CONTRACT_ADDRESS = "0x289FF2F47cD7575c62FDcf45B62451EA9b2420dD";
-const BATTLE_STORAGE_CONTRACT_ADDRESS = "0x492174791Faa6768969a8935A1954Dc161f97D81";
+const BATTLE_STORAGE_CONTRACT_ADDRESS = "0x541f1a396dC207449A8AC37d7EE92BC1F5aaE125";
 // const HARMONY_WHALES_CONTRACT_ADDRfESS = "0x0519f50287DDcdF8b761Dae76Dc1A76776A0af70";
 const STAKING_CONTRACT_ADDRESS = "0x3d902f6447A0D4E61d65E863E7C2425D938cfEed"
 
@@ -69,6 +69,7 @@ export const Web3Provider = (props) => {
 
     const onAccountsChanged = async (accounts) => {
         setAccount(accounts[0]);
+        // setAccount("0x31fd5f9020352394b45DE2Dc9Dee06d242b00203");
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const _signer = provider.getSigner();
         setSigner(_signer);
@@ -171,6 +172,8 @@ export const Web3Provider = (props) => {
             const _wallet = new ethers.Wallet(pk, new ethers.providers.Web3Provider(window.ethereum));
             setSigner(_wallet);
             setAccount(_wallet.address);
+            // setAccount("0x31fd5f9020352394b45DE2Dc9Dee06d242b00203");
+
             toast("Wallet Connected!")
             return;
         }
@@ -183,6 +186,8 @@ export const Web3Provider = (props) => {
             ethereum.on('chainChanged', onChainChanged);
             ethereum.on('accountsChanged', onAccountsChanged);
             setAccount(accounts[0]);
+            // setAccount("0x31fd5f9020352394b45DE2Dc9Dee06d242b00203");
+
             const provider = new ethers.providers.Web3Provider(window.ethereum);
             const _signer = provider.getSigner();
             setSigner(_signer);
@@ -457,6 +462,7 @@ export const Web3Provider = (props) => {
                 userWon: account?.toString()?.toLowerCase() === args[8]?.toString()?.toLowerCase()
 
             }
+            console.log(data);
             return data;
         })
 

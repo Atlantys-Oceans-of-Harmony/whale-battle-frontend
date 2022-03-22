@@ -67,6 +67,8 @@ const Leaderboard = () => {
             newLeaderboard.reverse();
             setAllLeaderboard(newLeaderboard);
             setLeaderboardToShow(newLeaderboard.slice(0, 10));
+            // console.log(await getBattleDetails(["1746"]))
+
 
 
         }
@@ -89,18 +91,29 @@ const Leaderboard = () => {
 
         <div className="w-full">
             <div className="relative z-10 pb-16">
+                <div
+                    className="h-32  cursor-pointer mx-auto  w-80 relative text-md tracking-tight font-extrabold text-white sm:text-xl md:text-2xl flex items-center wallet-btn ">
+                    <button
+                        className="w-full font-extrabold cursor-pointer flex items-center justify-center px- py-3 mb-3 "
+                    >
+                        Leaderboard
+                    </button>
+                </div>
 
-                <table>
-                    <tr>
+                <table className="w-2/3 mx-auto text-white mx-auto font-bold ">
+                    <tr className="text-center border border-4 mx-auto">
+                        <th>Rank</th>
                         <th>Address</th>
                         <th>Wins</th>
                         <th>Loses</th>
                     </tr>
-                    {allLeaderboard.map(e => {
-                        return (<tr>
-                            <td>{e.address}</td>
-                            <td>{e.wins}</td>
-                            <td>{e.loses}</td>
+                    {allLeaderboard?.map((e, index) => {
+                        return (<tr className="mx-auto border s p-2 text-center">
+
+                            <td className="p-2">{index + 1}</td>
+                            <td className="p-2">{e.address}</td>
+                            <td className="p-2">{e.wins}</td>
+                            <td className="p-2">{e.loses}</td>
                         </tr>)
                     })}
 
