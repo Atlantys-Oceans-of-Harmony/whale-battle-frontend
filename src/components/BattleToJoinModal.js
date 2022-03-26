@@ -3,7 +3,7 @@ import { Fragment, useRef, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { ExclamationIcon } from '@heroicons/react/outline'
 
-export default function BattleToJoinModal({ battleId = 24, amount = 555, handleClick, handelClick, whaleId = 7, owner = "0xxx", open, setOpen }) {
+export default function BattleToJoinModal({ battleId = 24, amount = 555, handleClick, handelClick, whaleId = 7, owner = "0xxx", open, setOpen, whaleData }) {
   console.log(open)
   const cancelButtonRef = useRef(null)
 
@@ -37,6 +37,7 @@ export default function BattleToJoinModal({ battleId = 24, amount = 555, handleC
             leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
           >
             <div className="relative py-8 px-8 z-50 inline-block align-bottom bg-black bg-opacity-70 rounded-lg text-center transform transition-all sm:my-8 sm:align-middle ">
+
               <img className="relative z-40 w-full mx-auto rounded-lg cursor-pointer" src={`https://harmony-whales-meta.herokuapp.com/token/image/${whaleId}`} alt="" />
               <br />
               <div className="font-bold text-2xl cursor-pointer text-white text-center mx-auto">Battle #{battleId}</div>

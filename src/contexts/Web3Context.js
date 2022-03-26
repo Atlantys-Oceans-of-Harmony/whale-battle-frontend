@@ -19,42 +19,43 @@ const DEFAULT_ACCOUNTS = [
 
 const Web3Context = createContext();
 
-const RPC_URL = "https://rpc.hermesdefi.io/";
-const CHAIN_ID = 1666600000;
-const NATIVE_CURRENCY = {
-    name: "one",
-    symbol: "ONE", // 2-6 characters long
-    decimals: 18,
-}
-const MULTI_CALL_ADDRESS = "0x34b415f4d3b332515e66f70595ace1dcf36254c5";
-const CHAIN_NAME = "Harmony Mainnet";
-const ARB_TOKEN_CONTRACT_ADDRESS = "0x1A5b1109F04Cc3f45d4C533685a347656d0983E4";
-const ARB_WHALE_BATTLE_CONTRACT_ADDRESS = "0x707b8B324DE71D21218d52EB1bd942E27B7044ac";
-const HARMONY_WHALES_CONTRACT_ADDRfESS = "0x289FF2F47cD7575c62FDcf45B62451EA9b2420dD";
-const HARMONY_WHALES_V2_CONTRACT_ADDRESS = "0x289FF2F47cD7575c62FDcf45B62451EA9b2420dD";
-const BATTLE_STORAGE_CONTRACT_ADDRESS = "0x541f1a396dC207449A8AC37d7EE92BC1F5aaE125";
-// const HARMONY_WHALES_CONTRACT_ADDRfESS = "0x0519f50287DDcdF8b761Dae76Dc1A76776A0af70";
-const STAKING_CONTRACT_ADDRESS = "0x3d902f6447A0D4E61d65E863E7C2425D938cfEed"
-
-
-
-
-// const RPC_URL = "https://api.s0.b.hmny.io";
-// const CHAIN_ID = 1666700000;
+// const RPC_URL = "https://rpc.hermesdefi.io/";
+// const CHAIN_ID = 1666600000;
 // const NATIVE_CURRENCY = {
 //     name: "one",
 //     symbol: "ONE", // 2-6 characters long
 //     decimals: 18,
 // }
-// const MULTI_CALL_ADDRESS = "0xd078799c53396616844e2fa97f0dd2b4c145a685";
-// const CHAIN_NAME = "Harmony Testnet";
-// const ARB_TOKEN_CONTRACT_ADDRESS = "0xbC34E7EA5Dce05bAc24a54759386067Cb461b7dd";
-// const ARB_WHALE_BATTLE_CONTRACT_ADDRESS = "0x4C34D0dE1876E62f0d89de0e11404F1550C506D8";
-// const HARMONY_WHALES_CONTRACT_ADDRfESS = "0x35BCB2a29F8f6D8F616c3827AabB0e9F5D0e749B";
-// const HARMONY_WHALES_V2_CONTRACT_ADDRESS = "0x35BCB2a29F8f6D8F616c3827AabB0e9F5D0e749B";
-// const BATTLE_STORAGE_CONTRACT_ADDRESS = "0x9eeC380533392663AD1f528e8681025BF3139c7B";
+// const MULTI_CALL_ADDRESS = "0x34b415f4d3b332515e66f70595ace1dcf36254c5";
+// const CHAIN_NAME = "Harmony Mainnet";
+// const ARB_TOKEN_CONTRACT_ADDRESS = "0x1A5b1109F04Cc3f45d4C533685a347656d0983E4";
+// const ARB_WHALE_BATTLE_CONTRACT_ADDRESS = "0x707b8B324DE71D21218d52EB1bd942E27B7044ac";
+// const HARMONY_WHALES_CONTRACT_ADDRfESS = "0x289FF2F47cD7575c62FDcf45B62451EA9b2420dD";
+// const HARMONY_WHALES_V2_CONTRACT_ADDRESS = "0x289FF2F47cD7575c62FDcf45B62451EA9b2420dD";
+// const BATTLE_STORAGE_CONTRACT_ADDRESS = "0x541f1a396dC207449A8AC37d7EE92BC1F5aaE125";
 // // const HARMONY_WHALES_CONTRACT_ADDRfESS = "0x0519f50287DDcdF8b761Dae76Dc1A76776A0af70";
 // const STAKING_CONTRACT_ADDRESS = "0x3d902f6447A0D4E61d65E863E7C2425D938cfEed"
+
+
+
+
+const RPC_URL = "https://api.s0.b.hmny.io";
+const CHAIN_ID = 1666700000;
+const NATIVE_CURRENCY = {
+    name: "one",
+    symbol: "ONE", // 2-6 characters long
+    decimals: 18,
+}
+const MULTI_CALL_ADDRESS = "0xd078799c53396616844e2fa97f0dd2b4c145a685";
+const CHAIN_NAME = "Harmony Testnet";
+const ARB_TOKEN_CONTRACT_ADDRESS = "0x4b56783e75781E96D37F15b0F5B5C6A5850cdd9A";
+const ARB_WHALE_BATTLE_CONTRACT_ADDRESS = "0xF6B876686a912614E65937614AF7330959bFbB41";
+const HARMONY_WHALES_CONTRACT_ADDRfESS = "0xf817ADD2C7aB83E297e5f0B91ae2fA81191e1d0e";
+const HARMONY_WHALES_V2_CONTRACT_ADDRESS = "0xf817ADD2C7aB83E297e5f0B91ae2fA81191e1d0e";
+const BATTLE_STORAGE_CONTRACT_ADDRESS = "0xD2aec639216d1EF35D1642bB05A04d999dCac224";
+// const HARMONY_WHALES_CONTRACT_ADDRfESS = "0x0519f50287DDcdF8b761Dae76Dc1A76776A0af70";
+const STAKING_CONTRACT_ADDRESS = "0x3d902f6447A0D4E61d65E863E7C2425D938cfEed";
+const BANK_CONTRACT = "0xE0370653E6DEb354D186d35215eb87E0b6200C8c";
 
 
 export const Web3Provider = (props) => {
@@ -69,7 +70,7 @@ export const Web3Provider = (props) => {
 
     const onAccountsChanged = async (accounts) => {
         setAccount(accounts[0]);
-        // setAccount("0x6618af3Fe00C0eC3DE8cf3e62d65ef4e01D11759");
+        // setAccount("");
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const _signer = provider.getSigner();
         setSigner(_signer);
@@ -172,7 +173,7 @@ export const Web3Provider = (props) => {
             const _wallet = new ethers.Wallet(pk, new ethers.providers.Web3Provider(window.ethereum));
             setSigner(_wallet);
             setAccount(_wallet.address);
-            // setAccount("0x6618af3Fe00C0eC3DE8cf3e62d65ef4e01D11759");
+            // setAccount("");
 
             toast("Wallet Connected!")
             return;
@@ -186,7 +187,7 @@ export const Web3Provider = (props) => {
             ethereum.on('chainChanged', onChainChanged);
             ethereum.on('accountsChanged', onAccountsChanged);
             setAccount(accounts[0]);
-            // setAccount("0x6618af3Fe00C0eC3DE8cf3e62d65ef4e01D11759");
+            // setAccount("");
 
             const provider = new ethers.providers.Web3Provider(window.ethereum);
             const _signer = provider.getSigner();
@@ -208,6 +209,37 @@ export const Web3Provider = (props) => {
         const battle = await contractObjects?.arbWhaleBattleContract?.getBattleById(battleId)
         console.log(battle);
         return battle;
+    }
+    functionsToExport.getSingleWhale = async (whaleId) => {
+        try {
+            const battle = await contractObjects?.battleStorageContract?.getBattlesByWhale(whaleId.toString());
+            return ({
+                exists: battle[0],
+                wins: battle[1]?.length,
+                loses: battle[2]?.length,
+                percent: parseFloat(parseFloat((100.0 * battle[1]?.length) / Math.max(1, (battle[1]?.length + battle[2]?.length))).toFixed(2))
+
+            })
+        }
+        catch (e) {
+            return ({
+                exists: false,
+                wins: 0,
+                loses: 0,
+                percent: 0.0
+            })
+        }
+    }
+    functionsToExport.getBattlesByWhale = async (whaleIds = []) => {
+        try {
+            const requests = await Promise.all(whaleIds.map((e) => functionsToExport.getSingleWhale(e.toString())));
+            // console.log("Whales", userBalance);
+
+            return requests;
+        }
+        catch (e) {
+            console.log(e);
+        }
     }
     functionsToExport.getAllHarmonyWhales = async () => {
         try {
@@ -557,12 +589,39 @@ export const Web3Provider = (props) => {
             console.log(account?.toString()?.toLowerCase() === battleSummary?.winner?.toString()?.toLowerCase())
             console.log(account)
             console.log(battleSummary.winner)
+            if (battleSummary.winner === "0x0000000000000000000000000000000000000000") {
+                toast("Battle Ended Successfully! You can view the results shortly in My Battles")
+            }
             battleSummary.userWon = account?.toString()?.toLowerCase() === battleSummary?.winner?.toString()?.toLowerCase()
             setBattleSummary(battleSummary)
             setOpen(true)
 
             toast("Battle Ended!");
             setUpdate(update => update + 1);
+        }
+        catch (e) {
+            toast.error(e?.data?.message || "Transaction Failed")
+            console.log(e);
+        }
+    }
+    functionsToExport.cancelAllBattles = async (allBattleIds = []) => {
+        const chunkSize = 10;
+        try {
+            for (let i = 0; i < allBattleIds.length; i += chunkSize) {
+                const battleIds = allBattleIds.slice(i, i + chunkSize);
+                // do whatever
+
+                toast(`Cancelling Battles ${Math.min(i + chunkSize, allBattleIds.length)}/${allBattleIds.length} (Placing Transaction)`)
+
+                const newBattle = await contractObjects?.arbWhaleBattleContract?.cancelMultipleBattles(battleIds);
+                console.log(newBattle);
+                console.log(newBattle.value.toString());
+                toast(`Cancelling ${Math.min(i + chunkSize, allBattleIds.length)}/${allBattleIds.length} Battles (Transaction Placed)`);
+                const newBattleId = await newBattle.wait();
+                console.log(newBattleId);
+                toast("Battles Cancelled");
+                setUpdate(update => update + 1);
+            }
         }
         catch (e) {
             toast.error(e?.data?.message || "Transaction Failed")
@@ -590,21 +649,28 @@ export const Web3Provider = (props) => {
 
     }
 
-    functionsToExport.createBattle = async ({ whaleId, duration, amount }, onCreate) => {
+    functionsToExport.createBattle = async ({ whaleId, duration, amount, numberOfBattles }, onCreate) => {
+        const originalAmount = utils.parseEther(amount);
+        numberOfBattles = isNaN(parseInt(numberOfBattles)) ? "1" : numberOfBattles.toString();
         try {
-            amount = utils.parseEther(amount)
+            amount = utils.parseEther(amount).mul(BigNumber.from(numberOfBattles));
+
             const requiredAmount = BigNumber.from(amount)
-            const availableBalance = await contractObjects?.arbTokenContract.allowance(account, ARB_WHALE_BATTLE_CONTRACT_ADDRESS);
+
+            console.log(requiredAmount.toString());
+            const availableBalance = await contractObjects?.arbTokenContract.allowance(account, BANK_CONTRACT);
+            console.log(availableBalance.toString())
             if (availableBalance.lt(requiredAmount)) {
                 toast(`Increasing Allowance for Battle (Placing Transaction)`)
 
-                const increaseBal = await contractObjects?.arbTokenContract.increaseAllowance(ARB_WHALE_BATTLE_CONTRACT_ADDRESS, requiredAmount.mul(10));
+                const increaseBal = await contractObjects?.arbTokenContract.increaseAllowance(BANK_CONTRACT, requiredAmount.mul(10));
                 const result = await increaseBal.wait()
 
             }
             toast(`Creating Battle (Placing Transaction)`)
-
-            const newBattle = await contractObjects?.arbWhaleBattleContract?.create(whaleId, "1", amount);
+            const numberArray = Array.from({ length: parseInt(numberOfBattles) }, (_, index) => index + 1)
+            console.log(numberArray.map(e => originalAmount.toString()))
+            const newBattle = await contractObjects?.arbWhaleBattleContract?.createMultipleBattles(numberOfBattles, numberArray.map(e => whaleId), "1", numberArray.map(e => originalAmount));
             console.log(newBattle);
             console.log(newBattle.value.toString());
             toast(`Creating Battle (Transaction Placed)`);
@@ -627,11 +693,11 @@ export const Web3Provider = (props) => {
     functionsToExport.joinBattle = async ({ whaleId, battleId, amount }) => {
         try {
             const requiredAmount = BigNumber.from(utils.parseEther(amount))
-            const availableBalance = await contractObjects?.arbTokenContract.allowance(account, ARB_WHALE_BATTLE_CONTRACT_ADDRESS);
+            const availableBalance = await contractObjects?.arbTokenContract.allowance(account, BANK_CONTRACT);
             if (availableBalance.lt(requiredAmount)) {
                 toast(`Increasing Allowance for #${battleId} (Placing Transaction)`)
 
-                const increaseBal = await contractObjects?.arbTokenContract.increaseAllowance(ARB_WHALE_BATTLE_CONTRACT_ADDRESS, requiredAmount.mul(10));
+                const increaseBal = await contractObjects?.arbTokenContract.increaseAllowance(BANK_CONTRACT, requiredAmount.mul(10));
                 const result = await increaseBal.wait()
 
             }

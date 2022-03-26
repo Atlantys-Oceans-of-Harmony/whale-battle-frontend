@@ -1,9 +1,15 @@
-const BattleToJoinCard = ({ handleClick, handleDetail, battleId, amount, whaleId, join }) => {
+const BattleToJoinCard = ({ handleClick, handleDetail, battleId, amount, whaleId, join, whaleData }) => {
     return (<>
-        <div className="px-3 pt-4 m-2 border-2 rounded-md">
-            <img
-                onClick={() => handleClick()}
-                className="w-full mx-auto rounded-lg cursor-pointer" src={`https://harmony-whales-meta.herokuapp.com/token/image/${whaleId}`} alt="" />
+        <div className=" px-3 pt-4 m-2 border-2 rounded-md">
+            <div className="relative">
+                <div className="absolute top-2 right-2 font-bold text-xl text-white">
+                    {whaleData[whaleId.toString()]?.percent}% ({whaleData[whaleId.toString()]?.wins}/{whaleData[whaleId.toString()]?.loses})
+                </div>
+                <img
+                    onClick={() => handleClick()}
+                    className="w-full mx-auto rounded-lg cursor-pointer" src={`https://harmony-whales-meta.herokuapp.com/token/image/${whaleId}`} alt="" />
+            </div>
+
 
             <div onClick={() => handleDetail()}
                 className="font-bold text-xl cursor-pointer text-white text-center mx-auto">Battle #{battleId}</div>

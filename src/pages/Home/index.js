@@ -27,14 +27,15 @@ const Home = () => {
 
     const { account, createBattle,
         joinBattle, getArbTokenBalance,
-        getAllHarmonyWhales, listenToCreatedBattles,
+        getAllHarmonyWhales, cancelAllBattles,
         listenToWonBattles, listenToCanceledBattles,
-        listenToAcceptedBattles, cancelBattle, getAllBattles,
+        getBattlesByWhale, cancelBattle, getAllBattles,
         getBattleDetails, getBattlesReadyToAccept, blockNumber, update, commenceBattle
     } = useContext(Web3Context);
     const [createBattleForm, setCreateBattleForm] = useState({
         whaleId: "",
         amount: "10",
+        numberOfBattles: "1",
         color: 0,
         duration: 300,
 
@@ -48,6 +49,7 @@ const Home = () => {
         battleId: "",
         whaleId: "",
     });
+    const [whaleData, setWhaleData] = useState({});
     const [arbTokenBalance, setArbTokenBalance] = useState("Loading...");
     const [harmonyWhales, setHarmonyWhales] = useState(undefined);
     function classNames(...classes) {
@@ -74,14 +76,24 @@ const Home = () => {
     }, []);
     useEffect(() => {
         const fetchStuff = async () => {
+            let allWhales = []
             if (!harmonyWhales) {
-                getAllHarmonyWhales().then(res => {
-                    setHarmonyWhales(res)
-                    setCreateBattleForm({ ...createBattleForm, whaleId: res[0] });
-                    setJoinBattleForm({ ...joinBattleForm, whaleId: res[0] });
-                }).catch(e => { setHarmonyWhales([]) });
+                try {
+                    allWhales = await getAllHarmonyWhales()
+                    setHarmonyWhales(allWhales)
+                    setCreateBattleForm({ ...createBattleForm, whaleId: allWhales[0] });
+                    setJoinBattleForm({ ...joinBattleForm, whaleId: allWhales[0] });
+                }
+                catch (e) {
+                    setHarmonyWhales([])
+
+                }
+
             }
+
             const [{ wonBattles, lostBattles, readyToAcceptBattles, readyToCommenceBattles, cancelledBattles, forfeitedBattles }, readyToJoinBattleIds] = await Promise.all([getAllBattles(), getBattlesReadyToAccept()]);
+            let listOfWhales = []
+
 
             const [createdBattles, commenceBattles, readyToJoinbattles] =
                 await Promise.all([getBattleDetails(readyToAcceptBattles),
@@ -98,7 +110,29 @@ const Home = () => {
             setCreatedBattles(createdBattles);
             setBattleToCommence(commenceBattles);
             setBattlesToJoin(readyToJoinbattles.filter(eee => !eee.isOwner));
-
+            createdBattles.map(e => {
+                listOfWhales.push(e?.whaleId);
+                listOfWhales.push(e?.whaleIdAccepted);
+            });
+            commenceBattles.map(e => {
+                listOfWhales.push(e?.whaleId);
+                listOfWhales.push(e?.whaleIdAccepted);
+            })
+            readyToJoinbattles.map(e => {
+                listOfWhales.push(e?.whaleId);
+                listOfWhales.push(e?.whaleIdAccepted);
+            })
+            const idsToSend = [... new Set([...listOfWhales, ...allWhales])].filter(e => e !== "0")
+            console.log(idsToSend);
+            const res = await getBattlesByWhale(idsToSend);
+            console.log(res);
+            let _whaleData = {};
+            res.map((e, index) => {
+                _whaleData[idsToSend[index].toString()] = {
+                    ...e
+                }
+            });
+            setWhaleData({ ...whaleData, ..._whaleData })
 
         }
         if (account) {
@@ -143,6 +177,12 @@ const Home = () => {
         console.log(data);
     }
     const handleCreateBattleChange = (field, value) => {
+        if (field === "numberOfBattles" && value !== "") {
+
+            const newValue = isNaN(parseInt(value)) ? 1 : parseInt(value);
+            value = parseInt(Math.max(Math.min(10, newValue), 1)).toString();
+
+        }
         const _createBattleForm = { ...createBattleForm };
         _createBattleForm[field] = value;
         setCreateBattleForm(_createBattleForm);
@@ -201,6 +241,8 @@ const Home = () => {
                                     <img src={Button1} alt="" className="absolute -z-10 w-64 -top-10 -left-10" />
 
                                 </div>
+                                <div className="relative z-10 mb-4 text-white text-xl ml-4 font-bold">Win Rate: {whaleData[createBattleForm?.whaleId?.toString()]?.percent}% ({whaleData[createBattleForm?.whaleId?.toString()]?.wins}/{whaleData[createBattleForm?.whaleId?.toString()]?.loses})</div>
+
 
                                 <div className="relative w-80 mt-4">
                                     <img src={Frame} alt="" className="absolute w-96" />
@@ -228,10 +270,31 @@ const Home = () => {
 
                                 </div>
 
+                                <div className="text-white sm:text-xl md:text-2xl font-extrabold">
 
+
+                                    <h3 className="text-white sm:text-xl md:text-2xl font-extrabold">Number of battles (Max 10)</h3>
+
+                                    <div className="h-32 mt-4 mx-auto  -top-6 -left-8 w-64 relative text-md tracking-tight font-extrabold text-white sm:text-xl md:text-2xl flex items-center ">
+                                        <input
+                                            className="text-white border border-white text-center w-44 p-1 rounded-md bg-transparent ml-14"
+                                            placeholder=""
+                                            type="text"
+                                            pattern="^[0-9]*$"
+                                            value={createBattleForm["numberOfBattles"]}
+                                            onChange={e => handleCreateBattleChange("numberOfBattles", e.target.value)}
+
+                                        />
+
+                                    </div>
+
+
+
+                                </div>
 
                             </div>
                         </div>
+
                     </div>
 
                 </div>
@@ -241,13 +304,14 @@ const Home = () => {
                         onClick={handleCreateBattle}
                         className="w-full font-extrabold cursor-pointer flex items-center justify-center px- py-3 mb-3 "
                     >
-                        Create Battle
+                        Create Battles
                     </button>
                 </div>
 
             </div>
             <div className="relative z-10">
                 <div className="text-2xl text-center font-bold mb-8 text-white">Battles Created</div>
+                <div className="text-white w-full text-md text-right pr-16">* Win % (Battles Won)/(Battles Lost)</div>
 
                 {createdBattles?.length > 0 ?
                     <div className="px-16 lg:px-8 grid md:grid-cols-2 lg:grid-cols-4 grid-cols-1 max-w-7xl mx-auto">
@@ -265,6 +329,7 @@ const Home = () => {
                                 }
                                 return (<>
                                     <BattleToJoinCard
+                                        whaleData={whaleData}
                                         join={false}
                                         handleClick={handleClick}
                                         handleDetail={handleDetail}
@@ -273,7 +338,18 @@ const Home = () => {
                                 </>)
                             })}          </div>
                     : <div className="mx-auto pb-16  w-full text-center text-xl text-white">No Battles created yet!</div>}
-
+                {createdBattles?.length > 0 ?
+                    <div className="w-full">
+                        <div
+                            onClick={() => cancelAllBattles(createdBattles?.map(e => e.battleId))}
+                            className="mx-auto h-36 w-96 relative text- tracking-tight font-extrabold focus-visible:border-0 focus:border-0 text-white sm:text-xl md:text-2xl flex items-center wallet-btn ">
+                            <button
+                                className="w-full font-extrabold text-lg cursor-pointer flex items-center justify-center px- py-3 mb-3 "
+                            >
+                                Cancel All Battles
+                            </button>
+                        </div>
+                    </div> : <></>}
 
             </div>
         </div>)
@@ -286,6 +362,7 @@ const Home = () => {
 
         return (<div>
             <BattleToJoinModal
+                whaleData={whaleData}
                 open={openJoinBattle}
                 setOpen={setOpenJoinBattle}
                 {...(joinBattleSelectedIndex >= 0 ? battlesToJoin[joinBattleSelectedIndex] : {})} />
@@ -310,9 +387,12 @@ const Home = () => {
                                 })}
 
                             </select>
+
+
                             <img src={Button1} alt="" className="absolute -z-10 w-64 -top-10 -left-10" />
 
                         </div>
+                        <div className="relative z-10 mb-4 text-white text-xl font-bold">Win Rate: {whaleData[joinBattleForm?.whaleId?.toString()]?.percent}% ({whaleData[joinBattleForm?.whaleId?.toString()]?.wins}/{whaleData[joinBattleForm?.whaleId?.toString()]?.loses})</div>
 
                         <div className="relative w-80 m-4">
                             <img src={Frame} alt="" className="absolute w-96" />
@@ -325,7 +405,7 @@ const Home = () => {
             </div>
 
             <h3 className=" text-center text-3xl my-8 text-white leading-6 font-bold">Battles to join appear here:</h3>
-
+            <div className="text-white w-full text-md text-right pr-16">* Win % (Battles Won)/(Battles Lost)</div>
 
             <div className="px-16 lg:px-8 grid md:grid-cols-2 lg:grid-cols-4 grid-cols-1 max-w-7xl mx-auto">
                 {battlesToJoin?.length > 0 ? battlesToJoin.map((e, index) => {
@@ -339,7 +419,10 @@ const Home = () => {
 
                     }
                     return (<>
-                        <BattleToJoinCard handleClick={handleClick} handleDetail={handleDetail} join {...e} />
+                        <BattleToJoinCard
+                            whaleData={whaleData}
+
+                            handleClick={handleClick} handleDetail={handleDetail} join {...e} />
 
                     </>)
                 }) : <div className="mx-auto pb-16  w-full text-center text-xl text-white">No Battles created yet!</div>}
@@ -394,6 +477,7 @@ const Home = () => {
                             }
                             return (<>
                                 <BattleProgressCard
+                                    whaleData={whaleData}
                                     handleClick={handleClick}
                                     {...e}
                                     isComplete={parseInt(e.futureBlock) - parseInt(blockNumber) <= 0}
