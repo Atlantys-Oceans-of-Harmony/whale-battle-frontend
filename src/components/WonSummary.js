@@ -3,8 +3,7 @@ import { Fragment, useRef, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { ExclamationIcon } from '@heroicons/react/outline'
 
-export default function WonSummary({ battleId = 24, hideWin, amount = 555, whaleId = 7, whaleIdAccepted = -1, ownerTotalPoints, acceptedTotalPoints, acceptedBy, owner = "0xxx", open, setOpen, userWon }) {
-  console.log(open)
+export default function WonSummary({ battleId = 24, hideWin, amount = 555, whaleId = 7, whaleIdAccepted = -1, ownerTotalPoints, acceptedTotalPoints, acceptedBy, owner = "0xxx", open, setOpen, userWon, winner }) {
   const cancelButtonRef = useRef(null)
 
   return (
@@ -49,6 +48,7 @@ export default function WonSummary({ battleId = 24, hideWin, amount = 555, whale
 
               </div>
               <br />
+              <div className="font-semibold text-xl cursor-pointer text-white text-center mx-auto">Winner: {winner?.slice(0, 4)}...{winner?.slice(-4)}</div>
               <div className="font-semibold text-xl cursor-pointer text-white text-center mx-auto">Winnings: {amount} AQUA</div>
               <div className="font-semibold text-xl cursor-pointer text-white text-center mx-auto">Battle Host: {owner?.slice(0, 4)}...{owner?.slice(-4)}</div>
               <div className="font-semibold text-xl cursor-pointer text-white text-center mx-auto">Challenger: {acceptedBy?.slice(0, 4)}...{acceptedBy?.slice(-4)}</div>

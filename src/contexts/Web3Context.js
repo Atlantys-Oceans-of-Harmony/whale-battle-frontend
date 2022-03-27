@@ -19,43 +19,43 @@ const DEFAULT_ACCOUNTS = [
 
 const Web3Context = createContext();
 
-// const RPC_URL = "https://rpc.hermesdefi.io/";
-// const CHAIN_ID = 1666600000;
-// const NATIVE_CURRENCY = {
-//     name: "one",
-//     symbol: "ONE", // 2-6 characters long
-//     decimals: 18,
-// }
-// const MULTI_CALL_ADDRESS = "0x34b415f4d3b332515e66f70595ace1dcf36254c5";
-// const CHAIN_NAME = "Harmony Mainnet";
-// const ARB_TOKEN_CONTRACT_ADDRESS = "0x1A5b1109F04Cc3f45d4C533685a347656d0983E4";
-// const ARB_WHALE_BATTLE_CONTRACT_ADDRESS = "0x707b8B324DE71D21218d52EB1bd942E27B7044ac";
-// const HARMONY_WHALES_CONTRACT_ADDRfESS = "0x289FF2F47cD7575c62FDcf45B62451EA9b2420dD";
-// const HARMONY_WHALES_V2_CONTRACT_ADDRESS = "0x289FF2F47cD7575c62FDcf45B62451EA9b2420dD";
-// const BATTLE_STORAGE_CONTRACT_ADDRESS = "0x541f1a396dC207449A8AC37d7EE92BC1F5aaE125";
-// // const HARMONY_WHALES_CONTRACT_ADDRfESS = "0x0519f50287DDcdF8b761Dae76Dc1A76776A0af70";
-// const STAKING_CONTRACT_ADDRESS = "0x3d902f6447A0D4E61d65E863E7C2425D938cfEed"
-
-
-
-
-const RPC_URL = "https://api.s0.b.hmny.io";
-const CHAIN_ID = 1666700000;
+const RPC_URL = "https://rpc.hermesdefi.io/";
+const CHAIN_ID = 1666600000;
 const NATIVE_CURRENCY = {
     name: "one",
     symbol: "ONE", // 2-6 characters long
     decimals: 18,
 }
-const MULTI_CALL_ADDRESS = "0xd078799c53396616844e2fa97f0dd2b4c145a685";
-const CHAIN_NAME = "Harmony Testnet";
-const ARB_TOKEN_CONTRACT_ADDRESS = "0x4b56783e75781E96D37F15b0F5B5C6A5850cdd9A";
-const ARB_WHALE_BATTLE_CONTRACT_ADDRESS = "0xF6B876686a912614E65937614AF7330959bFbB41";
-const HARMONY_WHALES_CONTRACT_ADDRfESS = "0xf817ADD2C7aB83E297e5f0B91ae2fA81191e1d0e";
-const HARMONY_WHALES_V2_CONTRACT_ADDRESS = "0xf817ADD2C7aB83E297e5f0B91ae2fA81191e1d0e";
-const BATTLE_STORAGE_CONTRACT_ADDRESS = "0xD2aec639216d1EF35D1642bB05A04d999dCac224";
+const MULTI_CALL_ADDRESS = "0x34b415f4d3b332515e66f70595ace1dcf36254c5";
+const CHAIN_NAME = "Harmony Mainnet";
+const ARB_TOKEN_CONTRACT_ADDRESS = "0x1A5b1109F04Cc3f45d4C533685a347656d0983E4";
+const ARB_WHALE_BATTLE_CONTRACT_ADDRESS = "0x707b8B324DE71D21218d52EB1bd942E27B7044ac";
+const HARMONY_WHALES_CONTRACT_ADDRfESS = "0x289FF2F47cD7575c62FDcf45B62451EA9b2420dD";
+const HARMONY_WHALES_V2_CONTRACT_ADDRESS = "0x289FF2F47cD7575c62FDcf45B62451EA9b2420dD";
+const BATTLE_STORAGE_CONTRACT_ADDRESS = "0x541f1a396dC207449A8AC37d7EE92BC1F5aaE125";
 // const HARMONY_WHALES_CONTRACT_ADDRfESS = "0x0519f50287DDcdF8b761Dae76Dc1A76776A0af70";
-const STAKING_CONTRACT_ADDRESS = "0x3d902f6447A0D4E61d65E863E7C2425D938cfEed";
-const BANK_CONTRACT = "0xE0370653E6DEb354D186d35215eb87E0b6200C8c";
+const STAKING_CONTRACT_ADDRESS = "0x3d902f6447A0D4E61d65E863E7C2425D938cfEed"
+
+
+
+
+// const RPC_URL = "https://api.s0.b.hmny.io";
+// const CHAIN_ID = 1666700000;
+// const NATIVE_CURRENCY = {
+//     name: "one",
+//     symbol: "ONE", // 2-6 characters long
+//     decimals: 18,
+// }
+// const MULTI_CALL_ADDRESS = "0xd078799c53396616844e2fa97f0dd2b4c145a685";
+// const CHAIN_NAME = "Harmony Testnet";
+// const ARB_TOKEN_CONTRACT_ADDRESS = "0x4b56783e75781E96D37F15b0F5B5C6A5850cdd9A";
+// const ARB_WHALE_BATTLE_CONTRACT_ADDRESS = "0xF6B876686a912614E65937614AF7330959bFbB41";
+// const HARMONY_WHALES_CONTRACT_ADDRfESS = "0xf817ADD2C7aB83E297e5f0B91ae2fA81191e1d0e";
+// const HARMONY_WHALES_V2_CONTRACT_ADDRESS = "0xf817ADD2C7aB83E297e5f0B91ae2fA81191e1d0e";
+// const BATTLE_STORAGE_CONTRACT_ADDRESS = "0xD2aec639216d1EF35D1642bB05A04d999dCac224";
+// // const HARMONY_WHALES_CONTRACT_ADDRfESS = "0x0519f50287DDcdF8b761Dae76Dc1A76776A0af70";
+// const STAKING_CONTRACT_ADDRESS = "0x3d902f6447A0D4E61d65E863E7C2425D938cfEed";
+// const BANK_CONTRACT = "0xE0370653E6DEb354D186d35215eb87E0b6200C8c";
 
 
 export const Web3Provider = (props) => {
@@ -65,14 +65,17 @@ export const Web3Provider = (props) => {
     const [contractObjects, setContractObjects] = useState();
     const functionsToExport = {};
     const [update, setUpdate] = useState(0);
+    const [askSwitch, setAskSwitch] = useState(false);
     const [wonBattles, setWonBattles] = useState(0)
-    const [lostBattles, setLostBattles] = useState(0)
+    const [lostBattles, setLostBattles] = useState(0);
+    const [correctChain, setCorrectChain] = useState();
 
     const onAccountsChanged = async (accounts) => {
         setAccount(accounts[0]);
         // setAccount("");
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const _signer = provider.getSigner();
+
         setSigner(_signer);
     }
     useEffect(() => {
@@ -80,7 +83,12 @@ export const Web3Provider = (props) => {
             window.ethereum,
             "any"
         );
-
+        try {
+            _signer?.getChainId().then(val => setCorrectChain(val === CHAIN_ID));
+        }
+        catch (e) {
+            setCorrectChain(false);
+        }
         const arbTokenContract = new ethers.Contract(ARB_TOKEN_CONTRACT_ADDRESS, arbTokenAbi, _signer);
         const arbWhaleBattleContract = new ethers.Contract(ARB_WHALE_BATTLE_CONTRACT_ADDRESS, arbWhaleBattleAbi, _signer);
         const battleStorageContract = new ethers.Contract(BATTLE_STORAGE_CONTRACT_ADDRESS, battleStorageAbi, _signer);
@@ -94,6 +102,7 @@ export const Web3Provider = (props) => {
             battleStorageContract,
             stakingContract,
         }
+
         setContractObjects(_contractObjects);
     }, [signer])
     const [blockNumber, setBlockNumber] = useState(0)
@@ -104,7 +113,6 @@ export const Web3Provider = (props) => {
                     window.ethereum,
                     "any"
                 )).getBlockNumber().then(e => {
-                    console.log(e.toString());
                     setBlockNumber(e.toString())
                 })
             }
@@ -131,9 +139,13 @@ export const Web3Provider = (props) => {
             params: [{ chainId: `0x${CHAIN_ID.toString(16)}` }],
         });
     }
-    const promptChain = async () => {
+    const promptChain = async (force = false) => {
         try {
-            await switchCain();
+            console.log(askSwitch);
+            if (!askSwitch || force) {
+                setAskSwitch(true);
+                await switchCain();
+            }
         }
         catch (e) {
             await addNewChain();
@@ -250,7 +262,10 @@ export const Web3Provider = (props) => {
             for (let i = 0; i < userBalance; i++) {
                 tokenCalls.push(multicallContract.tokenOfOwnerByIndex(account, i));
             }
-            const userTokens = (await multicallProvider?.all(tokenCalls)).map(e => e.toString());
+            let userTokens = (await multicallProvider?.all(tokenCalls)).map(e => e.toString());
+            userTokens.sort(function (a, b) {
+                return (parseInt(a?.toString()) - parseInt(b?.toString()));
+            })
             return userTokens;
         }
         catch (e) {
@@ -259,7 +274,6 @@ export const Web3Provider = (props) => {
     }
     functionsToExport.listenToCreatedBattles = async (onCreated, ownerOnly = false) => {
         let filter = contractObjects?.arbWhaleBattleContract?.filters?.CreatedBattle(null, ownerOnly ? account : null);
-        console.log(filter);
         contractObjects?.arbWhaleBattleContract?.on(filter, async (...args) => {
             const data = {
                 battleId: args[0].toString(),
@@ -574,9 +588,9 @@ export const Web3Provider = (props) => {
             });
             let a = 0;
             while (true) {
-                const reuls = await contractObjects?.battleStorageContract?.getBattleHasEndedById(battleId);
+                const hasBattleEnded = await contractObjects?.battleStorageContract?.getBattleHasEndedById(battleId);
                 a += 1
-                if (reuls) {
+                if (hasBattleEnded) {
                     break;
                 }
                 if (a > 4) {
@@ -658,12 +672,12 @@ export const Web3Provider = (props) => {
             const requiredAmount = BigNumber.from(amount)
 
             console.log(requiredAmount.toString());
-            const availableBalance = await contractObjects?.arbTokenContract.allowance(account, BANK_CONTRACT);
+            const availableBalance = await contractObjects?.arbTokenContract.allowance(account, ARB_WHALE_BATTLE_CONTRACT_ADDRESS);
             console.log(availableBalance.toString())
             if (availableBalance.lt(requiredAmount)) {
                 toast(`Increasing Allowance for Battle (Placing Transaction)`)
 
-                const increaseBal = await contractObjects?.arbTokenContract.increaseAllowance(BANK_CONTRACT, requiredAmount.mul(10));
+                const increaseBal = await contractObjects?.arbTokenContract.increaseAllowance(ARB_WHALE_BATTLE_CONTRACT_ADDRESS, requiredAmount.mul(10));
                 const result = await increaseBal.wait()
 
             }
@@ -693,11 +707,11 @@ export const Web3Provider = (props) => {
     functionsToExport.joinBattle = async ({ whaleId, battleId, amount }) => {
         try {
             const requiredAmount = BigNumber.from(utils.parseEther(amount))
-            const availableBalance = await contractObjects?.arbTokenContract.allowance(account, BANK_CONTRACT);
+            const availableBalance = await contractObjects?.arbTokenContract.allowance(account, ARB_WHALE_BATTLE_CONTRACT_ADDRESS);
             if (availableBalance.lt(requiredAmount)) {
                 toast(`Increasing Allowance for #${battleId} (Placing Transaction)`)
 
-                const increaseBal = await contractObjects?.arbTokenContract.increaseAllowance(BANK_CONTRACT, requiredAmount.mul(10));
+                const increaseBal = await contractObjects?.arbTokenContract.increaseAllowance(ARB_WHALE_BATTLE_CONTRACT_ADDRESS, requiredAmount.mul(10));
                 const result = await increaseBal.wait()
 
             }
@@ -732,7 +746,7 @@ export const Web3Provider = (props) => {
             console.log(e);
         }
     }
-    return (<Web3Context.Provider value={{ account, blockNumber, update, wonBattles, lostBattles, ...functionsToExport }}>
+    return (<Web3Context.Provider value={{ account, blockNumber, update, correctChain, wonBattles, lostBattles, promptChain, ...functionsToExport }}>
         {props.children}
     </Web3Context.Provider>)
 }

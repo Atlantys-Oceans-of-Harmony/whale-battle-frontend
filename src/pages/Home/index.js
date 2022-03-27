@@ -26,9 +26,9 @@ const Home = () => {
     const [gameState, setGameState] = useState(GAME_STATES[0])
 
     const { account, createBattle,
-        joinBattle, getArbTokenBalance,
+        joinBattle, correctChain,
         getAllHarmonyWhales, cancelAllBattles,
-        listenToWonBattles, listenToCanceledBattles,
+        promptChain, listenToCanceledBattles,
         getBattlesByWhale, cancelBattle, getAllBattles,
         getBattleDetails, getBattlesReadyToAccept, blockNumber, update, commenceBattle
     } = useContext(Web3Context);
@@ -57,7 +57,6 @@ const Home = () => {
     }
     const [wonSummary, setWonSummary] = useState({});
     const [openWon, setOpenWon] = useState(false);
-    console.log(blockNumber);
     const [battlesToCommence, setBattleToCommence] = useState([]);
 
     useEffect(() => {
@@ -433,6 +432,23 @@ const Home = () => {
         return (
             <div className="flex flex-col text-white items-center justify-center h-screen">
                 <div className="text-4xl font-bold">Connect to a wallet first!</div>
+            </div>)
+    }
+    if (!correctChain) {
+        return (
+            <div className="flex flex-col text-white items-center justify-center h-screen">
+                <div className="text-4xl font-bold">Switch to Harmony Network!</div>
+                <div className="w-full">
+                    <div
+                        className="mx-auto h-36 w-96 relative text- tracking-tight font-extrabold focus-visible:border-0 focus:border-0 text-white sm:text-xl md:text-2xl flex items-center wallet-btn ">
+                        <button
+                            onClick={() => { promptChain(true) }}
+                            className="w-full font-extrabold text-lg cursor-pointer flex items-center justify-center px- py-3 mb-3 "
+                        >
+                            Switch Network
+                        </button>
+                    </div>
+                </div>
             </div>)
     }
     if (harmonyWhales?.length <= 0) {

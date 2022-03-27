@@ -4,7 +4,6 @@ import { Dialog, Transition } from '@headlessui/react'
 import { ExclamationIcon } from '@heroicons/react/outline'
 
 export default function BattleToJoinModal({ battleId = 24, amount = 555, handleClick, handelClick, whaleId = 7, owner = "0xxx", open, setOpen, whaleData }) {
-  console.log(open)
   const cancelButtonRef = useRef(null)
 
   return (
