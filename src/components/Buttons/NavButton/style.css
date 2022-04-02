@@ -1,0 +1,17 @@
+.navbar-button {
+  font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+  font-size: 32px;
+  cursor: pointer;
+}
+
+.active {
+  background-image: url(../../../assets/glow.png);
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+.arrow {
+  width: 42px;
+}

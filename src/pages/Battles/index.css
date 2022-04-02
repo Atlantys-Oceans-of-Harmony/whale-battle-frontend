@@ -1,0 +1,7 @@
+.active-option {
+  background-image: url(../../assets/battle-option-bg.png);
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}

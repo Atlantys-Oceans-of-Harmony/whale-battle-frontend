@@ -1,0 +1,21 @@
+.title {
+  font-size: 32px;
+  color: white;
+  font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+}
+
+.subtitle {
+  font-size: 16px;
+  color: white;
+}
+
+.selection-active {
+  background-image: url(../../assets/selection_glow.png);
+  background-size: 100% 60%;
+  background-repeat: no-repeat;
+  background-position: center bottom;
+}
+
+.button {
+  font-size: 22px;
+}
