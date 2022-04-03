@@ -7,7 +7,6 @@ import ArenaEmblem from "../../assets/arena_emblem.png";
 import TrainingEmblem from "../../assets/training_emblem.png";
 import RaidEmblem from "../../assets/raid_emblem.png";
 import SideArrow from "../../assets/side-arrow.png";
-import ConfirmButton from "../../assets/confirm_button.png";
 import Container from "components/Container/index";
 import SearchBox from "components/SearchBox/index";
 
