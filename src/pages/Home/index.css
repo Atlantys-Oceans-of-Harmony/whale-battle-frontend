@@ -1,13 +1,13 @@
-.bg-image{
-    background-image: url("assets/background_ocean.png");
-    background-size: cover;
+.bg-image {
+  background-image: url("assets/background_ocean.png");
+  background-size: cover;
 }
-.dinasour{
-    transform: scaleX(-1);
-    width: 800px;
+.dinasour {
+  transform: scaleX(-1);
+  width: 800px;
 }
-select:focus{
-    border: none;
+select:focus {
+  border: none;
 }
 select {
   -webkit-appearance: none;
