@@ -5,3 +5,14 @@
   -o-background-size: cover;
   background-size: cover;
 }
+
+.golden-frame {
+  border: 100px solid transparent;
+}
+
+.shadow {
+  box-shadow: inset 0px -28px 89px -7px #000000;
+  -webkit-box-shadow: inset 0px -28px 89px -7px #000000;
+  -moz-box-shadow: inset 0px -28px 89px -7px #000000;
+  -o-box-shadow: inset 0px -28px 89px -7px #000000;
+}

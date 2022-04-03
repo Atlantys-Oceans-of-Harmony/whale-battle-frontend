@@ -6,6 +6,8 @@ module.exports = {
       red: "#FF0036",
       white: "#FFFFFF",
       green: "#00A361",
+      black: "#000000",
+      yellow: "#FFAF00",
     },
     fontFamily: {
       impact: 'Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif',
