@@ -26,15 +26,26 @@ const CreateBattle = () => {
     blockNumber,
     update,
     commenceBattle,
-    harmonyWhales,
+    harmonyWhalesData,
   } = useContext(Web3Context);
 
   const [createBattleForm, setCreateBattleForm] = useState({
     whaleId: "",
     amount: "10",
-
-
   });
+  const handleCreateBattle = async () => {
+    createBattle({ ...createBattleForm });
+  }
+  useEffect(() => {
+    const funcToRun = async () => {
+      if (createBattleForm?.whaleId == "") {
+        setCreateBattleForm({ ...createBattleForm, "whaleId": harmonyWhalesData[0]?.whaleId });
+      }
+    }
+    if (harmonyWhalesData && harmonyWhalesData?.length > 0) {
+      funcToRun();
+    }
+  }, [harmonyWhalesData])
   return (
     <>
       <div className="flex flex-col mx-12 xl:mx-48">
@@ -43,8 +54,8 @@ const CreateBattle = () => {
             CREATE BATTLE
           </div>
         </Container>
-        <BattleSection form={createBattleForm} setForm={setCreateBattleForm} isCreateBattle whales={harmonyWhales} />
-        <ConfirmButton />
+        <BattleSection form={createBattleForm} setForm={setCreateBattleForm} isCreateBattle whales={harmonyWhalesData} />
+        <ConfirmButton handleConfirm={handleCreateBattle} />
       </div>
     </>
   );

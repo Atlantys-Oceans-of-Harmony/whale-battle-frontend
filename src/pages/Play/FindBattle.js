@@ -26,7 +26,26 @@ const FindBattle = () => {
     blockNumber,
     update,
     commenceBattle,
+    harmonyWhalesData,
+
   } = useContext(Web3Context);
+  const [joinBattleForm, setJoinBattleForm] = useState({
+    whaleId: "",
+    battleId: "",
+  });
+  const handleJoinBattle = async () => {
+    createBattle({ ...joinBattleForm });
+  }
+  useEffect(() => {
+    const funcToRun = async () => {
+      if (joinBattleForm?.whaleId == "") {
+        setJoinBattleForm({ ...joinBattleForm, "whaleId": harmonyWhalesData[0]?.whaleId });
+      }
+    }
+    if (harmonyWhalesData && harmonyWhalesData?.length > 0) {
+      funcToRun();
+    }
+  }, [harmonyWhalesData])
 
   return (
     <>
@@ -36,8 +55,8 @@ const FindBattle = () => {
             CHOOSE YOUR BATTLE
           </div>
         </Container>
-        <BattleSection />
-        <ConfirmButton />
+        <BattleSection form={joinBattleForm} setForm={setJoinBattleForm} whales={harmonyWhalesData} />
+        <ConfirmButton handleConfirm={handleJoinBattle} />
       </div>
     </>
   );

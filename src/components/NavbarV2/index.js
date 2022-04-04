@@ -24,6 +24,7 @@ const Navbar = ({ active }) => {
     blockNumber,
     update,
     commenceBattle,
+    arbTokenBalance,
   } = useContext(Web3Context);
 
   return (
@@ -31,7 +32,7 @@ const Navbar = ({ active }) => {
       <img src={DividerTop} />
       <div className="w-full lg:px-8 flex justify-between items-center border-b border-red">
         <div className="navbar-button text-white">
-          0.0000
+          {arbTokenBalance}
         </div>
         <div className="flex justify-center">
           <NavButton text="HOME" active={active} />

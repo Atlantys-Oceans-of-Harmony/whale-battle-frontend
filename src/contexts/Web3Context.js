@@ -71,6 +71,7 @@ export const Web3Provider = (props) => {
     const [battlesWon, setBattlesWon] = useState([]);
     const [arbTokenBalance, setArbTokenBalance] = useState("Loading...");
     const [harmonyWhales, setHarmonyWhales] = useState(undefined);
+    const [harmonyWhalesData, setHarmonyWhalesData] = useState(undefined);
     const [battlesToCommence, setBattleToCommence] = useState([]);
 
 
@@ -120,10 +121,14 @@ export const Web3Provider = (props) => {
 
     useEffect(() => {
         const fetchStuff = async () => {
-            const { getAllHarmonyWhales, getAllBattles, getBattlesReadyToAccept, getBattleDetails
+            const { getAllHarmonyWhales, getAllBattles, getBattlesReadyToAccept, getBattleDetails, getBattlesByWhale, getArbTokenBalance
             } = functionsToExport;
-            getAllHarmonyWhales().then(res => {
+            getArbTokenBalance()
+            getAllHarmonyWhales().then(async (res) => {
                 setHarmonyWhales(res)
+                const data = await getBattlesByWhale(res)
+                console.log(data);
+                setHarmonyWhalesData(data);
                 // setCreateBattleForm({ ...createBattleForm, whaleId: res[0] });
                 // setJoinBattleForm({ ...joinBattleForm, whaleId: res[0] });
             }).catch(e => { setHarmonyWhales([]) });
@@ -137,6 +142,7 @@ export const Web3Provider = (props) => {
 
             setCreatedBattles(createdBattles);
             setBattleToCommence(commenceBattles);
+
             // setBattlesToJoin(readyToJoinbattles.filter(eee => !eee.isOwner));
 
 
@@ -228,6 +234,7 @@ export const Web3Provider = (props) => {
             console.log(account);
             const result = await contractObjects?.arbTokenContract?.balanceOf(account);
             console.log(result);
+            setArbTokenBalance(parseFloat(parseFloat(utils.formatEther(result?.toString() || "0")).toFixed(4)))
             return utils.formatEther(result?.toString() || "0");
         }
         catch (e) {
@@ -250,6 +257,39 @@ export const Web3Provider = (props) => {
             }
             const userTokens = (await multicallProvider?.all(tokenCalls)).map(e => e.toString());
             return userTokens;
+        }
+        catch (e) {
+            console.log(e);
+        }
+    }
+    functionsToExport.getSingleWhale = async (whaleId) => {
+        try {
+            const battle = await contractObjects?.battleStorageContract?.getBattlesByWhale(whaleId.toString());
+            return ({
+                whaleId: whaleId?.toString(),
+                exists: battle[0],
+                wins: battle[1]?.length,
+                loses: battle[2]?.length,
+                percent: parseFloat(parseFloat((100.0 * battle[1]?.length) / Math.max(1, (battle[1]?.length + battle[2]?.length))).toFixed(2))
+
+            })
+        }
+        catch (e) {
+            return ({
+                whaleId: whaleId?.toString(),
+                exists: false,
+                wins: 0,
+                loses: 0,
+                percent: 0.0
+            })
+        }
+    }
+    functionsToExport.getBattlesByWhale = async (whaleIds = []) => {
+        try {
+            const requests = await Promise.all(whaleIds.map((e) => functionsToExport.getSingleWhale(e.toString())));
+            // console.log("Whales", userBalance);
+
+            return requests;
         }
         catch (e) {
             console.log(e);
@@ -570,7 +610,9 @@ export const Web3Provider = (props) => {
         wonBattles,
         lostBattles,
         ...functionsToExport,
-        harmonyWhales
+        harmonyWhales,
+        harmonyWhalesData,
+        arbTokenBalance
     }}>
         {props.children}
     </Web3Context.Provider>)
