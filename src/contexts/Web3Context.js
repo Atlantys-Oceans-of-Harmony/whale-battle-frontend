@@ -19,43 +19,43 @@ const DEFAULT_ACCOUNTS = [
 
 const Web3Context = createContext();
 
-const RPC_URL = "https://rpc.hermesdefi.io/";
-const CHAIN_ID = 1666600000;
-const NATIVE_CURRENCY = {
-    name: "one",
-    symbol: "ONE", // 2-6 characters long
-    decimals: 18,
-}
-const MULTI_CALL_ADDRESS = "0x34b415f4d3b332515e66f70595ace1dcf36254c5";
-const CHAIN_NAME = "Harmony Mainnet";
-const ARB_TOKEN_CONTRACT_ADDRESS = "0x1A5b1109F04Cc3f45d4C533685a347656d0983E4";
-const ARB_WHALE_BATTLE_CONTRACT_ADDRESS = "0x707b8B324DE71D21218d52EB1bd942E27B7044ac";
-const HARMONY_WHALES_CONTRACT_ADDRfESS = "0x289FF2F47cD7575c62FDcf45B62451EA9b2420dD";
-const HARMONY_WHALES_V2_CONTRACT_ADDRESS = "0x289FF2F47cD7575c62FDcf45B62451EA9b2420dD";
-const BATTLE_STORAGE_CONTRACT_ADDRESS = "0x541f1a396dC207449A8AC37d7EE92BC1F5aaE125";
-// const HARMONY_WHALES_CONTRACT_ADDRfESS = "0x0519f50287DDcdF8b761Dae76Dc1A76776A0af70";
-const STAKING_CONTRACT_ADDRESS = "0x3d902f6447A0D4E61d65E863E7C2425D938cfEed"
-
-
-
-
-// const RPC_URL = "https://api.s0.b.hmny.io";
-// const CHAIN_ID = 1666700000;
+// const RPC_URL = "https://rpc.hermesdefi.io/";
+// const CHAIN_ID = 1666600000;
 // const NATIVE_CURRENCY = {
 //     name: "one",
 //     symbol: "ONE", // 2-6 characters long
 //     decimals: 18,
 // }
-// const MULTI_CALL_ADDRESS = "0xd078799c53396616844e2fa97f0dd2b4c145a685";
-// const CHAIN_NAME = "Harmony Testnet";
-// const ARB_TOKEN_CONTRACT_ADDRESS = "0x4b56783e75781E96D37F15b0F5B5C6A5850cdd9A";
-// const ARB_WHALE_BATTLE_CONTRACT_ADDRESS = "0xF6B876686a912614E65937614AF7330959bFbB41";
-// const HARMONY_WHALES_CONTRACT_ADDRfESS = "0xf817ADD2C7aB83E297e5f0B91ae2fA81191e1d0e";
-// const HARMONY_WHALES_V2_CONTRACT_ADDRESS = "0xf817ADD2C7aB83E297e5f0B91ae2fA81191e1d0e";
-// const BATTLE_STORAGE_CONTRACT_ADDRESS = "0xD2aec639216d1EF35D1642bB05A04d999dCac224";
+// const MULTI_CALL_ADDRESS = "0x34b415f4d3b332515e66f70595ace1dcf36254c5";
+// const CHAIN_NAME = "Harmony Mainnet";
+// const ARB_TOKEN_CONTRACT_ADDRESS = "0x044246137670a03ca790d7ed20af0c552c88117c";
+// const ARB_WHALE_BATTLE_CONTRACT_ADDRESS = "0x707b8B324DE71D21218d52EB1bd942E27B7044ac";
+// const HARMONY_WHALES_CONTRACT_ADDRfESS = "0x289FF2F47cD7575c62FDcf45B62451EA9b2420dD";
+// const HARMONY_WHALES_V2_CONTRACT_ADDRESS = "0x289FF2F47cD7575c62FDcf45B62451EA9b2420dD";
+// const BATTLE_STORAGE_CONTRACT_ADDRESS = "0x492174791Faa6768969a8935A1954Dc161f97D81";
 // // const HARMONY_WHALES_CONTRACT_ADDRfESS = "0x0519f50287DDcdF8b761Dae76Dc1A76776A0af70";
 // const STAKING_CONTRACT_ADDRESS = "0x3d902f6447A0D4E61d65E863E7C2425D938cfEed";
 // const BANK_CONTRACT = "0xE0370653E6DEb354D186d35215eb87E0b6200C8c";
+
+
+
+
+const RPC_URL = "https://api.s0.b.hmny.io";
+const CHAIN_ID = 1666700000;
+const NATIVE_CURRENCY = {
+    name: "one",
+    symbol: "ONE", // 2-6 characters long
+    decimals: 18,
+}
+const MULTI_CALL_ADDRESS = "0xd078799c53396616844e2fa97f0dd2b4c145a685";
+const CHAIN_NAME = "Harmony Testnet";
+const ARB_TOKEN_CONTRACT_ADDRESS = "0xbC34E7EA5Dce05bAc24a54759386067Cb461b7dd";
+const ARB_WHALE_BATTLE_CONTRACT_ADDRESS = "0x4C34D0dE1876E62f0d89de0e11404F1550C506D8";
+const HARMONY_WHALES_CONTRACT_ADDRfESS = "0x35BCB2a29F8f6D8F616c3827AabB0e9F5D0e749B";
+const HARMONY_WHALES_V2_CONTRACT_ADDRESS = "0x35BCB2a29F8f6D8F616c3827AabB0e9F5D0e749B";
+const BATTLE_STORAGE_CONTRACT_ADDRESS = "0x9eeC380533392663AD1f528e8681025BF3139c7B";
+// const HARMONY_WHALES_CONTRACT_ADDRfESS = "0x0519f50287DDcdF8b761Dae76Dc1A76776A0af70";
+const STAKING_CONTRACT_ADDRESS = "0x3d902f6447A0D4E61d65E863E7C2425D938cfEed"
 
 
 export const Web3Provider = (props) => {
@@ -67,8 +67,17 @@ export const Web3Provider = (props) => {
     const [update, setUpdate] = useState(0);
     const [askSwitch, setAskSwitch] = useState(false);
     const [wonBattles, setWonBattles] = useState(0)
-    const [lostBattles, setLostBattles] = useState(0);
     const [correctChain, setCorrectChain] = useState();
+    const [lostBattles, setLostBattles] = useState(0)
+    const [joinWhaleMetadata, setJoinWhaleMetadata] = useState();
+    const [createdBattles, setCreatedBattles] = useState([]);
+    const [battlesToJoin, setBattlesToJoin] = useState([]);
+    const [battlesWon, setBattlesWon] = useState([]);
+    const [arbTokenBalance, setArbTokenBalance] = useState("Loading...");
+    const [harmonyWhales, setHarmonyWhales] = useState(undefined);
+    const [harmonyWhalesData, setHarmonyWhalesData] = useState(undefined);
+    const [battlesToCommence, setBattleToCommence] = useState([]);
+
 
     const onAccountsChanged = async (accounts) => {
         setAccount(accounts[0]);
@@ -120,6 +129,39 @@ export const Web3Provider = (props) => {
 
         return () => clearInterval(interval); // This represents the unmount function, in which you need to clear your interval to prevent memory leaks.
     }, [signer])
+
+    useEffect(() => {
+        const fetchStuff = async () => {
+            const { getAllHarmonyWhales, getAllBattles, getBattlesReadyToAccept, getBattleDetails, getBattlesByWhale, getArbTokenBalance
+            } = functionsToExport;
+            getArbTokenBalance()
+            getAllHarmonyWhales().then(async (res) => {
+                setHarmonyWhales(res)
+                const data = await getBattlesByWhale(res)
+                console.log(data);
+                setHarmonyWhalesData(data);
+                // setCreateBattleForm({ ...createBattleForm, whaleId: res[0] });
+                // setJoinBattleForm({ ...joinBattleForm, whaleId: res[0] });
+            }).catch(e => { setHarmonyWhales([]) });
+            const [{ wonBattles, lostBattles, readyToAcceptBattles, readyToCommenceBattles, cancelledBattles, forfeitedBattles }, readyToJoinBattleIds] = await Promise.all([getAllBattles(), getBattlesReadyToAccept()]);
+
+            const [createdBattles, commenceBattles, readyToJoinbattles] =
+                await Promise.all([getBattleDetails(readyToAcceptBattles),
+                getBattleDetails(readyToCommenceBattles),
+                getBattleDetails(readyToJoinBattleIds)])
+
+
+            setCreatedBattles(createdBattles);
+            setBattleToCommence(commenceBattles);
+
+            // setBattlesToJoin(readyToJoinbattles.filter(eee => !eee.isOwner));
+
+
+        }
+        if (account) {
+            fetchStuff();
+        }
+    }, [account, update, blockNumber])
     const addNewChain = async () => {
         await window.ethereum.request({
             method: "wallet_addEthereumChain",
@@ -211,6 +253,7 @@ export const Web3Provider = (props) => {
             console.log(account);
             const result = await contractObjects?.arbTokenContract?.balanceOf(account);
             console.log(result);
+            setArbTokenBalance(parseFloat(parseFloat(utils.formatEther(result?.toString() || "0")).toFixed(4)))
             return utils.formatEther(result?.toString() || "0");
         }
         catch (e) {
@@ -267,6 +310,39 @@ export const Web3Provider = (props) => {
                 return (parseInt(a?.toString()) - parseInt(b?.toString()));
             })
             return userTokens;
+        }
+        catch (e) {
+            console.log(e);
+        }
+    }
+    functionsToExport.getSingleWhale = async (whaleId) => {
+        try {
+            const battle = await contractObjects?.battleStorageContract?.getBattlesByWhale(whaleId.toString());
+            return ({
+                whaleId: whaleId?.toString(),
+                exists: battle[0],
+                wins: battle[1]?.length,
+                loses: battle[2]?.length,
+                percent: parseFloat(parseFloat((100.0 * battle[1]?.length) / Math.max(1, (battle[1]?.length + battle[2]?.length))).toFixed(2))
+
+            })
+        }
+        catch (e) {
+            return ({
+                whaleId: whaleId?.toString(),
+                exists: false,
+                wins: 0,
+                loses: 0,
+                percent: 0.0
+            })
+        }
+    }
+    functionsToExport.getBattlesByWhale = async (whaleIds = []) => {
+        try {
+            const requests = await Promise.all(whaleIds.map((e) => functionsToExport.getSingleWhale(e.toString())));
+            // console.log("Whales", userBalance);
+
+            return requests;
         }
         catch (e) {
             console.log(e);
@@ -746,7 +822,17 @@ export const Web3Provider = (props) => {
             console.log(e);
         }
     }
-    return (<Web3Context.Provider value={{ account, blockNumber, update, correctChain, wonBattles, lostBattles, promptChain, ...functionsToExport }}>
+    return (<Web3Context.Provider value={{
+        account,
+        blockNumber,
+        update,
+        wonBattles,
+        lostBattles,
+        ...functionsToExport,
+        harmonyWhales,
+        harmonyWhalesData,
+        arbTokenBalance
+    }}>
         {props.children}
     </Web3Context.Provider>)
 }

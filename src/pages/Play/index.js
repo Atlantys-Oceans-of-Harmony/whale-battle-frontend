@@ -7,7 +7,10 @@ import ArenaEmblem from "../../assets/arena_emblem.png";
 import TrainingEmblem from "../../assets/training_emblem.png";
 import RaidEmblem from "../../assets/raid_emblem.png";
 import SideArrow from "../../assets/side-arrow.png";
-import ConfirmButton from "../../assets/confirm_button.png";
+import ConfirmButton from "../../components/Buttons/ConfirmButton/index";
+import CreateBattle from "./CreateBattle";
+import FindBattle from "./FindBattle";
+import Container from "components/Container/index";
 
 const Play = () => {
   const {
@@ -29,7 +32,12 @@ const Play = () => {
     commenceBattle,
   } = useContext(Web3Context);
 
-  const [playState, setPlayState] = useState("FIND BATTLE");
+  const [playState, setPlayState] = useState();
+  const [selectedState, setSelectedState] = useState("FIND BATTLE");
+
+  const handleConfirm = () => {
+    setPlayState(selectedState);
+  };
 
   const Emblem = ({ title, image, subtitle, isActive }) => {
     return (
@@ -50,7 +58,7 @@ const Play = () => {
 
   const Option = ({ text, extra }) => {
     const isActive = () => {
-      return text === playState;
+      return text === selectedState;
     };
     const conditionRender = () => {
       if (isActive()) {
@@ -72,7 +80,7 @@ const Play = () => {
     return (
       <div
         className="flex mt-4 hover:cursor-pointer"
-        onClick={() => setPlayState(text)}
+        onClick={() => setSelectedState(text)}
       >
         {isActive() && (
           <img src={SideArrow} className="h-5 my-auto -ml-8 mr-4" />
@@ -82,11 +90,11 @@ const Play = () => {
     );
   };
 
-  return (
-    <>
-      <div className="w-full flex flex-col ">
-        <Navbar active="PLAY" />
-        <div className="section justfiy-center text-center mx-12 xl:mx-48 mt-10 flex justify-between border-b border-red">
+  const DefaultView = () => {
+    return (
+      <div className="flex flex-col mx-12 xl:mx-48">
+        {/* Emblem */}
+        <Container>
           <Emblem
             title="TRAINING"
             subtitle="COMING SOON"
@@ -106,7 +114,9 @@ const Play = () => {
             image={RaidEmblem}
             isActive={false}
           />
-        </div>
+        </Container>
+
+        {/* Description */}
         <div className="w-64 text-white  flex border-b border-white self-center mt-6 pb-6 leading-5 font-bold">
           Crush your enemies in an epic 1v1 battle. Go up against players all
           over the world and become the Oceanverse Legend.
@@ -119,12 +129,39 @@ const Play = () => {
           <Option text="JOIN FRIEND" extra="REWARDS DISABLED" />
         </div>
 
-        <div className="confirm-button self-center mb-32">
-          <img
-            src={ConfirmButton}
-            className="w-72 mt-8 hover:cursor-pointer hover:opacity-75"
-          />
-        </div>
+        {/* ConfirmButton */}
+        <ConfirmButton handleConfirm={handleConfirm} />
+      </div>
+    );
+  };
+
+  const renderView = () => {
+    switch (playState) {
+      case "FIND BATTLE":
+        return <FindBattle />;
+        break;
+      case "CREATE BATTLE":
+        return <CreateBattle />;
+      default:
+        return <DefaultView />;
+        break;
+    }
+  };
+
+  return (
+    <>
+      <div className="w-full flex flex-col ">
+        <Navbar active="PLAY" />
+        {renderView()}
+        {playState && (
+          <div
+            className="fixed left-20 bottom-20 flex cursor-pointer"
+            onClick={() => setPlayState()}
+          >
+            <img src={SideArrow} className="w-6 mr-4" />
+            <div className="text-white text-3xl font-bold">RETURN TO PLAY</div>
+          </div>
+        )}
       </div>
     </>
   );
