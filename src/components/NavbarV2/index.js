@@ -8,6 +8,7 @@ import DividerTop from "../../assets/divider-top.png";
 const Navbar = ({ active }) => {
   const {
     account,
+    connectWallet,
     createBattle,
     joinBattle,
     getArbTokenBalance,
@@ -28,11 +29,21 @@ const Navbar = ({ active }) => {
   return (
     <div>
       <img src={DividerTop} />
-      <div className="w-full flex justify-center border-b border-red">
-        <NavButton text="HOME" active={active} />
-        <NavButton text="PLAY" active={active} />
-        <NavButton text="BATTLES" active={active} />
-        <NavButton text="HISTORY" active={active} />
+      <div className="w-full lg:px-8 flex justify-between items-center border-b border-red">
+        <div className="navbar-button text-white">
+          0.0000
+        </div>
+        <div className="flex justify-center">
+          <NavButton text="HOME" active={active} />
+          <NavButton text="PLAY" active={active} />
+          <NavButton text="BATTLES" active={active} />
+          <NavButton text="HISTORY" active={active} />
+
+        </div>
+        <div
+          className="navbar-button text-white"
+          onClick={connectWallet}
+        >{account ? `${account?.slice(0, 4)}...${account?.slice(-4)}` : "Connect to Wallet"}</div>
       </div>
     </div>
   );

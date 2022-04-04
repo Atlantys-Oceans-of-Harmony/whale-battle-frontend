@@ -14,7 +14,9 @@ import "react-circular-progressbar/dist/styles.css";
 import WhaleThumbActive from "../../../assets/whale_thumb.jpg";
 import GlowBackground from "../../../assets/glow-2.png";
 
-export default function BattleSection({ isCreateBattle }) {
+export default function BattleSection({ isCreateBattle, whales, form, setForm }) {
+  const { whaleId } = form;
+
   const WinStats = ({ data }) => {
     const { won, lost } = data;
     const percentage = (won / (won + lost)) * 100;
@@ -55,6 +57,7 @@ export default function BattleSection({ isCreateBattle }) {
   };
 
   const WhaleCard = ({ data, isActive }) => {
+    console.log(data)
     return (
       <div
         className="flex cursor-pointer"
@@ -65,14 +68,14 @@ export default function BattleSection({ isCreateBattle }) {
         )}
         <div
           style={{
-            backgroundImage: `url(${data.image})`,
+            backgroundImage: `url(https://harmony-whales-meta.herokuapp.com/token/image/${data.whaleId})`,
             backgroundSize: "cover",
           }}
           className="h-24 flex w-full font-bold text-xl"
         >
           {isActive && (
             <div className="w-full pl-4 glow flex">
-              <div className="my-auto">{data.name}</div>
+              <div className="my-auto">{data.whaleId}</div>
             </div>
           )}
         </div>
@@ -100,7 +103,7 @@ export default function BattleSection({ isCreateBattle }) {
     };
 
     return (
-      <div className="flex mt-1 hover:cursor-pointer" onClick={() => {}}>
+      <div className="flex mt-1 hover:cursor-pointer" onClick={() => { }}>
         {conditionRender()}
       </div>
     );
@@ -126,7 +129,10 @@ export default function BattleSection({ isCreateBattle }) {
       </div>
       <div className="flex flex-1 text-white">
         <div className="w-2/3 overflow-auto h-128">
-          <WhaleCard data={{ name: "Whale name", image: WhaleThumbActive }} />
+          {whales?.map((e) => {
+            return (<WhaleCard data={{ ...e }} isActive={e.whaleId == whaleId ? true : false} />)
+          })}
+
           <WhaleCard
             data={{ name: "Whale name", image: WhaleThumbActive }}
             isActive
@@ -138,11 +144,11 @@ export default function BattleSection({ isCreateBattle }) {
           <WhaleCard data={{ name: "Whale name", image: WhaleThumbActive }} />
           <WhaleCard data={{ name: "Whale name", image: WhaleThumbActive }} />
         </div>
-        <div className="w-1/3 flex flex-col pl-2">
+        {/* <div className="w-1/3 flex flex-col pl-2">
           <Option text="All" isActive />
           <Option text="Blue Whale" />
           <Option text="Green Whale" />
-        </div>
+        </div> */}
       </div>
     </div>
   );

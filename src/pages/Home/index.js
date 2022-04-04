@@ -85,14 +85,8 @@ const Home = () => {
                 await Promise.all([getBattleDetails(readyToAcceptBattles),
                 getBattleDetails(readyToCommenceBattles),
                 getBattleDetails(readyToJoinBattleIds)])
-            // listenToCreatedBattles(handleOnCreateBattle);
-            // listenToCreatedBattles(handleOnCreateOwnBattle, true);
-            // listenToWonBattles(handleOnWinBattle);
-            // listenToCanceledBattles(handleOnCancelledBattle);
-            // listenToAcceptedBattles(handleOnJoinedBattle);
-            console.log("Battles Created:", createdBattles)
-            console.log("Battles to commence", commenceBattles)
-            console.log("Battles Ready to join", readyToJoinbattles);
+
+
             setCreatedBattles(createdBattles);
             setBattleToCommence(commenceBattles);
             setBattlesToJoin(readyToJoinbattles.filter(eee => !eee.isOwner));
@@ -257,7 +251,6 @@ const Home = () => {
                                 const handleDetail = () => {
                                     setOpenJoinBattle(false)
                                     setOpenCreateBattle(true)
-
                                     setCreatedBattleSelectedIndex(index)
 
                                 }
