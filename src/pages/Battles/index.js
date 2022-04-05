@@ -32,6 +32,8 @@ const Battle = () => {
     blockNumber,
     update,
     commenceBattle,
+    battlesToCommence,
+    createdBattles,
   } = useContext(Web3Context);
 
   const battlesData = [
@@ -71,7 +73,7 @@ const Battle = () => {
     };
 
     return (
-      <div className="flex mt-1 hover:cursor-pointer" onClick={() => {}}>
+      <div className="flex mt-1 hover:cursor-pointer" onClick={() => { }}>
         {isActive && <img src={SideArrow} className="h-6 my-auto mr-2" />}
         {conditionRender()}
       </div>
@@ -103,12 +105,13 @@ const Battle = () => {
   };
 
   const BattleCard = ({ data }) => {
+
     if (data) {
       return (
         <div className="flex-1 relative flex flex-col cursor-pointer">
           <div
             style={{
-              backgroundImage: `url(${data.image})`,
+              backgroundImage: `url(https://harmony-whales-meta.herokuapp.com/token/image/${data?.whaleId})`,
             }}
             className="flex-1 mx-4 mt-4 bg-cover shadow"
           >
@@ -119,7 +122,7 @@ const Battle = () => {
           </div>
           <div className="bg-black flex flex-col flex-1 mx-4 bg-cover ">
             <div className="text-white text-center text-3xl font-impact mt-6">
-              {data.aqua}
+              {data?.amount}
             </div>
             <div className="text-white text-center text-xl">Aqua</div>
             <div className="text-white text-center text-xl font-impact mt-4">
@@ -152,7 +155,7 @@ const Battle = () => {
           <div className="w-full flex flex-1 grow">
             <img src={LeftArrow} className="my-auto w-6 h-9 " />
             <div className="flex">
-              {battlesData.map((el) => {
+              {createdBattles && createdBattles?.map((el) => {
                 return <BattleCard data={el} />;
               })}
             </div>

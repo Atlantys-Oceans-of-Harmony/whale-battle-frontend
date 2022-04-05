@@ -660,6 +660,8 @@ fragment ERC721CardInfo on ERC721TokenMetadata {
         harmonyWhalesData,
         arbTokenBalance,
         battlesToJoin,
+        battlesToCommence,
+        createdBattles,
     }}>
         {props.children}
     </Web3Context.Provider>)
