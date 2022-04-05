@@ -155,7 +155,7 @@ const Play = () => {
         {renderView()}
         {playState && (
           <div
-            className="fixed left-20 bottom-20 flex cursor-pointer"
+            className="absolute left-20 bottom-20 flex cursor-pointer"
             onClick={() => setPlayState()}
           >
             <img src={SideArrow} className="w-6 mr-4" />
