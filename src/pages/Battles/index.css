@@ -16,3 +16,12 @@
   -moz-box-shadow: inset 0px -28px 89px -7px #000000;
   -o-box-shadow: inset 0px -28px 89px -7px #000000;
 }
+
+.battle-card {
+  min-width: 200px;
+  min-height: 440px;
+}
+
+.whale-image {
+  width: 500px;
+}

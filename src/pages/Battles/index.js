@@ -11,8 +11,13 @@ import LeftArrow from "../../assets/left-arrow.png";
 import BattleFrame from "../../assets/battle-frame.png";
 import GoldFrame from "../../assets/golden-frame.png";
 import Whale1 from "../../assets/whale-1.png";
+import Placeholder from "../../assets/placeholder_whale.png";
+import OpponentWhale from "../../assets/tbd_whale.png";
+import AquaIcon from "../../assets/aqua.png";
+
 import Container from "components/Container/index";
 import SearchBox from "components/SearchBox/index";
+import BailButton from "components/Buttons/BailButton/index";
 
 const Battle = () => {
   const {
@@ -36,25 +41,27 @@ const Battle = () => {
     createdBattles,
   } = useContext(Web3Context);
 
-  const battlesData = [
-    {
-      image: Whale1,
-      battleId: 6942,
-      aqua: 645,
-      date: "23.02.2022",
-      done: true,
-    },
-    {
-      image: Whale1,
-      battleId: 15,
-      aqua: 1242,
-      date: "28.11.2021",
-      done: false,
-    },
-    null,
-    null,
-    null,
-  ];
+  // const battlesData = [
+  //   {
+  //     image: Whale1,
+  //     battleId: 6942,
+  //     aqua: 645,
+  //     date: "23.02.2022",
+  //     done: true,
+  //   },
+  //   {
+  //     image: Whale1,
+  //     battleId: 15,
+  //     aqua: 1242,
+  //     date: "28.11.2021",
+  //     done: false,
+  //   },
+  //   null,
+  //   null,
+  //   null,
+  // ];
+
+  const [selectedBattle, setSelectedBattle] = useState();
 
   const Option = ({ text, isActive }) => {
     const conditionRender = () => {
@@ -73,7 +80,7 @@ const Battle = () => {
     };
 
     return (
-      <div className="flex mt-1 hover:cursor-pointer" onClick={() => { }}>
+      <div className="flex mt-1 hover:cursor-pointer" onClick={() => {}}>
         {isActive && <img src={SideArrow} className="h-6 my-auto mr-2" />}
         {conditionRender()}
       </div>
@@ -90,7 +97,7 @@ const Battle = () => {
 
   const LeftSection = () => {
     return (
-      <div className="flex-none text-white pt-12">
+      <div className="flex-1 text-white pt-12">
         <SearchBox placeholder="Search #" />
         <div className="mt-6">
           <div className="text-xl font-bold">Sort by :</div>
@@ -104,11 +111,13 @@ const Battle = () => {
     );
   };
 
-  const BattleCard = ({ data }) => {
-
+  const BattleCard = ({ data, onClick }) => {
     if (data) {
       return (
-        <div className="flex-1 relative flex flex-col cursor-pointer">
+        <div
+          onClick={onClick}
+          className="battle-card relative flex flex-col cursor-pointer"
+        >
           <div
             style={{
               backgroundImage: `url(https://harmony-whales-meta.herokuapp.com/token/image/${data?.whaleId})`,
@@ -124,7 +133,7 @@ const Battle = () => {
             <div className="text-white text-center text-3xl font-impact mt-6">
               {data?.amount}
             </div>
-            <div className="text-white text-center text-xl">Aqua</div>
+            <div className="text-white text-center text-xl -mt-2">Aqua</div>
             <div className="text-white text-center text-xl font-impact mt-4">
               {data.date}
             </div>
@@ -145,21 +154,85 @@ const Battle = () => {
     );
   };
 
+  const BattleDetails = ({ data }) => {
+    const { battleId, whaleId, amount } = data;
+    const ImageContainer = ({ image, name, species }) => {
+      return (
+        <>
+          <img
+            src={image}
+            className={image === OpponentWhale ? "pt-24" : "whale-image"}
+          />
+          <div className="-mt-24">
+            <div className="text-white font-bold text-4xl">
+              {image === OpponentWhale ? "???" : name}
+            </div>
+            <div className="text-white text-xl">
+              {image === OpponentWhale ? "????" : species}
+            </div>
+          </div>
+        </>
+      );
+    };
+    return (
+      <div className="flex w-full mb-10">
+        <div className="flex flex-col flex-1">
+          <ImageContainer
+            image={`https://harmony-whales-meta.herokuapp.com/token/image/transparent/${whaleId}`} // Acadia yaha pe image url daal dena (url() type wala)
+            name="Whale name"
+            species="Whale species"
+          />
+        </div>
+        <div className="flex flex-col flex-1">
+          <div className="text-white text-xl mt-20">Battle</div>
+          <div className="text-white text-4xl font-impact">#{battleId}</div>
+          <img src={AquaIcon} className="self-center w-8 mt-6" />
+          <div className="text-white text-center text-3xl font-impact -mt-3">
+            {amount}
+          </div>
+          <div className="text-white text-center text-xl -mt-2">Aqua</div>
+          <BailButton handleConfirm={{}} />
+        </div>
+        <div className="flex flex-col flex-1 ">
+          <ImageContainer image={OpponentWhale} />
+        </div>
+      </div>
+    );
+  };
+
   return (
     <>
       <div className="w-full flex flex-col ">
         <Navbar active="BATTLES" />
-        <Container>{renderErrorState()}</Container>
+        <div className="mx-24">
+          <Container>
+            {selectedBattle ? (
+              <BattleDetails data={selectedBattle} />
+            ) : (
+              renderErrorState()
+            )}
+          </Container>
+        </div>
+
         <div className="flex mt-4 mx-8 xl:mx-24 gap-5">
           <LeftSection />
-          <div className="w-full flex flex-1 grow">
-            <img src={LeftArrow} className="my-auto w-6 h-9 " />
-            <div className="flex">
-              {createdBattles && createdBattles?.map((el) => {
-                return <BattleCard data={el} />;
-              })}
+          <div className="flex w-3/4">
+            <img src={LeftArrow} className="flex-1 my-auto w-6 h-9 " />
+            <div className="flex overflow-auto mx-5 mb-6">
+              {createdBattles &&
+                createdBattles?.map((el) => {
+                  return (
+                    <BattleCard
+                      data={el}
+                      onClick={() => {
+                        console.log(el);
+                        setSelectedBattle(el);
+                      }}
+                    />
+                  );
+                })}
             </div>
-            <img src={SideArrow} className="my-auto w-6 h-9" />
+            <img src={SideArrow} className="flex-1 my-auto w-6 h-9" />
           </div>
         </div>
       </div>
