@@ -118,11 +118,11 @@ export default function BattleSection({ isCreateBattle, whales = [], form, setFo
           <div className="text-2xl font-bold">Whale #{whaleId}</div>
           {/* <div className="text-md font-semibold mb-10">Whale Species</div> */}
           <div className="text-xl">Rarity Rank:</div>
-          <div className="font-impact text-4xl">69420</div>
+          <div className="font-impact text-4xl">{whaleData?.rarityRank}</div>
           <WinStats data={{ won: whaleData?.wins, lost: whaleData?.loses }} />
         </div>
-        <div className="flex-1 flex-col mr-8">
-          <img src={`https://harmony-whales-meta.herokuapp.com/token/image/${whaleId}`} className=" mb-8" />
+        <div className="flex-1 flex-col">
+          <img src={`https://harmony-whales-meta.herokuapp.com/token/image/transparent/${whaleId}`} className="" />
           {isCreateBattle && (
             <div className="flex border-white border-2 p-1 px-2 w-36 mx-auto cursor-pointer">
               <img src={AquaIcon} className="w-6" />

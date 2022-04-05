@@ -28,6 +28,7 @@ const FindBattle = () => {
     update,
     commenceBattle,
     harmonyWhalesData,
+    battlesToJoin,
   } = useContext(Web3Context);
   const [joinBattleForm, setJoinBattleForm] = useState({
     whaleId: "",
@@ -36,6 +37,7 @@ const FindBattle = () => {
   const [findBattleView, setFindBattleView] = useState(false);
 
   const handleJoinBattle = async () => {
+    console.log(joinBattleForm)
     joinBattle({ ...joinBattleForm });
   };
   useEffect(() => {
@@ -61,7 +63,10 @@ const FindBattle = () => {
           </div>
         </Container>
         {findBattleView ? (
-          <FindBattleSection />
+          <FindBattleSection
+            form={joinBattleForm}
+            setForm={setJoinBattleForm}
+            battles={battlesToJoin} />
         ) : (
           <BattleSection
             form={joinBattleForm}

@@ -8,6 +8,7 @@ import battleStorageAbi from "abis/battleStorage.json";
 import { Provider as MulticallProvider, Contract as MulticallContract } from "ethers-multicall";
 import { BigNumber } from "../../node_modules/ethers/lib/ethers";
 import { toast } from 'react-toastify';
+import axios from "axios";
 
 
 const DEFAULT_ACCOUNTS = [
@@ -121,14 +122,18 @@ export const Web3Provider = (props) => {
 
     useEffect(() => {
         const fetchStuff = async () => {
-            const { getAllHarmonyWhales, getAllBattles, getBattlesReadyToAccept, getBattleDetails, getBattlesByWhale, getArbTokenBalance
+            const { getAllHarmonyWhales, getAllBattles, getBattlesReadyToAccept, getBattleDetails, getBattlesByWhale, getArbTokenBalance, getWhaleStats
             } = functionsToExport;
             getArbTokenBalance()
             getAllHarmonyWhales().then(async (res) => {
                 setHarmonyWhales(res)
+                const whaleStats = await getWhaleStats(res);
                 const data = await getBattlesByWhale(res)
-                console.log(data);
-                setHarmonyWhalesData(data);
+                const updatedData = data.map((ele) => {
+                    const statObject = whaleStats?.find(e => e.tokenId == ele?.whaleId);
+                    return ({ ...ele, ...statObject?.data })
+                })
+                setHarmonyWhalesData(updatedData);
                 // setCreateBattleForm({ ...createBattleForm, whaleId: res[0] });
                 // setJoinBattleForm({ ...joinBattleForm, whaleId: res[0] });
             }).catch(e => { setHarmonyWhales([]) });
@@ -140,9 +145,11 @@ export const Web3Provider = (props) => {
                 getBattleDetails(readyToJoinBattleIds)])
 
 
+
             setCreatedBattles(createdBattles);
             setBattleToCommence(commenceBattles);
 
+            setBattlesToJoin(readyToJoinbattles);
             // setBattlesToJoin(readyToJoinbattles.filter(eee => !eee.isOwner));
 
 
@@ -248,6 +255,7 @@ export const Web3Provider = (props) => {
     }
     functionsToExport.getAllHarmonyWhales = async () => {
         try {
+
             const userBalance = parseInt((await contractObjects?.harmonyWhaleContract?.balanceOf(account)).toString());
             console.log("Whales", userBalance);
             const [multicallProvider, multicallContract] = await setupMultiCallContract(HARMONY_WHALES_CONTRACT_ADDRfESS, harmonyWhalesAbi);
@@ -262,9 +270,47 @@ export const Web3Provider = (props) => {
             console.log(e);
         }
     }
+    functionsToExport.getWhaleStats = async (whaleIds = []) => {
+        const result = await axios.post("https://nftkey.app/graphql", {
+            operationName: "GetERC721TokensNew",
+            "query": `query GetERC721TokensNew($input: GetERC721TokensByCollectionIdInput!) {
+  erc721Tokens(input: $input) {
+                count
+    tokens {
+                    tokenId
+      data {
+        ...ERC721CardInfo
+        __typename
+        }
+      __typename
+    }
+    __typename
+}
+}
+
+fragment ERC721CardInfo on ERC721TokenMetadata {
+    tokenId
+    name
+    image
+    imageCdnUrl
+    thumbnailCdnUrl
+    imageContentType
+    background
+    backgroundUrl
+    rarityRank
+    __typename
+}
+`,
+            variables: { input: { collectionId: "0x289ff2f47cd7575c62fdcf45b62451ea9b2420dd_1666600000", filters: { tokenIds: whaleIds } } }
+        }, {});;
+        return result?.data?.data?.erc721Tokens?.tokens;
+
+    }
     functionsToExport.getSingleWhale = async (whaleId) => {
         try {
             const battle = await contractObjects?.battleStorageContract?.getBattlesByWhale(whaleId.toString());
+            const result = await axios.post("https://nftkey.app/graphql", { operationName: "GetERC721TokensNew", variables: { input: { collectionId: "0x289ff2f47cd7575c62fdcf45b62451ea9b2420dd_1666600000", filters: { tokenIds: [whaleId] } } } }, {});;
+            console.log(result);
             return ({
                 whaleId: whaleId?.toString(),
                 exists: battle[0],
@@ -612,7 +658,8 @@ export const Web3Provider = (props) => {
         ...functionsToExport,
         harmonyWhales,
         harmonyWhalesData,
-        arbTokenBalance
+        arbTokenBalance,
+        battlesToJoin,
     }}>
         {props.children}
     </Web3Context.Provider>)
