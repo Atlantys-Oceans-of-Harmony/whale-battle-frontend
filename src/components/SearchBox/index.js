@@ -5,10 +5,11 @@ import "./style.css";
 
 import DividerTop from "../../assets/divider-top.png";
 
-const SearchBox = ({ ...rest }) => {
+const SearchBox = ({ icon, ...rest }) => {
   return (
-    <div>
-      <input type="text" {...rest} className="search" />
+    <div className="search flex">
+      {icon && <img src={icon} className="w-8 h-8 my-auto mr-3" />}
+      <input type="text" {...rest} className="search-box overflow-auto" />
     </div>
   );
 };

@@ -11,13 +11,15 @@ import LeftArrow from "../../assets/left-arrow.png";
 import BattleFrame from "../../assets/battle-frame.png";
 import GoldFrame from "../../assets/golden-frame.png";
 import Whale1 from "../../assets/whale-1.png";
-import Placeholder from "../../assets/placeholder_whale.png";
-import OpponentWhale from "../../assets/tbd_whale.png";
+import OpponentWhale from "../../assets/placeholder_whale.png";
 import AquaIcon from "../../assets/aqua.png";
+import Shade from "../../assets/shade.png";
+import CardGlow from "../../assets/carousel_glow.png";
 
 import Container from "components/Container/index";
 import SearchBox from "components/SearchBox/index";
 import BailButton from "components/Buttons/BailButton/index";
+import { Navigate } from "../../../node_modules/react-router-dom/index";
 
 const Battle = () => {
   const {
@@ -111,39 +113,48 @@ const Battle = () => {
     );
   };
 
-  const BattleCard = ({ data, onClick }) => {
+  const BattleCard = ({ data, onClick, isSelected }) => {
     if (data) {
       return (
-        <div
-          onClick={onClick}
-          className="battle-card relative flex flex-col cursor-pointer"
-        >
+        <div className="relative">
           <div
-            style={{
-              backgroundImage: `url(https://harmony-whales-meta.herokuapp.com/token/image/${data?.whaleId})`,
-            }}
-            className="flex-1 mx-4 mt-4 bg-cover shadow"
+            onClick={onClick}
+            className="battle-card relative flex flex-col cursor-pointer z-10"
           >
-            <div className="mt-6 text-center text-yellow text-xl">Battle</div>
-            <div className="text-center font-impact text-yellow text-3xl">
-              #{data.battleId}
-            </div>
-          </div>
-          <div className="bg-black flex flex-col flex-1 mx-4 bg-cover ">
-            <div className="text-white text-center text-3xl font-impact mt-6">
-              {data?.amount}
-            </div>
-            <div className="text-white text-center text-xl -mt-2">Aqua</div>
-            <div className="text-white text-center text-xl font-impact mt-4">
-              {data.date}
-            </div>
-            {data.done && (
-              <div className="mt-4 text-center font-impact text-yellow text-3xl">
-                DONE!
+            <div
+              style={{
+                backgroundImage: `url(https://harmony-whales-meta.herokuapp.com/token/image/${data?.whaleId})`,
+              }}
+              className="flex-1 mx-4 mt-4 bg-cover "
+            >
+              <div className="mt-6 text-center text-yellow text-xl">Battle</div>
+              <div className="text-center font-impact text-yellow text-3xl">
+                #{data.battleId}
               </div>
-            )}
+            </div>
+            <div className="z-20 flex flex-col flex-1 mx-4 bg-cover ">
+              <div className="text-white text-center text-3xl font-impact mt-6">
+                {data?.amount}
+              </div>
+              <div className="text-white text-center text-xl -mt-2">Aqua</div>
+              <div className="text-white text-center text-xl font-impact mt-4">
+                {data.date}
+              </div>
+              {data.done && (
+                <div className="mt-4 text-center font-impact text-yellow text-3xl">
+                  DONE!
+                </div>
+              )}
+            </div>
+            <img
+              src={GoldFrame}
+              className="absolute top-0 w-full z-30 h-full"
+            />
+            <img src={Shade} className="absolute bottom-0 h-4/5 z-0 p-4" />
           </div>
-          <img src={GoldFrame} className="absolute top-0 w-full" />
+          {isSelected && (
+            <img src={CardGlow} className="w-full z-0 absolute top-0" />
+          )}
         </div>
       );
     }
@@ -202,6 +213,7 @@ const Battle = () => {
 
   return (
     <>
+      {!account && <Navigate to="/connect" />}
       <div className="w-full flex flex-col ">
         <Navbar active="BATTLES" />
         <div className="mx-24">
@@ -228,6 +240,10 @@ const Battle = () => {
                         console.log(el);
                         setSelectedBattle(el);
                       }}
+                      isSelected={
+                        selectedBattle &&
+                        selectedBattle.battleId === el.battleId
+                      }
                     />
                   );
                 })}

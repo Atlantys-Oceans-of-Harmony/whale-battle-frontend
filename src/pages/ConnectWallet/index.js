@@ -6,7 +6,7 @@ import Navbar from "../../components/NavbarV2";
 import ConnectButton from "components/Buttons/ConnectButton/index";
 import { Navigate } from "../../../node_modules/react-router-dom/index";
 
-const Home = () => {
+const ConnectWallet = () => {
   const {
     account,
     createBattle,
@@ -42,4 +42,4 @@ const Home = () => {
     </>
   );
 };
-export default Home;
+export default ConnectWallet;

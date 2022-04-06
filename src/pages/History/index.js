@@ -3,6 +3,7 @@ import { useContext, useEffect, useState, Fragment } from "react";
 import "./index.css";
 
 import Navbar from "../../components/NavbarV2";
+import { Navigate } from "../../../node_modules/react-router-dom/index";
 
 const History = () => {
   const {
@@ -26,6 +27,7 @@ const History = () => {
 
   return (
     <>
+      {!account && <Navigate to="/connect" />}
       <div className="w-full">
         <Navbar active="HISTORY" />
       </div>

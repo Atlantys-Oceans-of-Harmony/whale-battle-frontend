@@ -11,6 +11,7 @@ import ConfirmButton from "../../components/Buttons/ConfirmButton/index";
 import CreateBattle from "./CreateBattle";
 import FindBattle from "./FindBattle";
 import Container from "components/Container/index";
+import { Navigate } from "../../../node_modules/react-router-dom/index";
 
 const Play = () => {
   const {
@@ -150,6 +151,7 @@ const Play = () => {
 
   return (
     <>
+      {!account && <Navigate to="/connect" />}
       <div className="w-full flex flex-col ">
         <Navbar active="PLAY" />
         {renderView()}

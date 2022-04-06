@@ -37,7 +37,7 @@ const FindBattle = () => {
   const [findBattleView, setFindBattleView] = useState(false);
 
   const handleJoinBattle = async () => {
-    console.log(joinBattleForm)
+    console.log(joinBattleForm);
     joinBattle({ ...joinBattleForm });
   };
   useEffect(() => {
@@ -66,7 +66,8 @@ const FindBattle = () => {
           <FindBattleSection
             form={joinBattleForm}
             setForm={setJoinBattleForm}
-            battles={battlesToJoin} />
+            battles={battlesToJoin}
+          />
         ) : (
           <BattleSection
             form={joinBattleForm}
@@ -76,6 +77,7 @@ const FindBattle = () => {
         )}
 
         <ConfirmButton
+          className="z-10"
           handleConfirm={
             findBattleView ? handleJoinBattle : () => setFindBattleView(true)
           }
