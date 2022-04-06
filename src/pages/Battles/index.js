@@ -62,6 +62,7 @@ const Battle = () => {
   //   null,
   //   null,
   // ];
+  console.log(createdBattles)
 
   const [selectedBattle, setSelectedBattle] = useState();
 
@@ -82,7 +83,7 @@ const Battle = () => {
     };
 
     return (
-      <div className="flex mt-1 hover:cursor-pointer" onClick={() => {}}>
+      <div className="flex mt-1 hover:cursor-pointer" onClick={() => { }}>
         {isActive && <img src={SideArrow} className="h-6 my-auto mr-2" />}
         {conditionRender()}
       </div>
