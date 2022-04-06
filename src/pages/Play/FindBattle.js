@@ -8,6 +8,7 @@ import ConfirmButton from "../../components/Buttons/ConfirmButton/index";
 import Container from "components/Container/index";
 import BattleSection from "./sections/BattleSection";
 import FindBattleSection from "./sections/FindBattleSection";
+import { useNavigate } from "react-router-dom";
 
 const FindBattle = () => {
   const {
@@ -30,6 +31,7 @@ const FindBattle = () => {
     harmonyWhalesData,
     battlesToJoin,
   } = useContext(Web3Context);
+  const navigate = useNavigate();
   const [joinBattleForm, setJoinBattleForm] = useState({
     whaleId: "",
     battleId: "",
@@ -38,7 +40,8 @@ const FindBattle = () => {
 
   const handleJoinBattle = async () => {
     console.log(joinBattleForm);
-    joinBattle({ ...joinBattleForm });
+    await joinBattle({ ...joinBattleForm });
+    navigate(`/battles/${joinBattleForm?.battleId}`)
   };
   useEffect(() => {
     const funcToRun = async () => {

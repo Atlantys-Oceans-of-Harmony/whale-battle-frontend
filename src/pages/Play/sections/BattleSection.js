@@ -99,7 +99,7 @@ const Option = ({ text, isActive }) => {
   };
 
   return (
-    <div className="flex mt-1 hover:cursor-pointer" onClick={() => {}}>
+    <div className="flex mt-1 hover:cursor-pointer" onClick={() => { }}>
       {conditionRender()}
     </div>
   );

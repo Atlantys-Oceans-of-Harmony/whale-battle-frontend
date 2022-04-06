@@ -25,6 +25,7 @@ function App() {
               <Route path="/" element={<HomeV2 />} />
               <Route path="/play" element={<Play />} />
               <Route path="/battles" element={<Battles />} />
+              <Route path="/battles/:viewBattleId" element={<Battles />} />
               <Route path="/history" element={<History />} />
               <Route path="/connect" element={<ConnectWallet />} />
             </Routes>

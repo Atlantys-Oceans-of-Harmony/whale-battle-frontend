@@ -143,6 +143,7 @@ export const Web3Provider = (props) => {
                     const statObject = whaleStats?.find(e => e.tokenId == ele?.whaleId);
                     return ({ ...ele, ...statObject?.data })
                 })
+                console.log(updatedData)
                 setHarmonyWhalesData(updatedData);
                 // setCreateBattleForm({ ...createBattleForm, whaleId: res[0] });
                 // setJoinBattleForm({ ...joinBattleForm, whaleId: res[0] });
@@ -274,6 +275,7 @@ export const Web3Provider = (props) => {
     functionsToExport.getSingleWhale = async (whaleId) => {
         try {
             const battle = await contractObjects?.battleStorageContract?.getBattlesByWhale(whaleId.toString());
+            console.log(battle);
             return ({
                 exists: battle[0],
                 wins: battle[1]?.length,
@@ -283,6 +285,7 @@ export const Web3Provider = (props) => {
             })
         }
         catch (e) {
+            console.log(e);
             return ({
                 exists: false,
                 wins: 0,
@@ -350,11 +353,17 @@ fragment ERC721CardInfo on ERC721TokenMetadata {
     background
     backgroundUrl
     rarityRank
+    attributes {
+    trait_type
+    value
+    __typename
+  }
     __typename
 }
 `,
             variables: { input: { collectionId: "0x289ff2f47cd7575c62fdcf45b62451ea9b2420dd_1666600000", filters: { tokenIds: whaleIds } } }
         }, {});;
+        console.log(result?.data?.data?.erc721Tokens?.tokens)
         return result?.data?.data?.erc721Tokens?.tokens;
 
     }
@@ -644,7 +653,6 @@ fragment ERC721CardInfo on ERC721TokenMetadata {
                 userWon: account?.toString()?.toLowerCase() === args[8]?.toString()?.toLowerCase()
 
             }
-            console.log(data);
             return data;
         })
 

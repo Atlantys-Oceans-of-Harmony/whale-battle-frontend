@@ -19,7 +19,10 @@ import CardGlow from "../../assets/carousel_glow.png";
 import Container from "components/Container/index";
 import SearchBox from "components/SearchBox/index";
 import BailButton from "components/Buttons/BailButton/index";
-import { Navigate } from "../../../node_modules/react-router-dom/index";
+import ConfirmButton from "components/Buttons/ConfirmButton/index";
+import BattleProgressModal from "components/BattleProgressModal";
+
+import { Navigate, useParams } from "react-router-dom";
 
 const Battle = () => {
   const {
@@ -39,6 +42,7 @@ const Battle = () => {
     blockNumber,
     update,
     commenceBattle,
+    commenceBattles,
     battlesToCommence,
     createdBattles,
   } = useContext(Web3Context);
@@ -65,6 +69,14 @@ const Battle = () => {
   console.log(createdBattles)
 
   const [selectedBattle, setSelectedBattle] = useState();
+  const [selectedBattleModalDetail, setSelectedBattleModalDetail] = useState();
+  const { viewBattleId } = useParams();
+  const [openModal, setOpenModal] = useState(false);
+  useEffect(() => {
+    if (viewBattleId) {
+      setOpenModal(true);
+    }
+  }, [viewBattleId, battlesToCommence])
 
   const Option = ({ text, isActive }) => {
     const conditionRender = () => {
@@ -114,7 +126,7 @@ const Battle = () => {
     );
   };
 
-  const BattleCard = ({ data, onClick, isSelected }) => {
+  const BattleCard = ({ data, onClick, isSelected, created }) => {
     if (data) {
       return (
         <div className="relative">
@@ -141,7 +153,7 @@ const Battle = () => {
               <div className="text-white text-center text-xl font-impact mt-4">
                 {data.date}
               </div>
-              {data.done && (
+              {!created && (
                 <div className="mt-4 text-center font-impact text-yellow text-3xl">
                   DONE!
                 </div>
@@ -167,13 +179,28 @@ const Battle = () => {
   };
 
   const BattleDetails = ({ data }) => {
-    const { battleId, whaleId, amount } = data;
-    const ImageContainer = ({ image, name, species }) => {
+    const { battleId,
+      whaleId,
+      owner,
+      amount,
+      ownerTotalPoints,
+      acceptedBy,
+      whaleIdAccepted,
+      acceptedTotalPoints,
+      winner,
+      endDate,
+      futureBlock,
+      inProgress,
+      isOwner,
+      userWon,
+      created
+    } = data;
+    const ImageContainer = ({ image, name, species, mirror }) => {
       return (
         <>
           <img
             src={image}
-            className={image === OpponentWhale ? "pt-24" : "whale-image"}
+            className={image === OpponentWhale ? "pt-24" : `whale-image ${mirror ? "-scale-x-100" : ""}`}
           />
           <div className="-mt-24">
             <div className="text-white font-bold text-4xl">
@@ -191,7 +218,7 @@ const Battle = () => {
         <div className="flex flex-col flex-1">
           <ImageContainer
             image={`https://harmony-whales-meta.herokuapp.com/token/image/transparent/${whaleId}`} // Acadia yaha pe image url daal dena (url() type wala)
-            name="Whale name"
+            name={`Whale #${whaleId}`}
             species="Whale species"
           />
         </div>
@@ -203,10 +230,17 @@ const Battle = () => {
             {amount}
           </div>
           <div className="text-white text-center text-xl -mt-2">Aqua</div>
-          <BailButton handleConfirm={{}} />
+          {created ? <BailButton handleConfirm={() => cancelBattle(battleId)} /> : (blockNumber > futureBlock) ?
+            <ConfirmButton handleConfirm={() => commenceBattle(battleId)} /> : "Battle in Progress"}
+
+
         </div>
         <div className="flex flex-col flex-1 ">
-          <ImageContainer image={OpponentWhale} />
+          <ImageContainer
+            mirror
+            image={whaleIdAccepted != 0 ? `https://harmony-whales-meta.herokuapp.com/token/image/transparent/${whaleIdAccepted}` : OpponentWhale}
+            name={whaleIdAccepted != 0 ? `Whale #${whaleIdAccepted}` : undefined}
+          />
         </div>
       </div>
     );
@@ -214,6 +248,8 @@ const Battle = () => {
 
   return (
     <>
+      <BattleProgressModal open={openModal} setOpen={setOpenModal} />
+
       {!account && <Navigate to="/connect" />}
       <div className="w-full flex flex-col ">
         <Navbar active="BATTLES" />
@@ -234,6 +270,23 @@ const Battle = () => {
             <div className="flex overflow-auto mx-5 mb-6">
               {createdBattles &&
                 createdBattles?.map((el) => {
+                  return (
+                    <BattleCard
+                      created
+                      data={el}
+                      onClick={() => {
+                        console.log(el);
+                        setSelectedBattle({ ...el, created: true });
+                      }}
+                      isSelected={
+                        selectedBattle &&
+                        selectedBattle.battleId === el.battleId
+                      }
+                    />
+                  );
+                })}
+              {battlesToCommence &&
+                battlesToCommence?.map((el) => {
                   return (
                     <BattleCard
                       data={el}
