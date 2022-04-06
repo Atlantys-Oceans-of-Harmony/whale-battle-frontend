@@ -91,7 +91,7 @@ const Battle = () => {
 
   const renderErrorState = () => {
     return (
-      <div className="text-white w-full py-32 text-3xl font-bold text-center">
+      <div className="text-white w-full py-52 text-3xl font-bold text-center">
         You have no battle selected. :(
       </div>
     );

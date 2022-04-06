@@ -51,7 +51,7 @@ export default function FindBattleSection({ battles, form, setForm }) {
               }}
               className="flex-1 mx-4 mt-4 bg-cover"
             >
-              <div className="text-center font-bold text-yellow text-xl mt-6 mb-32">
+              <div className="text-center font-bold font-impact text-yellow text-xl mt-6 mb-32">
                 Battle #{data.battleId}
               </div>
             </div>
