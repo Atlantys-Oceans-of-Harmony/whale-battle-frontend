@@ -10,6 +10,7 @@ import "react-toastify/dist/ReactToastify.css";
 import Play from "pages/Play/index";
 import Battles from "pages/Battles/index";
 import History from "pages/History/index";
+import ConnectWallet from "pages/ConnectWallet/index";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
               <Route path="/play" element={<Play />} />
               <Route path="/battles" element={<Battles />} />
               <Route path="/history" element={<History />} />
+              <Route path="/connect" element={<ConnectWallet />} />
             </Routes>
           </Web3Provider>
         </Router>
