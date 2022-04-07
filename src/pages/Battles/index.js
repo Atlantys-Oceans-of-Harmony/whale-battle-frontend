@@ -23,6 +23,7 @@ import ConfirmButton from "components/Buttons/ConfirmButton/index";
 import BattleProgressModal from "components/BattleProgressModal";
 
 import { Navigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Battle = () => {
   const {
@@ -67,7 +68,7 @@ const Battle = () => {
   //   null,
   // ];
   console.log(createdBattles)
-
+  const navigate = useNavigate()
   const [selectedBattle, setSelectedBattle] = useState();
   const [selectedBattleModalDetail, setSelectedBattleModalDetail] = useState();
   const { viewBattleId } = useParams();
@@ -75,9 +76,27 @@ const Battle = () => {
   useEffect(() => {
     if (viewBattleId) {
       setOpenModal(true);
+      console.log(viewBattleId);
+      const _selectedBattle = battlesToCommence?.find(e => {
+        console.log(e)
+        return (e?.battleId == viewBattleId.toString())
+      });
+      console.log(_selectedBattle)
+      setSelectedBattleModalDetail(_selectedBattle);
     }
-  }, [viewBattleId, battlesToCommence])
 
+    else {
+    }
+  }, [viewBattleId, battlesToCommence]);
+  useEffect(() => {
+    if (battlesToCommence?.find(e => e?.battleId == selectedBattle?.battleId) || createdBattles?.find(e => e?.battleId == selectedBattle?.battleId)) {
+
+    }
+    else {
+      setSelectedBattle(createdBattles[0] || battlesToCommence[0]);
+    }
+  }, [battlesToCommence, createdBattles])
+  console.log(selectedBattleModalDetail)
   const Option = ({ text, isActive }) => {
     const conditionRender = () => {
       if (isActive) {
@@ -231,7 +250,11 @@ const Battle = () => {
           </div>
           <div className="text-white text-center text-xl -mt-2">Aqua</div>
           {created ? <BailButton handleConfirm={() => cancelBattle(battleId)} /> : (blockNumber > futureBlock) ?
-            <ConfirmButton handleConfirm={() => commenceBattle(battleId)} /> : "Battle in Progress"}
+            <ConfirmButton handleConfirm={() => {
+              // commenceBattle(battleId)
+              navigate(`/battles/${battleId}`)
+
+            }} /> : "Battle in Progress"}
 
 
         </div>
@@ -248,7 +271,7 @@ const Battle = () => {
 
   return (
     <>
-      <BattleProgressModal open={openModal} setOpen={setOpenModal} />
+      <BattleProgressModal open={openModal} setOpen={setOpenModal} {...selectedBattleModalDetail} />
 
       {!account && <Navigate to="/connect" />}
       <div className="w-full flex flex-col ">

@@ -157,7 +157,7 @@ export const Web3Provider = (props) => {
 
 
 
-            setCreatedBattles(createdBattles);
+            setCreatedBattles(createdBattles?.map(e => { return ({ ...e, created: true }) }));
             setBattleToCommence(commenceBattles);
 
             setBattlesToJoin(readyToJoinbattles);
@@ -650,13 +650,17 @@ fragment ERC721CardInfo on ERC721TokenMetadata {
                 futureBlock: args[10].toString(),
                 inProgress: args[11],
                 isOwner: args[2]?.toString()?.toLowerCase() === account?.toLowerCase(),
-                userWon: account?.toString()?.toLowerCase() === args[8]?.toString()?.toLowerCase()
+                userWon: account?.toString()?.toLowerCase() === args[8]?.toString()?.toLowerCase(),
+                isComplete: parseInt(args[10].toString()) - parseInt(blockNumber) <= 0
+
+
+
 
             }
             return data;
         })
 
-        return userTokens;
+        // return userTokens;
 
     }
     functionsToExport.commenceBattle = async (battleId, setOpen, setBattleSummary) => {
