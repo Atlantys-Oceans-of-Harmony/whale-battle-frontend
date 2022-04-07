@@ -67,8 +67,8 @@ const Battle = () => {
   //   null,
   //   null,
   // ];
-  console.log(createdBattles)
-  const navigate = useNavigate()
+  console.log(createdBattles);
+  const navigate = useNavigate();
   const [selectedBattle, setSelectedBattle] = useState();
   const [selectedBattleModalDetail, setSelectedBattleModalDetail] = useState();
   const { viewBattleId } = useParams();
@@ -77,26 +77,25 @@ const Battle = () => {
     if (viewBattleId) {
       setOpenModal(true);
       console.log(viewBattleId);
-      const _selectedBattle = battlesToCommence?.find(e => {
-        console.log(e)
-        return (e?.battleId == viewBattleId.toString())
+      const _selectedBattle = battlesToCommence?.find((e) => {
+        console.log(e);
+        return e?.battleId == viewBattleId.toString();
       });
-      console.log(_selectedBattle)
+      console.log(_selectedBattle);
       setSelectedBattleModalDetail(_selectedBattle);
-    }
-
-    else {
+    } else {
     }
   }, [viewBattleId, battlesToCommence]);
   useEffect(() => {
-    if (battlesToCommence?.find(e => e?.battleId == selectedBattle?.battleId) || createdBattles?.find(e => e?.battleId == selectedBattle?.battleId)) {
-
-    }
-    else {
+    if (
+      battlesToCommence?.find((e) => e?.battleId == selectedBattle?.battleId) ||
+      createdBattles?.find((e) => e?.battleId == selectedBattle?.battleId)
+    ) {
+    } else {
       setSelectedBattle(createdBattles[0] || battlesToCommence[0]);
     }
-  }, [battlesToCommence, createdBattles])
-  console.log(selectedBattleModalDetail)
+  }, [battlesToCommence, createdBattles]);
+  console.log(selectedBattleModalDetail);
   const Option = ({ text, isActive }) => {
     const conditionRender = () => {
       if (isActive) {
@@ -114,7 +113,7 @@ const Battle = () => {
     };
 
     return (
-      <div className="flex mt-1 hover:cursor-pointer" onClick={() => { }}>
+      <div className="flex mt-1 hover:cursor-pointer" onClick={() => {}}>
         {isActive && <img src={SideArrow} className="h-6 my-auto mr-2" />}
         {conditionRender()}
       </div>
@@ -198,7 +197,8 @@ const Battle = () => {
   };
 
   const BattleDetails = ({ data }) => {
-    const { battleId,
+    const {
+      battleId,
       whaleId,
       owner,
       amount,
@@ -212,14 +212,18 @@ const Battle = () => {
       inProgress,
       isOwner,
       userWon,
-      created
+      created,
     } = data;
     const ImageContainer = ({ image, name, species, mirror }) => {
       return (
         <>
           <img
             src={image}
-            className={image === OpponentWhale ? "pt-24" : `whale-image ${mirror ? "-scale-x-100" : ""}`}
+            className={
+              image === OpponentWhale
+                ? "pt-24"
+                : `whale-image ${mirror ? "-scale-x-100" : ""}`
+            }
           />
           <div className="-mt-24">
             <div className="text-white font-bold text-4xl">
@@ -249,20 +253,30 @@ const Battle = () => {
             {amount}
           </div>
           <div className="text-white text-center text-xl -mt-2">Aqua</div>
-          {created ? <BailButton handleConfirm={() => cancelBattle(battleId)} /> : (blockNumber > futureBlock) ?
-            <ConfirmButton handleConfirm={() => {
-              // commenceBattle(battleId)
-              navigate(`/battles/${battleId}`)
-
-            }} /> : "Battle in Progress"}
-
-
+          {created ? (
+            <BailButton handleConfirm={() => cancelBattle(battleId)} />
+          ) : blockNumber > futureBlock ? (
+            <ConfirmButton
+              handleConfirm={() => {
+                // commenceBattle(battleId)
+                navigate(`/battles/${battleId}`);
+              }}
+            />
+          ) : (
+            "Battle in Progress"
+          )}
         </div>
         <div className="flex flex-col flex-1 ">
           <ImageContainer
             mirror
-            image={whaleIdAccepted != 0 ? `https://harmony-whales-meta.herokuapp.com/token/image/transparent/${whaleIdAccepted}` : OpponentWhale}
-            name={whaleIdAccepted != 0 ? `Whale #${whaleIdAccepted}` : undefined}
+            image={
+              whaleIdAccepted != 0
+                ? `https://harmony-whales-meta.herokuapp.com/token/image/transparent/${whaleIdAccepted}`
+                : OpponentWhale
+            }
+            name={
+              whaleIdAccepted != 0 ? `Whale #${whaleIdAccepted}` : undefined
+            }
           />
         </div>
       </div>
@@ -271,7 +285,11 @@ const Battle = () => {
 
   return (
     <>
-      <BattleProgressModal open={openModal} setOpen={setOpenModal} {...selectedBattleModalDetail} />
+      <BattleProgressModal
+        open={openModal}
+        setOpen={setOpenModal}
+        {...selectedBattleModalDetail}
+      />
 
       {!account && <Navigate to="/connect" />}
       <div className="w-full flex flex-col ">
