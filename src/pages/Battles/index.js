@@ -21,6 +21,7 @@ import SearchBox from "components/SearchBox/index";
 import BailButton from "components/Buttons/BailButton/index";
 import ConfirmButton from "components/Buttons/ConfirmButton/index";
 import BattleProgressModal from "components/BattleProgressModal";
+import BattleResultModal from "components/BattleResultModal/index";
 
 import { Navigate, useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
@@ -73,6 +74,7 @@ const Battle = () => {
   const [selectedBattleModalDetail, setSelectedBattleModalDetail] = useState();
   const { viewBattleId } = useParams();
   const [openModal, setOpenModal] = useState(false);
+  const [openBattleResultModal, setOpenBattleResultModal] = useState(true);
   useEffect(() => {
     if (viewBattleId) {
       setOpenModal(true);
@@ -283,6 +285,17 @@ const Battle = () => {
     );
   };
 
+  const data = {
+    isWinner: true,
+    battleId: 8630,
+    date: "23.02.2022",
+    aqua: 645,
+    host: "0x18...9fb0",
+    attackPoints: 53654,
+    defensePoints: 53234,
+    challenger: "0x18...9fb0",
+  };
+
   return (
     <>
       <BattleProgressModal
@@ -290,6 +303,7 @@ const Battle = () => {
         setOpen={setOpenModal}
         {...selectedBattleModalDetail}
       />
+      {openBattleResultModal && <BattleResultModal data={data} />}
 
       {!account && <Navigate to="/connect" />}
       <div className="w-full flex flex-col ">

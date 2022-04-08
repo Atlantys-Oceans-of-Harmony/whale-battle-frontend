@@ -1,0 +1,25 @@
+.overlay {
+  z-index: 50;
+  position: absolute;
+  background-color: black;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.emblem {
+  width: 500px;
+}
+
+.banner {
+  left: 50%;
+  width: 330px;
+}
+
+.winner {
+  transform: translate(-50%, 0);
+}
+
+.loser {
+  transform: translate(-48%, 0);
+}
