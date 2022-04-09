@@ -73,37 +73,28 @@ const History = () => {
   };
 
   const HistoryItem = ({ data }) => {
-    const {
-      image,
-      isWinner,
-      battleId,
-      date,
-      aqua,
-      host,
-      challenger,
-      attackPoints,
-      defensePoints,
-    } = data;
+    const {handleClick,creatorAddress,owner,acceptedBy, hideWin, battleId, amount, whaleId = 7, whaleIdAccepted = -1, isComplete, ownerTotalPoints, acceptedTotalPoints, userWon} = data
+  
 
     const AddressCard = ({ text, address }) => {
       return (
         <div className="flex flex-col my-auto text-xl">
           <div className="text-yellow">{text}</div>
           <div className="text-white font-bold font-impact text-center">
-            {address}
+            {address?.slice(0,4)}...{address?.slice(-4)}
           </div>
         </div>
       );
     };
     return (
       <div className="flex border-b border-yellow mt-6 gap-8">
-        <img src={image} className="w-20" />
+        <img src={`https://harmony-whales-meta.herokuapp.com/token/image/${whaleIdAccepted}`} className="w-20" />
         <div
           className={`text-4xl font-bold my-auto ${
-            isWinner ? "text-green" : "text-red"
+            userWon ? "text-green" : "text-red"
           }`}
         >
-          {isWinner ? "VICTORY" : "DEFEAT"}
+          {userWon ? "VICTORY" : "DEFEAT"}
         </div>
         <div className="flex flex-col my-auto text-xl">
           <div className="text-yellow">
@@ -112,31 +103,29 @@ const History = () => {
               {battleId}
             </span>
           </div>
-          <div className="text-white font-bold font-impact text-center">
-            {date}
-          </div>
+         
         </div>
         <div className="font-impact text-2xl text-lightRed flex my-auto">
           <img src={AquaIcon} className="w-8 h-8 my-auto mr-2" />
-          {aqua}
+          {amount}
         </div>
-        <AddressCard text="Battle Host" address={host} />
+        <AddressCard text="Battle Host" address={owner} />
         <div className="flex">
           <div className="text-white flex font-bold font-impact text-center text-xl relative w-20">
-            <div className="my-auto z-10 mx-4">{defensePoints}</div>
+            <div className="my-auto z-10 mx-4">{ownerTotalPoints}</div>
             <img src={DefenseIcon} className="absolute top-0 " />
           </div>
           <div className="text-white flex font-bold font-impact text-center text-xl relative w-20">
-            <div className="my-auto z-10 mx-4">{attackPoints}</div>
+            <div className="my-auto z-10 mx-4">{acceptedTotalPoints}</div>
             <img src={AttackIcon} className="absolute top-0 " />
           </div>
         </div>
 
-        <AddressCard text="Challenger" address={challenger} />
+        <AddressCard text="Challenger" address={acceptedBy} />
       </div>
     );
   };
-
+const {allBattles} = useContext(Web3Context);
   const data = {
     image: Placeholder,
     isWinner: true,
@@ -156,21 +145,11 @@ const History = () => {
         <div className="flex mt-4 mx-8 xl:mx-24 gap-5">
           <LeftSection />
           <div className="flex flex-col w-4/5 h-screen overflow-auto mb-10">
-            <HistoryItem data={data} />
-            <HistoryItem data={data} />
-            <HistoryItem data={data} />
-            <HistoryItem data={data} />
-            <HistoryItem data={data} />
-            <HistoryItem data={data} />
-            <HistoryItem data={data} />
-            <HistoryItem data={data} />
-            <HistoryItem data={data} />
-            <HistoryItem data={data} />
-            <HistoryItem data={data} />
-            <HistoryItem data={data} />
-            <HistoryItem data={data} />
-            <HistoryItem data={data} />
-            <HistoryItem data={data} />
+            {allBattles?.map(e=>{
+              return(<HistoryItem data={e} />)
+            })}
+            
+        
           </div>
         </div>
       </div>

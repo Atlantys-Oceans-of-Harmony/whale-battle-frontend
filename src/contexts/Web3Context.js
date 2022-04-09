@@ -9,6 +9,7 @@ import { Provider as MulticallProvider, Contract as MulticallContract } from "et
 import { BigNumber } from "../../node_modules/ethers/lib/ethers";
 import { toast } from 'react-toastify';
 import axios from 'axios';
+import { useNavigate } from "react-router-dom";
 
 
 const DEFAULT_ACCOUNTS = [
@@ -59,7 +60,7 @@ const STAKING_CONTRACT_ADDRESS = "0x3d902f6447A0D4E61d65E863E7C2425D938cfEed"
 
 
 export const Web3Provider = (props) => {
-
+    const navigate = useNavigate()
     const [account, setAccount] = useState();
     const [signer, setSigner] = useState();
     const [contractObjects, setContractObjects] = useState();
@@ -77,6 +78,9 @@ export const Web3Provider = (props) => {
     const [harmonyWhales, setHarmonyWhales] = useState(undefined);
     const [harmonyWhalesData, setHarmonyWhalesData] = useState(undefined);
     const [battlesToCommence, setBattleToCommence] = useState([]);
+    const [allBattles, setAllBattles] = useState([]);
+    const [cancelledBattles, setCancelledBattles] = useState([]);
+    const [forfeitedBattles, setForfeitedBattles] = useState([]);
 
 
     const onAccountsChanged = async (accounts) => {
@@ -132,8 +136,22 @@ export const Web3Provider = (props) => {
 
     useEffect(() => {
         const fetchStuff = async () => {
-            const { getAllHarmonyWhales, getAllBattles, getBattlesReadyToAccept, getBattleDetails, getBattlesByWhale, getArbTokenBalance, getWhaleStats
+            const { getAllHarmonyWhales, getAllBattles, getBattlesReadyToAccept, getBattleDetails, getBattlesByWhale, getArbTokenBalance, getWhaleStats,getAllUserBattles
             } = functionsToExport;
+            const { allBattles, wonBattles: _wonBattles, lostBattles: _lostBattles, cancelledBattles: _cancelledBattles, forfeitedBattles: _forfeitedBattles } = await getAllUserBattles();
+            const [_allBattleDetails, _wonBattleDetails, _lostBattleDetails, _cancelledBattleDetails, _forfeitedBattleDetails] = await Promise.all([
+                getBattleDetails(allBattles),
+                getBattleDetails(_wonBattles),
+                getBattleDetails(_lostBattles),
+                getBattleDetails(_cancelledBattles),
+                getBattleDetails(_forfeitedBattles),
+            ]);
+            setAllBattles(_allBattleDetails);
+            setWonBattles(_wonBattleDetails);
+            setLostBattles(_lostBattleDetails);
+            setCancelledBattles(_cancelledBattleDetails);
+            setForfeitedBattles(_forfeitedBattleDetails);
+            // setBattlesToShow(_allBattleDetails);
             getArbTokenBalance()
             getAllHarmonyWhales().then(async (res) => {
                 setHarmonyWhales(res)
@@ -839,6 +857,7 @@ fragment ERC721CardInfo on ERC721TokenMetadata {
     }
     functionsToExport.joinBattle = async ({ whaleId, battleId, amount }) => {
         try {
+            
             const requiredAmount = BigNumber.from(utils.parseEther(amount))
             const availableBalance = await contractObjects?.arbTokenContract.allowance(account, ARB_WHALE_BATTLE_CONTRACT_ADDRESS);
             if (availableBalance.lt(requiredAmount)) {
@@ -857,6 +876,8 @@ fragment ERC721CardInfo on ERC721TokenMetadata {
             console.log(txn);
             toast("Battle Joined!")
             setUpdate(update => update + 1);
+            navigate(`/battles/${battleId}`)
+
         }
         catch (e) {
             toast.error(e?.data?.message || "Transaction Failed")
@@ -892,6 +913,8 @@ fragment ERC721CardInfo on ERC721TokenMetadata {
         battlesToJoin,
         battlesToCommence,
         createdBattles,
+        allBattles,
+        cancelledBattles
     }}>
         {props.children}
     </Web3Context.Provider>)

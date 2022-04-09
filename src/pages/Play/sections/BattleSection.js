@@ -146,7 +146,7 @@ export default function BattleSection({
           </div>
         </>
       ) : (
-        <>Select a Whale First!</>
+        <div className="text-2xl w-full text-center text-white">Select a Whale First!</div>
       )}
       <div className="flex flex-1 text-white">
         <div className="w-2/3 overflow-auto h-128">

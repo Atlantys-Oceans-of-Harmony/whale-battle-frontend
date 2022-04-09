@@ -41,7 +41,6 @@ const FindBattle = () => {
   const handleJoinBattle = async () => {
     console.log(joinBattleForm);
     await joinBattle({ ...joinBattleForm });
-    navigate(`/battles/${joinBattleForm?.battleId}`)
   };
   useEffect(() => {
     const funcToRun = async () => {
