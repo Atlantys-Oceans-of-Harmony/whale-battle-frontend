@@ -11,6 +11,7 @@ import Play from "pages/Play/index";
 import Battles from "pages/Battles/index";
 import History from "pages/History/index";
 import ConnectWallet from "pages/ConnectWallet/index";
+import BattleResultModal from "components/BattleResultModal/index";
 
 function App() {
   return (

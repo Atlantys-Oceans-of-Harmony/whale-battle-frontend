@@ -3,22 +3,26 @@ import { Fragment, useRef, useState, useContext, useEffect } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { ExclamationIcon } from '@heroicons/react/outline'
 import Web3Context from 'contexts/Web3Context';
+import BattleResultModal from './BattleResultModal/index';
 
 
-export default function BattleProgressModal({ battleId = 24, amount = 555, handleClick, handelClick, whaleId = 7, owner = "0xxx", open, setOpen, whaleData, isComplete }) {
+export default function BattleProgressModal({ battleId = 24, amount = 555, handleClick, handelClick, whaleId = 7, owner = "0xxx", open, setOpen, whaleData, isComplete,battleSummary,setBattleSummary }) {
   const cancelButtonRef = useRef(null);
-  const [battleSummary, setBattleSummary] = useState();//battle Summary would contain the win/lose results. If this is has a value, the battle has ended and show user the popup instead of video
   useEffect(() => {
     if (!open) {
-      setBattleSummary();
+      // setBattleSummary();
     }
   }, [open])
   const { commenceBattle } = useContext(Web3Context);
+  console.log(open);
 
   return (
     <Transition.Root show={open} as={Fragment}>
-      <Dialog as="div" className="fixed z-10 inset-0 overflow-y-auto" initialFocus={cancelButtonRef} onClose={setOpen}>
-        <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+      <Dialog as="div" className="fixed z-10 inset-0 overflow-y-auto"  onClose={(e)=>{
+        console.log("I was called")
+        console.log(e)
+        setOpen(false)}}>
+         <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"
@@ -44,7 +48,6 @@ export default function BattleProgressModal({ battleId = 24, amount = 555, handl
             leaveFrom="opacity-100 translate-y-0 sm:scale-100"
             leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
           >
-            {!battleSummary ?
               <div className="relative py-8 px-8 z-50 inline-block align-bottom bg-black bg-opacity-70 rounded-lg text-center transform transition-all sm:my-8 sm:align-middle ">
                 <video width="750" height="500" playsInline autoPlay muted loop style={{ pointerEvents: "none" }} >
 
@@ -62,21 +65,10 @@ export default function BattleProgressModal({ battleId = 24, amount = 555, handl
                     </button>
                   </div>
                   : <div className="text-center font-bold text-xl text-white my-4">Battle in Progress...</div>}
-              </div> : <>
-                <div className="font-semibold text-xl cursor-pointer text-white text-center mx-auto">Winner: {battleSummary?.winner?.slice(0, 4)}...{battleSummary?.winner?.slice(-4)}</div>
-                <div className="font-semibold text-xl cursor-pointer text-white text-center mx-auto">Winnings: {battleSummary?.amount} AQUA</div>
-                <div className="font-semibold text-xl cursor-pointer text-white text-center mx-auto">Battle Host: {battleSummary?.owner?.slice(0, 4)}...{battleSummary?.owner?.slice(-4)}</div>
-                <div className="font-semibold text-xl cursor-pointer text-white text-center mx-auto">Challenger: {battleSummary?.acceptedBy?.slice(0, 4)}...{battleSummary?.acceptedBy?.slice(-4)}</div>
-                <br />
+              </div> 
 
-                <div className="font-semibold text-xl cursor-pointer text-white text-center mx-auto">Game Points</div>
-                <div className="font-semibold text-xl cursor-pointer text-white text-center mx-auto">Host: {battleSummary?.ownerTotalPoints}</div>
-                <div className="font-semibold text-xl cursor-pointer text-white text-center mx-auto">Challenger: {battleSummary?.acceptedTotalPoints}</div>
-
-              </>
-            }
           </Transition.Child>
-        </div>
+        </div> 
       </Dialog >
     </Transition.Root >
   )

@@ -4,6 +4,7 @@ import "./index.css";
 import { Navigate } from "react-router-dom";
 
 import Navbar from "../../components/NavbarV2";
+import BattleResultModal from "components/BattleResultModal/index";
 
 const Home = () => {
   const {
@@ -30,6 +31,8 @@ const Home = () => {
       {!account && <Navigate to="/connect" />}
       <div className="w-full">
         <Navbar active="HOME" />
+        {/* <BattleResultModal/> */}
+
       </div>
     </>
   );

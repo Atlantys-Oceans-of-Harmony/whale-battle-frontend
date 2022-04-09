@@ -741,7 +741,7 @@ fragment ERC721CardInfo on ERC721TokenMetadata {
             }
             battleSummary.userWon = account?.toString()?.toLowerCase() === battleSummary?.winner?.toString()?.toLowerCase()
             setBattleSummary(battleSummary)
-            setOpen(true)
+            setOpen(false)
 
             toast("Battle Ended!");
             setUpdate(update => update + 1);

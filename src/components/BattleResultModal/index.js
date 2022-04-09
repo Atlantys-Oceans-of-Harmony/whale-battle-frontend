@@ -14,33 +14,32 @@ const Banner = (isWinner) => {
     : require("../../assets/defeat_banner.png");
 };
 
-export default function BattleResultModal({ data, closeModal }) {
+export default function BattleResultModal({ data={}, closeModal }) {
   const {
     image,
-    isWinner,
+    userWon,
     battleId,
-    date,
-    aqua,
-    host,
-    challenger,
-    attackPoints,
-    defensePoints,
+   amount,
+    owner,
+    acceptedBy,
+    ownerTotalPoints,
+    acceptedTotalPoints,
   } = data;
   return (
-    <div className="text-white flex overlay">
+    <div className="text-white flex overlay ">
       <img
         src={CrossIcon}
         className="absolute top-20 right-20 w-10 cursor-pointer"
         onClick={closeModal}
       />
       <div className="mx-auto flex flex-col">
-        <img src={Emblem(isWinner)} className="emblem" />
+        <img src={Emblem(userWon)} className="emblem" />
         <div className="relative text-white">
           <div className="-mt-28 flex flex-col">
             <img
-              src={Banner(isWinner)}
+              src={Banner(userWon)}
               className={`absolute banner mx-auto ${
-                isWinner ? "winner" : "loser"
+                userWon ? "winner" : "loser"
               }`}
             />
             <div className="mt-12 z-10 flex flex-col">
@@ -52,28 +51,28 @@ export default function BattleResultModal({ data, closeModal }) {
               </div>
               <div
                 className={`text-center text-yellow text-sm ${
-                  isWinner ? "mt-10" : "mt-16"
+                  userWon ? "mt-10" : "mt-16"
                 }`}
               >
-                {isWinner ? "Winnings" : "Losses"}
+                {userWon ? "Winnings" : "Losses"}
               </div>
               <div className="text-center text-white text-xl font-impact font-bold -mt-1">
-                {aqua}
+                {amount}
               </div>
               <div
                 className={`flex mx-auto ${
-                  isWinner ? "mt-4 gap-6" : "mt-8 gap-12"
+                  userWon ? "mt-4 gap-6" : "mt-8 gap-12"
                 }`}
               >
                 <div className="text-center text-white text-lg font-impact font-bold -mt-1">
-                  {defensePoints}
+                  {acceptedTotalPoints}
                 </div>
                 <div className="text-center text-white text-lg font-impact font-bold -mt-1">
-                  {attackPoints}
+                  {ownerTotalPoints}
                 </div>
               </div>
               <div
-                className={`flex mx-auto mt-2 ${isWinner ? "gap-4" : "gap-8"}`}
+                className={`flex mx-auto mt-2 ${userWon ? "gap-4" : "gap-8"}`}
               >
                 <div className="text-center text-yellow text-sm w-16 leading-3">
                   Battle Host
@@ -84,10 +83,10 @@ export default function BattleResultModal({ data, closeModal }) {
               </div>
               <div className="flex mx-auto mt-2 gap-6">
                 <div className="text-center text-white text-sm font-impact font-bold -mt-1">
-                  {host}
+                  {owner}
                 </div>
                 <div className="text-center text-white text-sm font-impact font-bold -mt-1">
-                  {challenger}
+                  {acceptedBy}
                 </div>
               </div>
             </div>
