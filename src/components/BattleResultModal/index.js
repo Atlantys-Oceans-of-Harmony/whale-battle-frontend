@@ -1,7 +1,6 @@
 import React from "react";
 import "./style.css";
-import VictoryBanner from "../../assets/victory_banner.png";
-import DefeatBanner from "../../assets/defeat_banner.png";
+import CrossIcon from "../../assets/cross_icon.png";
 
 const Emblem = (isWinner) => {
   return isWinner
@@ -15,7 +14,7 @@ const Banner = (isWinner) => {
     : require("../../assets/defeat_banner.png");
 };
 
-export default function BattleResultModal({ data }) {
+export default function BattleResultModal({ data, closeModal }) {
   const {
     image,
     isWinner,
@@ -29,6 +28,11 @@ export default function BattleResultModal({ data }) {
   } = data;
   return (
     <div className="text-white flex overlay">
+      <img
+        src={CrossIcon}
+        className="absolute top-20 right-20 w-10 cursor-pointer"
+        onClick={closeModal}
+      />
       <div className="mx-auto flex flex-col">
         <img src={Emblem(isWinner)} className="emblem" />
         <div className="relative text-white">

@@ -303,7 +303,12 @@ const Battle = () => {
         setOpen={setOpenModal}
         {...selectedBattleModalDetail}
       />
-      {openBattleResultModal && <BattleResultModal data={data} />}
+      {openBattleResultModal && (
+        <BattleResultModal
+          data={data}
+          closeModal={() => setOpenBattleResultModal(false)}
+        />
+      )}
 
       {!account && <Navigate to="/connect" />}
       <div className="w-full flex flex-col ">
