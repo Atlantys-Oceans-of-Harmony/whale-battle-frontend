@@ -420,107 +420,7 @@ fragment ERC721CardInfo on ERC721TokenMetadata {
             console.log(e);
         }
     }
-    functionsToExport.listenToCreatedBattles = async (onCreated, ownerOnly = false) => {
-        let filter = contractObjects?.arbWhaleBattleContract?.filters?.CreatedBattle(null, ownerOnly ? account : null);
-        contractObjects?.arbWhaleBattleContract?.on(filter, async (...args) => {
-            const data = {
-                battleId: args[0].toString(),
-                creatorAddress: args[1],
-                whaleId: args[2].toString(),
-                amount: args[3].toString(),
-                color: args[4].toString(),
-                created: args[5].toString(),
-            }
-            console.log(args[0].toString());
-            console.log("CreatedBattle");
-            console.log(args)
-            onCreated(data);
-            toast(` Battle #${data.battleId} Added${ownerOnly ? "(by you)" : data.creatorAddress}`);
-
-        })
-    }
-    functionsToExport.listenToAcceptedBattles = async (onAccepted) => {
-        let filter = contractObjects?.arbWhaleBattleContract?.filters?.AcceptedBattle(null, account);
-        contractObjects?.arbWhaleBattleContract?.on(filter, async (...args) => {
-            const data = {
-                battleId: args[0].toString(),
-                creatorAddress: args[1],
-                whaleId: args[2].toString(),
-                amount: args[3].toString(),
-                color: args[4].toString(),
-                created: args[5].toString(),
-            }
-            console.log("AcceptedBattle");
-            onAccepted(data);
-            toast(`Battle #${data.battleId} Accepted!`)
-
-        })
-    }
-
-    functionsToExport.listenToCanceledBattles = async (onCancelled) => {
-        let filter = contractObjects?.arbWhaleBattleContract?.filters?.CanceledBattle();
-        contractObjects?.arbWhaleBattleContract?.on(filter, async (...args) => {
-            const data = {
-                battleId: args[0].toString(),
-                creatorAddress: args[1],
-                whaleId: args[2].toString(),
-                amount: args[3].toString(),
-                color: args[4].toString(),
-                created: args[5].toString(),
-            }
-            console.log(args[0].toString());
-            console.log("CreatedBattle");
-            console.log(args)
-            onCancelled(data);
-            toast(`Battle #${data.battleId} Canceled!`)
-
-
-        })
-    }
-    functionsToExport.listenToOngoingBattles = async (onWin) => {
-        let filter = contractObjects?.arbWhaleBattleContract?.filters?.AcceptedBattle();
-        contractObjects?.arbWhaleBattleContract?.on(filter, async (...args) => {
-            const data = {
-                battleId: args[0].toString(),
-                creatorAddress: args[1],
-                whaleId: args[2].toString(),
-                whaleIdAccepted: args[3].toString(),
-                ownerTotalPoints: args[4].toString(),
-                acceptedTotalPoints: args[5].toString(),
-                amount: args[6].toString(),
-                created: args[7].toString(),
-            }
-            console.log(args[0].toString());
-            console.log("WonBattle");
-            console.log(args);
-            onWin(data);
-            toast(`Battle #${data.battleId} Won!`)
-
-
-        })
-    }
-    functionsToExport.listenToWonBattles = async (onWin) => {
-        let filter = contractObjects?.arbWhaleBattleContract?.filters?.BattleWon();
-        contractObjects?.arbWhaleBattleContract?.on(filter, async (...args) => {
-            const data = {
-                battleId: args[0].toString(),
-                creatorAddress: args[1],
-                whaleId: args[2].toString(),
-                whaleIdAccepted: args[3].toString(),
-                ownerTotalPoints: args[4].toString(),
-                acceptedTotalPoints: args[5].toString(),
-                amount: args[6].toString(),
-                created: args[7].toString(),
-            }
-            console.log(args[0].toString());
-            console.log("WonBattle");
-            console.log(args);
-            onWin(data);
-            toast(`Battle #${data.battleId} Won!`)
-
-
-        })
-    }
+  
     functionsToExport.getBattlesReadyToAccept = async () => {
         let result = await contractObjects?.battleStorageContract?.getBattlesReadyToAccept();
 
@@ -543,7 +443,7 @@ fragment ERC721CardInfo on ERC721TokenMetadata {
             let _lostBattles = result[4]?.filter(e => e.toString() !== "0")
             let _cancelledBattles = result[7]?.filter(e => e.toString() !== "0")
             let _forfeitedBattles = result[8]?.filter(e => e.toString() !== "0")
-            let allBattles = [..._wonBattles, ..._lostBattles, ..._cancelledBattles, ..._forfeitedBattles];
+            let allBattles = [...new Set([..._wonBattles, ..._lostBattles, ..._cancelledBattles, ..._forfeitedBattles])];
             allBattles = allBattles.map(e => parseInt(e.toString()));
             _wonBattles = _wonBattles.map(e => parseInt(e.toString()));
             _lostBattles = _lostBattles.map(e => parseInt(e.toString()));

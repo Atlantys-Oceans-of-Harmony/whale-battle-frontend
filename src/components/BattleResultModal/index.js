@@ -83,10 +83,11 @@ export default function BattleResultModal({ data={}, closeModal }) {
               </div>
               <div className="flex mx-auto mt-2 gap-6">
                 <div className="text-center text-white text-sm font-impact font-bold -mt-1">
-                  {owner}
+                  {owner?.slice(0,3)}...{owner?.slice(-3)}
                 </div>
                 <div className="text-center text-white text-sm font-impact font-bold -mt-1">
-                  {acceptedBy}
+                  {acceptedBy?.slice(0,3)}...{acceptedBy?.slice(-3)}
+
                 </div>
               </div>
             </div>
