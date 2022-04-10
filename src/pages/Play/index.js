@@ -127,7 +127,7 @@ const Play = () => {
         <div className="buttons-container self-center my-4">
           <Option text="FIND BATTLE" />
           <Option text="CREATE BATTLE" />
-          <Option text="JOIN FRIEND" extra="REWARDS DISABLED" />
+          {/* <Option text="JOIN FRIEND" extra="REWARDS DISABLED" /> */}
         </div>
 
         {/* ConfirmButton */}

@@ -38,7 +38,7 @@ const Navbar = ({ active }) => {
         </div>
 
         <div className="flex justify-center">
-          <NavButton text="HOME" active={active} />
+          {/* <NavButton text="HOME" active={active} /> */}
           <NavButton text="PLAY" active={active} />
           <NavButton text="BATTLES" active={active} />
           <NavButton text="HISTORY" active={active} />
