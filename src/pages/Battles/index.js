@@ -235,7 +235,7 @@ const Battle = () => {
               style={{
                 backgroundImage: `url(https://harmony-whales-meta.herokuapp.com/token/image/${data?.whaleId})`,
               }}
-              className="flex-1 mx-4 mt-4 bg-cover "
+              className="flex-1 mx-4 mt-4 bg-cover bg-center"
             >
               <div className="mt-6 text-center text-yellow text-xl">Battle</div>
               <div className="text-center font-impact text-yellow text-3xl">
@@ -321,7 +321,7 @@ const Battle = () => {
           <ImageContainer
             image={`https://harmony-whales-meta.herokuapp.com/token/image/transparent/${whaleId}`} // Acadia yaha pe image url daal dena (url() type wala)
             name={`Whale #${whaleId}`}
-            species="Whale species"
+            species=""
           />
         </div>
         <div className="flex flex-col flex-1">
