@@ -14,7 +14,7 @@ const BattleProgressCard = ({ handleClick, hideWin, battleId, amount, whaleId = 
 
 
             <div className="font-bold text-xl cursor-pointer text-white text-center mx-auto">Battle #{battleId}</div>
-            <div className="font-semibold text-lg cursor-pointer text-white text-center mx-auto">Amount {amount} AQUA</div>
+            <div className="font-semibold text-lg cursor-pointer text-white text-center mx-auto">Amount {parseFloat(parseFloat(amount)?.toFixed(4))} AQUA</div>
             <div
                 className="h-32 mx-auto  w-60 relative text-md tracking-tight font-extrabold text-white text-xl flex items-center wallet-btn ">
                 <button

@@ -73,15 +73,19 @@ const Battle = () => {
   const [selectedBattle, setSelectedBattle] = useState();
   const [selectedBattleModalDetail, setSelectedBattleModalDetail] = useState();
   const { viewBattleId } = useParams();
-  const [openModal, setOpenModal] = useState(false);
-  const [battleSummary, setBattleSummary] = useState(); //battle Summary would contain the win/lose results. If this is has a value, the battle has ended and show user the popup instead of video
-
   const [currentBattles, setCurrentBattles] = useState();
   const [page, setPage] = useState(0);
+  const [openModal, setOpenModal] = useState(undefined);
+  const [battleSummary, setBattleSummary] = useState(); //battle Summary would contain the win/lose results. If this is has a value, the battle has ended and show user the popup instead of video
+  const [battlesToShow, setBattlesToShow] = useState([]);
+  const [sortOption, setSortOption] = useState("Date");
+  const [searchText, setSearchText] = useState("");
 
   useEffect(() => {
     if (viewBattleId) {
-      setOpenModal(true);
+      if (openModal == undefined) {
+        setOpenModal(true);
+      }
       console.log(viewBattleId);
       const _selectedBattle = battlesToCommence?.find((e) => {
         console.log(e);
@@ -103,9 +107,29 @@ const Battle = () => {
   }, [battlesToCommence, createdBattles]);
 
   useEffect(() => {
-    const allBattles = [...createdBattles, ...battlesToCommence];
-    setCurrentBattles(allBattles.slice(page * 5, page * 5 + 5));
-  }, [createdBattles, battlesToCommence, page]);
+    if (battlesToCommence) {
+      let _battlesToShow = [...battlesToCommence, ...createdBattles];
+      if (searchText !== "") {
+        _battlesToShow = _battlesToShow?.filter(({ battleId }) =>
+          battleId?.toString().includes(searchText)
+        );
+      }
+      if (sortOption === "Stake") {
+        _battlesToShow.sort((b, a) => a?.amount - b?.amount);
+      }
+      if (sortOption === "Date") {
+        _battlesToShow.sort((b, a) => a?.battleId - b?.battleId);
+      }
+      if (sortOption === "Progress") {
+        _battlesToShow.sort((b, a) => a?.created - b?.created);
+      }
+      setBattlesToShow(_battlesToShow);
+    }
+  }, [battlesToCommence, createdBattles, sortOption, searchText]);
+
+  useEffect(() => {
+    setCurrentBattles(battlesToShow.slice(page * 5, page * 5 + 5));
+  }, [battlesToShow, page]);
 
   const handlePageUp = () => {
     if (page * 5 + 5 < [...createdBattles, ...battlesToCommence].length) {
@@ -120,17 +144,20 @@ const Battle = () => {
   };
 
   console.log(selectedBattleModalDetail);
-  const Option = ({ text, isActive }) => {
+  const Option = ({ text, isActive, onClick }) => {
     const conditionRender = () => {
       if (isActive) {
         return (
-          <div className="text-white active-option w-full pl-2 py">
+          <div
+            onClick={onClick}
+            className="text-white active-option w-full pl-2 py"
+          >
             <div className="font-bold">{text}</div>
           </div>
         );
       }
       return (
-        <div className="text-white hover:text-red ml-7">
+        <div onClick={onClick} className="text-white hover:text-red ml-7">
           <div className="font-bold">{text}</div>
         </div>
       );
@@ -152,16 +179,36 @@ const Battle = () => {
     );
   };
 
-  const LeftSection = () => {
+  const LeftSection = ({ onChange, value }) => {
+    const options = [
+      { text: "Stake", id: "Stake" },
+      { text: "Date", id: "Date" },
+      { text: "Progress", id: "Progress" },
+    ];
+
     return (
       <div className="flex-1 text-white pt-12">
-        <SearchBox placeholder="Search #" />
+        <SearchBox
+          autoFocus="autofocus"
+          value={searchText}
+          onChange={(e) => setSearchText(e?.target?.value)}
+          placeholder="Search #"
+        />
         <div className="mt-6">
           <div className="text-xl font-bold">Sort by :</div>
           <div className="mt-4">
-            <Option text="Stake" isActive />
-            <Option text="Date" />
-            <Option text="Progress" />
+            {options?.map(({ text, id }) => {
+              return (
+                <Option
+                  text={text}
+                  isActive={value === id}
+                  onClick={() => {
+                    console.log(id);
+                    onChange(id);
+                  }}
+                />
+              );
+            })}
           </div>
         </div>
       </div>
@@ -312,7 +359,7 @@ const Battle = () => {
   return (
     <>
       <BattleProgressModal
-        open={openModal}
+        open={openModal || false}
         setOpen={setOpenModal}
         {...selectedBattleModalDetail}
         battleSummary={battleSummary}
@@ -368,22 +415,6 @@ const Battle = () => {
                     />
                   );
                 })}
-              {/* {battlesToCommence &&
-                battlesToCommence?.map((el) => {
-                  return (
-                    <BattleCard
-                      data={el}
-                      onClick={() => {
-                        console.log(el);
-                        setSelectedBattle(el);
-                      }}
-                      isSelected={
-                        selectedBattle &&
-                        selectedBattle.battleId === el.battleId
-                      }
-                    />
-                  );
-                })} */}
             </div>
             <img
               src={SideArrow}
