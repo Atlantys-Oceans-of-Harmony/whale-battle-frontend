@@ -20,43 +20,43 @@ const DEFAULT_ACCOUNTS = [
 
 const Web3Context = createContext();
 
-// const RPC_URL = "https://rpc.hermesdefi.io/";
-// const CHAIN_ID = 1666600000;
-// const NATIVE_CURRENCY = {
-//     name: "one",
-//     symbol: "ONE", // 2-6 characters long
-//     decimals: 18,
-// }
-// const MULTI_CALL_ADDRESS = "0x34b415f4d3b332515e66f70595ace1dcf36254c5";
-// const CHAIN_NAME = "Harmony Mainnet";
-// const ARB_TOKEN_CONTRACT_ADDRESS = "0x044246137670a03ca790d7ed20af0c552c88117c";
-// const ARB_WHALE_BATTLE_CONTRACT_ADDRESS = "0x707b8B324DE71D21218d52EB1bd942E27B7044ac";
-// const HARMONY_WHALES_CONTRACT_ADDRfESS = "0x289FF2F47cD7575c62FDcf45B62451EA9b2420dD";
-// const HARMONY_WHALES_V2_CONTRACT_ADDRESS = "0x289FF2F47cD7575c62FDcf45B62451EA9b2420dD";
-// const BATTLE_STORAGE_CONTRACT_ADDRESS = "0x492174791Faa6768969a8935A1954Dc161f97D81";
-// // const HARMONY_WHALES_CONTRACT_ADDRfESS = "0x0519f50287DDcdF8b761Dae76Dc1A76776A0af70";
-// const STAKING_CONTRACT_ADDRESS = "0x3d902f6447A0D4E61d65E863E7C2425D938cfEed";
-// const BANK_CONTRACT = "0xE0370653E6DEb354D186d35215eb87E0b6200C8c";
-
-
-
-
-const RPC_URL = "https://api.s0.b.hmny.io";
-const CHAIN_ID = 1666700000;
+const RPC_URL = "https://rpc.hermesdefi.io/";
+const CHAIN_ID = 1666600000;
 const NATIVE_CURRENCY = {
     name: "one",
     symbol: "ONE", // 2-6 characters long
     decimals: 18,
 }
-const MULTI_CALL_ADDRESS = "0xd078799c53396616844e2fa97f0dd2b4c145a685";
-const CHAIN_NAME = "Harmony Testnet";
-const ARB_TOKEN_CONTRACT_ADDRESS = "0x188f75D2f8E7636D5F12C8b50ff5E1EB1DAF2E83";
-const ARB_WHALE_BATTLE_CONTRACT_ADDRESS = "0x8A0A89513092AFf04d1B8e9f1CeFDd5FA5451Cc3";
-const HARMONY_WHALES_CONTRACT_ADDRfESS = "0xfA982a44a24f30Ca4988761441B2C85EaFDd4c50";
-const HARMONY_WHALES_V2_CONTRACT_ADDRESS = "0xfA982a44a24f30Ca4988761441B2C85EaFDd4c50";
-const BATTLE_STORAGE_CONTRACT_ADDRESS = "0xe2884592C1162664e3e9f34b3252f63673d8e432";
+const MULTI_CALL_ADDRESS = "0x34b415f4d3b332515e66f70595ace1dcf36254c5";
+const CHAIN_NAME = "Harmony Mainnet";
+const ARB_TOKEN_CONTRACT_ADDRESS = "0x044246137670a03ca790d7ed20af0c552c88117c";
+const ARB_WHALE_BATTLE_CONTRACT_ADDRESS = "0x707b8B324DE71D21218d52EB1bd942E27B7044ac";
+const HARMONY_WHALES_CONTRACT_ADDRfESS = "0x289FF2F47cD7575c62FDcf45B62451EA9b2420dD";
+const HARMONY_WHALES_V2_CONTRACT_ADDRESS = "0x289FF2F47cD7575c62FDcf45B62451EA9b2420dD";
+const BATTLE_STORAGE_CONTRACT_ADDRESS = "0x492174791Faa6768969a8935A1954Dc161f97D81";
 // const HARMONY_WHALES_CONTRACT_ADDRfESS = "0x0519f50287DDcdF8b761Dae76Dc1A76776A0af70";
-const STAKING_CONTRACT_ADDRESS = "0x3d902f6447A0D4E61d65E863E7C2425D938cfEed"
+const STAKING_CONTRACT_ADDRESS = "0x3d902f6447A0D4E61d65E863E7C2425D938cfEed";
+const BANK_CONTRACT = "0xE0370653E6DEb354D186d35215eb87E0b6200C8c";
+
+
+
+
+// const RPC_URL = "https://api.s0.b.hmny.io";
+// const CHAIN_ID = 1666700000;
+// const NATIVE_CURRENCY = {
+//     name: "one",
+//     symbol: "ONE", // 2-6 characters long
+//     decimals: 18,
+// }
+// const MULTI_CALL_ADDRESS = "0xd078799c53396616844e2fa97f0dd2b4c145a685";
+// const CHAIN_NAME = "Harmony Testnet";
+// const ARB_TOKEN_CONTRACT_ADDRESS = "0x188f75D2f8E7636D5F12C8b50ff5E1EB1DAF2E83";
+// const ARB_WHALE_BATTLE_CONTRACT_ADDRESS = "0x8A0A89513092AFf04d1B8e9f1CeFDd5FA5451Cc3";
+// const HARMONY_WHALES_CONTRACT_ADDRfESS = "0xfA982a44a24f30Ca4988761441B2C85EaFDd4c50";
+// const HARMONY_WHALES_V2_CONTRACT_ADDRESS = "0xfA982a44a24f30Ca4988761441B2C85EaFDd4c50";
+// const BATTLE_STORAGE_CONTRACT_ADDRESS = "0xe2884592C1162664e3e9f34b3252f63673d8e432";
+// // const HARMONY_WHALES_CONTRACT_ADDRfESS = "0x0519f50287DDcdF8b761Dae76Dc1A76776A0af70";
+// const STAKING_CONTRACT_ADDRESS = "0x3d902f6447A0D4E61d65E863E7C2425D938cfEed"
 
 
 export const Web3Provider = (props) => {
@@ -140,11 +140,11 @@ export const Web3Provider = (props) => {
             } = functionsToExport;
             const { allBattles, wonBattles: _wonBattles, lostBattles: _lostBattles, cancelledBattles: _cancelledBattles, forfeitedBattles: _forfeitedBattles } = await getAllUserBattles();
             const [_allBattleDetails, _wonBattleDetails, _lostBattleDetails, _cancelledBattleDetails, _forfeitedBattleDetails] = await Promise.all([
-                getBattleDetails(allBattles),
-                getBattleDetails(_wonBattles),
-                getBattleDetails(_lostBattles),
-                getBattleDetails(_cancelledBattles),
-                getBattleDetails(_forfeitedBattles),
+                getBattleDetails(allBattles||[]),
+                getBattleDetails(_wonBattles||[]),
+                getBattleDetails(_lostBattles||[]),
+                getBattleDetails(_cancelledBattles||[]),
+                getBattleDetails(_forfeitedBattles||[]),
             ]);
             setAllBattles(_allBattleDetails);
             setWonBattles(_wonBattleDetails);
@@ -179,7 +179,7 @@ export const Web3Provider = (props) => {
             setBattleToCommence(commenceBattles);
 
             setBattlesToJoin(readyToJoinbattles);
-            // setBattlesToJoin(readyToJoinbattles.filter(eee => !eee.isOwner));
+            setBattlesToJoin(readyToJoinbattles.filter(eee => !eee.isOwner));
 
 
         }
@@ -548,7 +548,7 @@ fragment ERC721CardInfo on ERC721TokenMetadata {
     }
     functionsToExport.getBattleDetails = async (battleIds = []) => {
         const [multicallProvider, multicallContract] = await setupMultiCallContract(BATTLE_STORAGE_CONTRACT_ADDRESS, battleStorageAbi);
-        let tokenCalls = battleIds.map(e => {
+        let tokenCalls = battleIds?.map(e => {
             return (multicallContract.getBattleById(e.toString()));
         })
         const userTokens = (await multicallProvider?.all(tokenCalls));
