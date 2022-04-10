@@ -29,16 +29,13 @@ const NATIVE_CURRENCY = {
 }
 const MULTI_CALL_ADDRESS = "0x34b415f4d3b332515e66f70595ace1dcf36254c5";
 const CHAIN_NAME = "Harmony Mainnet";
-const ARB_TOKEN_CONTRACT_ADDRESS = "0x044246137670a03ca790d7ed20af0c552c88117c";
+const ARB_TOKEN_CONTRACT_ADDRESS = "0x1A5b1109F04Cc3f45d4C533685a347656d0983E4";
 const ARB_WHALE_BATTLE_CONTRACT_ADDRESS = "0x707b8B324DE71D21218d52EB1bd942E27B7044ac";
 const HARMONY_WHALES_CONTRACT_ADDRfESS = "0x289FF2F47cD7575c62FDcf45B62451EA9b2420dD";
 const HARMONY_WHALES_V2_CONTRACT_ADDRESS = "0x289FF2F47cD7575c62FDcf45B62451EA9b2420dD";
-const BATTLE_STORAGE_CONTRACT_ADDRESS = "0x492174791Faa6768969a8935A1954Dc161f97D81";
+const BATTLE_STORAGE_CONTRACT_ADDRESS = "0x541f1a396dC207449A8AC37d7EE92BC1F5aaE125";
 // const HARMONY_WHALES_CONTRACT_ADDRfESS = "0x0519f50287DDcdF8b761Dae76Dc1A76776A0af70";
-const STAKING_CONTRACT_ADDRESS = "0x3d902f6447A0D4E61d65E863E7C2425D938cfEed";
-const BANK_CONTRACT = "0xE0370653E6DEb354D186d35215eb87E0b6200C8c";
-
-
+const STAKING_CONTRACT_ADDRESS = "0x3d902f6447A0D4E61d65E863E7C2425D938cfEed"
 
 
 // const RPC_URL = "https://api.s0.b.hmny.io";
@@ -85,7 +82,7 @@ export const Web3Provider = (props) => {
 
     const onAccountsChanged = async (accounts) => {
         setAccount(accounts[0]);
-        // setAccount("");
+        // setAccount("0x005CE906e04A14a3dD485231FDabb23BA8DC0d6d");
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const _signer = provider.getSigner();
 
@@ -156,7 +153,8 @@ export const Web3Provider = (props) => {
             getAllHarmonyWhales().then(async (res) => {
                 setHarmonyWhales(res)
                 const whaleStats = await getWhaleStats(res);
-                const data = await getBattlesByWhale(res)
+                const data = await getBattlesByWhale(res);
+                console.log(data);
                 const updatedData = data.map((ele) => {
                     const statObject = whaleStats?.find(e => e.tokenId == ele?.whaleId);
                     return ({ ...ele, ...statObject?.data })
@@ -178,7 +176,10 @@ export const Web3Provider = (props) => {
             setCreatedBattles(createdBattles?.map(e => { return ({ ...e, created: true }) }));
             setBattleToCommence(commenceBattles);
 
-            setBattlesToJoin(readyToJoinbattles);
+            // setBattlesToJoin(readyToJoinbattles);
+            console.log("Created", createdBattles)
+            console.log("Commence", commenceBattles)
+            console.log("Ready To Join", readyToJoinbattles)
             setBattlesToJoin(readyToJoinbattles.filter(eee => !eee.isOwner));
 
 
@@ -266,7 +267,7 @@ export const Web3Provider = (props) => {
             ethereum.on('chainChanged', onChainChanged);
             ethereum.on('accountsChanged', onAccountsChanged);
             setAccount(accounts[0]);
-            // setAccount("");
+            // setAccount("0x005CE906e04A14a3dD485231FDabb23BA8DC0d6d");
 
             const provider = new ethers.providers.Web3Provider(window.ethereum);
             const _signer = provider.getSigner();
@@ -303,17 +304,18 @@ export const Web3Provider = (props) => {
             })
         }
         catch (e) {
-            console.log(e);
+            console.log("wut",e);
             return ({
                 exists: false,
-                wins: 0,
-                loses: 0,
+                wins: 1,
+                loses: 1,
                 percent: 0.0
             })
         }
     }
     functionsToExport.getBattlesByWhale = async (whaleIds = []) => {
         try {
+            console.log(whaleIds)
             const requests = await Promise.all(whaleIds.map((e) => functionsToExport.getSingleWhale(e.toString())));
             // console.log("Whales", userBalance);
 
@@ -388,8 +390,7 @@ fragment ERC721CardInfo on ERC721TokenMetadata {
     functionsToExport.getSingleWhale = async (whaleId) => {
         try {
             const battle = await contractObjects?.battleStorageContract?.getBattlesByWhale(whaleId.toString());
-            const result = await axios.post("https://nftkey.app/graphql", { operationName: "GetERC721TokensNew", variables: { input: { collectionId: "0x289ff2f47cd7575c62fdcf45b62451ea9b2420dd_1666600000", filters: { tokenIds: [whaleId] } } } }, {});;
-            console.log(result);
+            // const result = await axios.post("https://nftkey.app/graphql", { operationName: "GetERC721TokensNew", variables: { input: { collectionId: "0x289ff2f47cd7575c62fdcf45b62451ea9b2420dd_1666600000", filters: { tokenIds: [whaleId] } } } }, {});;
             return ({
                 whaleId: whaleId?.toString(),
                 exists: battle[0],
@@ -400,6 +401,7 @@ fragment ERC721CardInfo on ERC721TokenMetadata {
             })
         }
         catch (e) {
+            console.log(e)
             return ({
                 whaleId: whaleId?.toString(),
                 exists: false,
@@ -512,6 +514,7 @@ fragment ERC721CardInfo on ERC721TokenMetadata {
             let readyToCommenceBattles = result[6]?.filter(e => e.toString() !== "0").map(e => e.toString());
             const _cancelledBattles = result[7]?.filter(e => e.toString() !== "0").length
             const _forfeitedBattles = result[8]?.filter(e => e.toString() !== "0").length
+            
             readyToAcceptBattles
                 .sort(function (a, b) {
                     return parseInt(a.toString()) - parseInt(b.toString());

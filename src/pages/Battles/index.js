@@ -395,7 +395,7 @@ const Battle = () => {
         </div>
 
         <div className="flex mt-4 mx-8 xl:mx-24 gap-5">
-          <LeftSection />
+          {LeftSection({onChange:setSortOption,value:sortOption})}
           <div className="flex w-4/5">
             <img
               src={LeftArrow}
