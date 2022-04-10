@@ -28,11 +28,10 @@ const Home = () => {
 
   return (
     <>
-      {!account && <Navigate to="/connect" />}
+      {<Navigate to="/play" />}
       <div className="w-full">
         <Navbar active="HOME" />
         {/* <BattleResultModal/> */}
-
       </div>
     </>
   );

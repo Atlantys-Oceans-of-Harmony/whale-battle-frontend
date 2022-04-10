@@ -4,7 +4,11 @@ import "./style.css";
 
 import Navbar from "../../components/NavbarV2";
 import ConnectButton from "components/Buttons/ConnectButton/index";
-import { Navigate } from "../../../node_modules/react-router-dom/index";
+import {
+  Navigate,
+  useLocation,
+  useNavigate,
+} from "../../../node_modules/react-router-dom/index";
 
 const ConnectWallet = () => {
   const {
@@ -27,9 +31,18 @@ const ConnectWallet = () => {
     connectWallet,
   } = useContext(Web3Context);
 
+  const { state } = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    console.log(state);
+    if (account) {
+      navigate(state.from);
+    }
+  }, [account]);
+
   return (
     <>
-      {account && <Navigate to="/" />}
       <div className="w-full flex flex-col">
         <Navbar />
         <div className="w-full h-full flex flex-col justify-center h-96 lg:mt-32">

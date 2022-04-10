@@ -131,6 +131,12 @@ const Battle = () => {
     setCurrentBattles(battlesToShow.slice(page * 5, page * 5 + 5));
   }, [battlesToShow, page]);
 
+  useEffect(() => {
+    if (!account) {
+      navigate("/connect", { state: { from: "/battles" } });
+    }
+  }, [account]);
+
   const handlePageUp = () => {
     if (page * 5 + 5 < [...createdBattles, ...battlesToCommence].length) {
       setPage(page + 1);
@@ -376,7 +382,6 @@ const Battle = () => {
         <></>
       )}
 
-      {!account && <Navigate to="/connect" />}
       <div className="w-full flex flex-col mb-10">
         <Navbar active="BATTLES" />
         <div className="mx-24">

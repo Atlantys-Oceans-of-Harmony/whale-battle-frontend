@@ -40,7 +40,9 @@ const FindBattle = () => {
 
   const handleJoinBattle = async () => {
     console.log(joinBattleForm);
-    await joinBattle({ ...joinBattleForm });
+    if (joinBattleForm.battleId != "") {
+      await joinBattle({ ...joinBattleForm });
+    } else alert("Select a battle first");
   };
   useEffect(() => {
     const funcToRun = async () => {
@@ -81,7 +83,13 @@ const FindBattle = () => {
         <ConfirmButton
           className="z-10"
           handleConfirm={
-            findBattleView ? handleJoinBattle : () => setFindBattleView(true)
+            findBattleView
+              ? handleJoinBattle
+              : () => {
+                  joinBattleForm.whaleId != ""
+                    ? setFindBattleView(true)
+                    : alert("Select a whale first");
+                }
           }
         />
       </div>
