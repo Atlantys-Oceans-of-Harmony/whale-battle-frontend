@@ -5,10 +5,3 @@
   -o-background-size: cover;
   background-size: cover;
 }
-
-.shadow {
-  /* box-shadow: inset 0px 0px 2px -40px #000000; */
-  /* -webkit-box-shadow: inset 0px -40px 89px -20px #000000;
-  -moz-box-shadow: inset 0px -40px 89px -20px #000000;
-  -o-box-shadow: inset 0px -40px 89px -20px #000000; */
-}

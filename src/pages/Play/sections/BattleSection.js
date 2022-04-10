@@ -99,7 +99,7 @@ const Option = ({ text, isActive }) => {
   };
 
   return (
-    <div className="flex mt-1 hover:cursor-pointer" onClick={() => { }}>
+    <div className="flex mt-1 hover:cursor-pointer" onClick={() => {}}>
       {conditionRender()}
     </div>
   );
@@ -146,7 +146,9 @@ export default function BattleSection({
           </div>
         </>
       ) : (
-        <div className="text-2xl w-full text-center text-white">Select a Whale First!</div>
+        <div className="text-2xl w-full h-full my-auto text-center text-white">
+          You have no whales!
+        </div>
       )}
       <div className="flex flex-1 text-white">
         <div className="w-2/3 overflow-auto h-128">

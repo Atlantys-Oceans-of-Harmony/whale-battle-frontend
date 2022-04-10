@@ -1,7 +1,10 @@
 import Web3Context from "contexts/Web3Context";
 import { useContext, useEffect, useState, Fragment } from "react";
 import "./index.css";
-import { Navigate } from "../../../node_modules/react-router-dom/index";
+import {
+  Navigate,
+  useNavigate,
+} from "../../../node_modules/react-router-dom/index";
 
 import Navbar from "../../components/NavbarV2";
 import SearchBox from "components/SearchBox/index";
@@ -32,34 +35,45 @@ const History = () => {
     allBattles,
     commenceBattle,
   } = useContext(Web3Context);
-  const [battlesToShow,setBattlesToShow] = useState([]);
-  const [sortOption,setSortOption] = useState("Date");
-  const [searchText,setSearchText] = useState("");
-  useEffect(()=>{
-    if(allBattles){
-      let _battlesToShow = [...allBattles];
-      if(searchText!==""){
-        _battlesToShow = _battlesToShow?.filter(({battleId})=>battleId?.toString().includes(searchText));
-      }
-      if(sortOption==="Stake"){
-        _battlesToShow.sort((b,a) => a?.amount - b?.amount);
-      }
-      if(sortOption==="Date"){
-        _battlesToShow.sort((b,a) => a?.battleId - b?.battleId);
-      }
-      if(sortOption==="Progress"){
-        _battlesToShow.sort((b,a) => a?.created - b?.created);
-      }
-      setBattlesToShow(_battlesToShow)
-      
+
+  const navigate = useNavigate();
+  const [battlesToShow, setBattlesToShow] = useState([]);
+  const [sortOption, setSortOption] = useState("Date");
+  const [searchText, setSearchText] = useState("");
+  useEffect(() => {
+    if (!account) {
+      navigate("/connect", { state: { from: "/history" } });
     }
-  },[allBattles,sortOption,searchText])
+  }, [account]);
+  useEffect(() => {
+    if (allBattles) {
+      let _battlesToShow = [...allBattles];
+      if (searchText !== "") {
+        _battlesToShow = _battlesToShow?.filter(({ battleId }) =>
+          battleId?.toString().includes(searchText)
+        );
+      }
+      if (sortOption === "Stake") {
+        _battlesToShow.sort((b, a) => a?.amount - b?.amount);
+      }
+      if (sortOption === "Date") {
+        _battlesToShow.sort((b, a) => a?.battleId - b?.battleId);
+      }
+      if (sortOption === "Progress") {
+        _battlesToShow.sort((b, a) => a?.created - b?.created);
+      }
+      setBattlesToShow(_battlesToShow);
+    }
+  }, [allBattles, sortOption, searchText]);
 
   const Option = ({ text, isActive, onClick }) => {
     const conditionRender = () => {
       if (isActive) {
         return (
-          <div onClick={onClick} className="text-white active-option w-full pl-2 py">
+          <div
+            onClick={onClick}
+            className="text-white active-option w-full pl-2 py"
+          >
             <div className="font-bold">{text}</div>
           </div>
         );
@@ -79,15 +93,32 @@ const History = () => {
     );
   };
 
-  const LeftSection = ({sortOption,searchText,setSortOption,setSearchText}) => {
+  const LeftSection = ({
+    sortOption,
+    searchText,
+    setSortOption,
+    setSearchText,
+  }) => {
     return (
       <div className="flex-1 text-white pt-12">
-        <SearchBox value={searchText} onChange={(e)=>setSearchText(e?.target?.value)} placeholder="Search #" />
+        <SearchBox
+          value={searchText}
+          onChange={(e) => setSearchText(e?.target?.value)}
+          placeholder="Search #"
+        />
         <div className="mt-6">
           <div className="text-xl font-bold">Sort by :</div>
           <div className="mt-4">
-            <Option text="Stake" isActive={sortOption==="Stake"} onClick={()=>setSortOption("Stake")} />
-            <Option text="Date" isActive={sortOption==="Date"} onClick={()=>setSortOption("Date")} />
+            <Option
+              text="Stake"
+              isActive={sortOption === "Stake"}
+              onClick={() => setSortOption("Stake")}
+            />
+            <Option
+              text="Date"
+              isActive={sortOption === "Date"}
+              onClick={() => setSortOption("Date")}
+            />
           </div>
         </div>
       </div>
@@ -95,23 +126,39 @@ const History = () => {
   };
 
   const HistoryItem = ({ data }) => {
-    const {handleClick,creatorAddress,owner,acceptedBy, hideWin, battleId, amount, whaleId = 7, whaleIdAccepted = -1, isComplete, ownerTotalPoints, acceptedTotalPoints, userWon} = data
-  
+    const {
+      handleClick,
+      creatorAddress,
+      owner,
+      acceptedBy,
+      hideWin,
+      battleId,
+      amount,
+      whaleId = 7,
+      whaleIdAccepted = -1,
+      isComplete,
+      ownerTotalPoints,
+      acceptedTotalPoints,
+      userWon,
+    } = data;
 
     const AddressCard = ({ text, address }) => {
       return (
         <div className="flex flex-col my-auto text-xl">
           <div className="text-yellow">{text}</div>
           <div className="text-white font-bold font-impact text-center">
-            {address?.slice(0,4)}...{address?.slice(-4)}
+            {address?.slice(0, 4)}...{address?.slice(-4)}
           </div>
         </div>
       );
     };
-    
+
     return (
       <div className="flex border-b border-yellow mt-6 gap-8">
-        <img src={`https://harmony-whales-meta.herokuapp.com/token/image/${whaleId}`} className="w-20" />
+        <img
+          src={`https://harmony-whales-meta.herokuapp.com/token/image/${whaleId}`}
+          className="w-20"
+        />
         <div
           className={`text-4xl font-bold my-auto ${
             userWon ? "text-green" : "text-red"
@@ -126,7 +173,6 @@ const History = () => {
               {battleId}
             </span>
           </div>
-         
         </div>
         <div className="font-impact text-2xl text-lightRed flex my-auto">
           <img src={AquaIcon} className="w-8 h-8 my-auto mr-2" />
@@ -161,19 +207,19 @@ const History = () => {
   };
   return (
     <>
-      {!account && <Navigate to="/connect" />}
       <div className="w-full">
         <Navbar active="HISTORY" />
         <div className="flex mt-4 mx-8 xl:mx-24 gap-5">
-          {LeftSection({sortOption,searchText,setSearchText,setSortOption})}
+          {LeftSection({
+            sortOption,
+            searchText,
+            setSearchText,
+            setSortOption,
+          })}
           <div className="flex flex-col w-4/5 h-screen overflow-auto mb-10">
-            {battlesToShow?.map(e=>{
-              return(<HistoryItem
-
-                 data={e} />)
+            {battlesToShow?.map((e) => {
+              return <HistoryItem data={e} />;
             })}
-            
-        
           </div>
         </div>
       </div>
