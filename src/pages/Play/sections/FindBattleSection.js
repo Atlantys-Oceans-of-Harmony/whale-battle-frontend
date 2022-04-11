@@ -65,7 +65,7 @@ export default function FindBattleSection({ battles, form, setForm }) {
               style={{
                 backgroundImage: `url(https://harmony-whales-meta.herokuapp.com/token/image/${data.whaleId})`,
               }}
-              className="h-56 mx-4 mt-4 bg-cover"
+              className="flex-1 mx-4 mt-4 bg-cover bg-center"
             ></div>
             <div className="flex flex-col flex-1 mx-4 mb-4 pb-4 z-20">
               <img src={AquaIcon} className="self-center w-6 mt-6" />

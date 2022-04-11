@@ -47,6 +47,8 @@ const Battle = () => {
     commenceBattles,
     battlesToCommence,
     createdBattles,
+    allWhalesData,
+
   } = useContext(Web3Context);
 
   // const battlesData = [
@@ -180,7 +182,7 @@ const Battle = () => {
   const renderErrorState = () => {
     return (
       <div className="text-white w-full py-52 text-3xl font-bold text-center">
-        You have no battle selected. :(
+        You have no battle selected.
       </div>
     );
   };
@@ -235,7 +237,7 @@ const Battle = () => {
               style={{
                 backgroundImage: `url(https://harmony-whales-meta.herokuapp.com/token/image/${data?.whaleId})`,
               }}
-              className="flex-1 mx-4 mt-4 bg-cover "
+              className="flex-1 mx-4 mt-4 bg-cover bg-center"
             >
               <div className="mt-6 text-center text-yellow text-xl">Battle</div>
               <div className="text-center font-impact text-yellow text-3xl">
@@ -304,7 +306,7 @@ const Battle = () => {
                 : `whale-image ${mirror ? "-scale-x-100" : ""}`
             }
           />
-          <div className="-mt-24">
+          <div className="-mt-24 z-10">
             <div className="text-white font-bold text-4xl">
               {image === OpponentWhale ? "???" : name}
             </div>
@@ -321,7 +323,7 @@ const Battle = () => {
           <ImageContainer
             image={`https://harmony-whales-meta.herokuapp.com/token/image/transparent/${whaleId}`} // Acadia yaha pe image url daal dena (url() type wala)
             name={`Whale #${whaleId}`}
-            species="Whale species"
+            species={allWhalesData[whaleId?.toString()]?.data?.attributes[3]?.value}
           />
         </div>
         <div className="flex flex-col flex-1">
@@ -356,6 +358,8 @@ const Battle = () => {
             name={
               whaleIdAccepted != 0 ? `Whale #${whaleIdAccepted}` : undefined
             }
+            species={allWhalesData[whaleIdAccepted?.toString()]?.data?.attributes[3]?.value}
+
           />
         </div>
       </div>
@@ -395,7 +399,7 @@ const Battle = () => {
         </div>
 
         <div className="flex mt-4 mx-8 xl:mx-24 gap-5">
-          <LeftSection />
+          {LeftSection({onChange:setSortOption,value:sortOption})}
           <div className="flex w-4/5">
             <img
               src={LeftArrow}
@@ -407,11 +411,11 @@ const Battle = () => {
                 currentBattles.map((el) => {
                   return (
                     <BattleCard
-                      created
+                      created={el?.created}
                       data={el}
                       onClick={() => {
                         console.log(el);
-                        setSelectedBattle({ ...el, created: true });
+                        setSelectedBattle({ ...el });
                       }}
                       isSelected={
                         selectedBattle &&

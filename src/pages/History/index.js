@@ -34,6 +34,7 @@ const History = () => {
     update,
     allBattles,
     commenceBattle,
+    allWhalesData,
   } = useContext(Web3Context);
 
   const navigate = useNavigate();

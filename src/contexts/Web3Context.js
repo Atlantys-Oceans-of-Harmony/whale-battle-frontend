@@ -20,43 +20,40 @@ const DEFAULT_ACCOUNTS = [
 
 const Web3Context = createContext();
 
-// const RPC_URL = "https://rpc.hermesdefi.io/";
-// const CHAIN_ID = 1666600000;
-// const NATIVE_CURRENCY = {
-//     name: "one",
-//     symbol: "ONE", // 2-6 characters long
-//     decimals: 18,
-// }
-// const MULTI_CALL_ADDRESS = "0x34b415f4d3b332515e66f70595ace1dcf36254c5";
-// const CHAIN_NAME = "Harmony Mainnet";
-// const ARB_TOKEN_CONTRACT_ADDRESS = "0x044246137670a03ca790d7ed20af0c552c88117c";
-// const ARB_WHALE_BATTLE_CONTRACT_ADDRESS = "0x707b8B324DE71D21218d52EB1bd942E27B7044ac";
-// const HARMONY_WHALES_CONTRACT_ADDRfESS = "0x289FF2F47cD7575c62FDcf45B62451EA9b2420dD";
-// const HARMONY_WHALES_V2_CONTRACT_ADDRESS = "0x289FF2F47cD7575c62FDcf45B62451EA9b2420dD";
-// const BATTLE_STORAGE_CONTRACT_ADDRESS = "0x492174791Faa6768969a8935A1954Dc161f97D81";
-// // const HARMONY_WHALES_CONTRACT_ADDRfESS = "0x0519f50287DDcdF8b761Dae76Dc1A76776A0af70";
-// const STAKING_CONTRACT_ADDRESS = "0x3d902f6447A0D4E61d65E863E7C2425D938cfEed";
-// const BANK_CONTRACT = "0xE0370653E6DEb354D186d35215eb87E0b6200C8c";
-
-
-
-
-const RPC_URL = "https://api.s0.b.hmny.io";
-const CHAIN_ID = 1666700000;
+const RPC_URL = "https://rpc.hermesdefi.io/";
+const CHAIN_ID = 1666600000;
 const NATIVE_CURRENCY = {
     name: "one",
     symbol: "ONE", // 2-6 characters long
     decimals: 18,
 }
-const MULTI_CALL_ADDRESS = "0xd078799c53396616844e2fa97f0dd2b4c145a685";
-const CHAIN_NAME = "Harmony Testnet";
-const ARB_TOKEN_CONTRACT_ADDRESS = "0x188f75D2f8E7636D5F12C8b50ff5E1EB1DAF2E83";
-const ARB_WHALE_BATTLE_CONTRACT_ADDRESS = "0x8A0A89513092AFf04d1B8e9f1CeFDd5FA5451Cc3";
-const HARMONY_WHALES_CONTRACT_ADDRfESS = "0xfA982a44a24f30Ca4988761441B2C85EaFDd4c50";
-const HARMONY_WHALES_V2_CONTRACT_ADDRESS = "0xfA982a44a24f30Ca4988761441B2C85EaFDd4c50";
-const BATTLE_STORAGE_CONTRACT_ADDRESS = "0xe2884592C1162664e3e9f34b3252f63673d8e432";
+const MULTI_CALL_ADDRESS = "0x34b415f4d3b332515e66f70595ace1dcf36254c5";
+const CHAIN_NAME = "Harmony Mainnet";
+const ARB_TOKEN_CONTRACT_ADDRESS = "0x1A5b1109F04Cc3f45d4C533685a347656d0983E4";
+const ARB_WHALE_BATTLE_CONTRACT_ADDRESS = "0x707b8B324DE71D21218d52EB1bd942E27B7044ac";
+const HARMONY_WHALES_CONTRACT_ADDRfESS = "0x289FF2F47cD7575c62FDcf45B62451EA9b2420dD";
+const HARMONY_WHALES_V2_CONTRACT_ADDRESS = "0x289FF2F47cD7575c62FDcf45B62451EA9b2420dD";
+const BATTLE_STORAGE_CONTRACT_ADDRESS = "0x541f1a396dC207449A8AC37d7EE92BC1F5aaE125";
 // const HARMONY_WHALES_CONTRACT_ADDRfESS = "0x0519f50287DDcdF8b761Dae76Dc1A76776A0af70";
 const STAKING_CONTRACT_ADDRESS = "0x3d902f6447A0D4E61d65E863E7C2425D938cfEed"
+
+
+// const RPC_URL = "https://api.s0.b.hmny.io";
+// const CHAIN_ID = 1666700000;
+// const NATIVE_CURRENCY = {
+//     name: "one",
+//     symbol: "ONE", // 2-6 characters long
+//     decimals: 18,
+// }
+// const MULTI_CALL_ADDRESS = "0xd078799c53396616844e2fa97f0dd2b4c145a685";
+// const CHAIN_NAME = "Harmony Testnet";
+// const ARB_TOKEN_CONTRACT_ADDRESS = "0x188f75D2f8E7636D5F12C8b50ff5E1EB1DAF2E83";
+// const ARB_WHALE_BATTLE_CONTRACT_ADDRESS = "0x8A0A89513092AFf04d1B8e9f1CeFDd5FA5451Cc3";
+// const HARMONY_WHALES_CONTRACT_ADDRfESS = "0xfA982a44a24f30Ca4988761441B2C85EaFDd4c50";
+// const HARMONY_WHALES_V2_CONTRACT_ADDRESS = "0xfA982a44a24f30Ca4988761441B2C85EaFDd4c50";
+// const BATTLE_STORAGE_CONTRACT_ADDRESS = "0xe2884592C1162664e3e9f34b3252f63673d8e432";
+// // const HARMONY_WHALES_CONTRACT_ADDRfESS = "0x0519f50287DDcdF8b761Dae76Dc1A76776A0af70";
+// const STAKING_CONTRACT_ADDRESS = "0x3d902f6447A0D4E61d65E863E7C2425D938cfEed"
 
 
 export const Web3Provider = (props) => {
@@ -81,11 +78,12 @@ export const Web3Provider = (props) => {
     const [allBattles, setAllBattles] = useState([]);
     const [cancelledBattles, setCancelledBattles] = useState([]);
     const [forfeitedBattles, setForfeitedBattles] = useState([]);
+    const [allWhalesData,setAllWhalesData] = useState({});
 
 
     const onAccountsChanged = async (accounts) => {
         setAccount(accounts[0]);
-        // setAccount("");
+        // setAccount("0xaC7245b6031c0405fE00DF1033b97E966C5193b6");
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const _signer = provider.getSigner();
 
@@ -140,12 +138,13 @@ export const Web3Provider = (props) => {
             } = functionsToExport;
             const { allBattles, wonBattles: _wonBattles, lostBattles: _lostBattles, cancelledBattles: _cancelledBattles, forfeitedBattles: _forfeitedBattles } = await getAllUserBattles();
             const [_allBattleDetails, _wonBattleDetails, _lostBattleDetails, _cancelledBattleDetails, _forfeitedBattleDetails] = await Promise.all([
-                getBattleDetails(allBattles),
-                getBattleDetails(_wonBattles),
-                getBattleDetails(_lostBattles),
-                getBattleDetails(_cancelledBattles),
-                getBattleDetails(_forfeitedBattles),
+                getBattleDetails(allBattles||[]),
+                getBattleDetails(_wonBattles||[]),
+                getBattleDetails(_lostBattles||[]),
+                getBattleDetails(_cancelledBattles||[]),
+                getBattleDetails(_forfeitedBattles||[]),
             ]);
+          
             setAllBattles(_allBattleDetails);
             setWonBattles(_wonBattleDetails);
             setLostBattles(_lostBattleDetails);
@@ -156,7 +155,8 @@ export const Web3Provider = (props) => {
             getAllHarmonyWhales().then(async (res) => {
                 setHarmonyWhales(res)
                 const whaleStats = await getWhaleStats(res);
-                const data = await getBattlesByWhale(res)
+                const data = await getBattlesByWhale(res);
+                console.log(data);
                 const updatedData = data.map((ele) => {
                     const statObject = whaleStats?.find(e => e.tokenId == ele?.whaleId);
                     return ({ ...ele, ...statObject?.data })
@@ -178,8 +178,37 @@ export const Web3Provider = (props) => {
             setCreatedBattles(createdBattles?.map(e => { return ({ ...e, created: true }) }));
             setBattleToCommence(commenceBattles);
 
-            setBattlesToJoin(readyToJoinbattles);
-            // setBattlesToJoin(readyToJoinbattles.filter(eee => !eee.isOwner));
+            
+            let allWhaleTokenIds = []
+            _allBattleDetails?.map(({whaleId,whaleIdAccepted})=>{
+                allWhaleTokenIds.push(whaleId);
+                allWhaleTokenIds.push(whaleIdAccepted);
+            })
+            createdBattles?.map(({whaleId,whaleIdAccepted})=>{
+                allWhaleTokenIds.push(whaleId);
+                allWhaleTokenIds.push(whaleIdAccepted);
+            })
+            commenceBattles?.map(({whaleId,whaleIdAccepted})=>{
+                allWhaleTokenIds.push(whaleId);
+                allWhaleTokenIds.push(whaleIdAccepted);
+            })
+            
+            allWhaleTokenIds = [...new Set(allWhaleTokenIds)];
+            console.log(allWhaleTokenIds);
+            const whaleStatData =await  getWhaleStats(allWhaleTokenIds);
+            let _whaleData = {}
+            whaleStatData?.map((element,index)=>{
+                _whaleData[element?.tokenId?.toString()] = element;
+            })
+            setAllWhalesData({...allWhalesData,..._whaleData});
+            
+
+
+            // setBattlesToJoin(readyToJoinbattles);
+            console.log("Created", createdBattles)
+            console.log("Commence", commenceBattles)
+            console.log("Ready To Join", readyToJoinbattles)
+            setBattlesToJoin(readyToJoinbattles.filter(eee => !eee.isOwner));
 
 
         }
@@ -266,7 +295,7 @@ export const Web3Provider = (props) => {
             ethereum.on('chainChanged', onChainChanged);
             ethereum.on('accountsChanged', onAccountsChanged);
             setAccount(accounts[0]);
-            // setAccount("");
+            // setAccount("0xaC7245b6031c0405fE00DF1033b97E966C5193b6");
 
             const provider = new ethers.providers.Web3Provider(window.ethereum);
             const _signer = provider.getSigner();
@@ -303,17 +332,18 @@ export const Web3Provider = (props) => {
             })
         }
         catch (e) {
-            console.log(e);
+            console.log("wut",e);
             return ({
                 exists: false,
-                wins: 0,
-                loses: 0,
+                wins: 1,
+                loses: 1,
                 percent: 0.0
             })
         }
     }
     functionsToExport.getBattlesByWhale = async (whaleIds = []) => {
         try {
+            console.log(whaleIds)
             const requests = await Promise.all(whaleIds.map((e) => functionsToExport.getSingleWhale(e.toString())));
             // console.log("Whales", userBalance);
 
@@ -388,8 +418,7 @@ fragment ERC721CardInfo on ERC721TokenMetadata {
     functionsToExport.getSingleWhale = async (whaleId) => {
         try {
             const battle = await contractObjects?.battleStorageContract?.getBattlesByWhale(whaleId.toString());
-            const result = await axios.post("https://nftkey.app/graphql", { operationName: "GetERC721TokensNew", variables: { input: { collectionId: "0x289ff2f47cd7575c62fdcf45b62451ea9b2420dd_1666600000", filters: { tokenIds: [whaleId] } } } }, {});;
-            console.log(result);
+            // const result = await axios.post("https://nftkey.app/graphql", { operationName: "GetERC721TokensNew", variables: { input: { collectionId: "0x289ff2f47cd7575c62fdcf45b62451ea9b2420dd_1666600000", filters: { tokenIds: [whaleId] } } } }, {});;
             return ({
                 whaleId: whaleId?.toString(),
                 exists: battle[0],
@@ -400,6 +429,7 @@ fragment ERC721CardInfo on ERC721TokenMetadata {
             })
         }
         catch (e) {
+            console.log(e)
             return ({
                 whaleId: whaleId?.toString(),
                 exists: false,
@@ -443,7 +473,7 @@ fragment ERC721CardInfo on ERC721TokenMetadata {
             let _lostBattles = result[4]?.filter(e => e.toString() !== "0")
             let _cancelledBattles = result[7]?.filter(e => e.toString() !== "0")
             let _forfeitedBattles = result[8]?.filter(e => e.toString() !== "0")
-            let allBattles = [...new Set([..._wonBattles, ..._lostBattles, ..._cancelledBattles, ..._forfeitedBattles])];
+            let allBattles = [...new Set([..._wonBattles, ..._lostBattles, ..._forfeitedBattles])];
             allBattles = allBattles.map(e => parseInt(e.toString()));
             _wonBattles = _wonBattles.map(e => parseInt(e.toString()));
             _lostBattles = _lostBattles.map(e => parseInt(e.toString()));
@@ -512,6 +542,7 @@ fragment ERC721CardInfo on ERC721TokenMetadata {
             let readyToCommenceBattles = result[6]?.filter(e => e.toString() !== "0").map(e => e.toString());
             const _cancelledBattles = result[7]?.filter(e => e.toString() !== "0").length
             const _forfeitedBattles = result[8]?.filter(e => e.toString() !== "0").length
+            
             readyToAcceptBattles
                 .sort(function (a, b) {
                     return parseInt(a.toString()) - parseInt(b.toString());
@@ -548,7 +579,7 @@ fragment ERC721CardInfo on ERC721TokenMetadata {
     }
     functionsToExport.getBattleDetails = async (battleIds = []) => {
         const [multicallProvider, multicallContract] = await setupMultiCallContract(BATTLE_STORAGE_CONTRACT_ADDRESS, battleStorageAbi);
-        let tokenCalls = battleIds.map(e => {
+        let tokenCalls = battleIds?.map(e => {
             return (multicallContract.getBattleById(e.toString()));
         })
         const userTokens = (await multicallProvider?.all(tokenCalls));
@@ -814,7 +845,8 @@ fragment ERC721CardInfo on ERC721TokenMetadata {
         battlesToCommence,
         createdBattles,
         allBattles,
-        cancelledBattles
+        cancelledBattles,
+        allWhalesData,
     }}>
         {props.children}
     </Web3Context.Provider>)
