@@ -78,7 +78,7 @@ export const Web3Provider = (props) => {
     const [allBattles, setAllBattles] = useState([]);
     const [cancelledBattles, setCancelledBattles] = useState([]);
     const [forfeitedBattles, setForfeitedBattles] = useState([]);
-    const [allWhalesData,setAllWhalesData] = useState({});
+    const [allWhalesData, setAllWhalesData] = useState({});
 
 
     const onAccountsChanged = async (accounts) => {
@@ -134,17 +134,17 @@ export const Web3Provider = (props) => {
 
     useEffect(() => {
         const fetchStuff = async () => {
-            const { getAllHarmonyWhales, getAllBattles, getBattlesReadyToAccept, getBattleDetails, getBattlesByWhale, getArbTokenBalance, getWhaleStats,getAllUserBattles
+            const { getAllHarmonyWhales, getAllBattles, getBattlesReadyToAccept, getBattleDetails, getBattlesByWhale, getArbTokenBalance, getWhaleStats, getAllUserBattles
             } = functionsToExport;
             const { allBattles, wonBattles: _wonBattles, lostBattles: _lostBattles, cancelledBattles: _cancelledBattles, forfeitedBattles: _forfeitedBattles } = await getAllUserBattles();
             const [_allBattleDetails, _wonBattleDetails, _lostBattleDetails, _cancelledBattleDetails, _forfeitedBattleDetails] = await Promise.all([
-                getBattleDetails(allBattles||[]),
-                getBattleDetails(_wonBattles||[]),
-                getBattleDetails(_lostBattles||[]),
-                getBattleDetails(_cancelledBattles||[]),
-                getBattleDetails(_forfeitedBattles||[]),
+                getBattleDetails(allBattles || []),
+                getBattleDetails(_wonBattles || []),
+                getBattleDetails(_lostBattles || []),
+                getBattleDetails(_cancelledBattles || []),
+                getBattleDetails(_forfeitedBattles || []),
             ]);
-          
+
             setAllBattles(_allBattleDetails);
             setWonBattles(_wonBattleDetails);
             setLostBattles(_lostBattleDetails);
@@ -178,30 +178,30 @@ export const Web3Provider = (props) => {
             setCreatedBattles(createdBattles?.map(e => { return ({ ...e, created: true }) }));
             setBattleToCommence(commenceBattles);
 
-            
+
             let allWhaleTokenIds = []
-            _allBattleDetails?.map(({whaleId,whaleIdAccepted})=>{
+            _allBattleDetails?.map(({ whaleId, whaleIdAccepted }) => {
                 allWhaleTokenIds.push(whaleId);
                 allWhaleTokenIds.push(whaleIdAccepted);
             })
-            createdBattles?.map(({whaleId,whaleIdAccepted})=>{
+            createdBattles?.map(({ whaleId, whaleIdAccepted }) => {
                 allWhaleTokenIds.push(whaleId);
                 allWhaleTokenIds.push(whaleIdAccepted);
             })
-            commenceBattles?.map(({whaleId,whaleIdAccepted})=>{
+            commenceBattles?.map(({ whaleId, whaleIdAccepted }) => {
                 allWhaleTokenIds.push(whaleId);
                 allWhaleTokenIds.push(whaleIdAccepted);
             })
-            
+
             allWhaleTokenIds = [...new Set(allWhaleTokenIds)];
             console.log(allWhaleTokenIds);
-            const whaleStatData =await  getWhaleStats(allWhaleTokenIds);
+            const whaleStatData = await getWhaleStats(allWhaleTokenIds);
             let _whaleData = {}
-            whaleStatData?.map((element,index)=>{
+            whaleStatData?.map((element, index) => {
                 _whaleData[element?.tokenId?.toString()] = element;
             })
-            setAllWhalesData({...allWhalesData,..._whaleData});
-            
+            setAllWhalesData({ ...allWhalesData, ..._whaleData });
+
 
 
             // setBattlesToJoin(readyToJoinbattles);
@@ -332,7 +332,6 @@ export const Web3Provider = (props) => {
             })
         }
         catch (e) {
-            console.log("wut",e);
             return ({
                 exists: false,
                 wins: 1,
@@ -450,7 +449,6 @@ fragment ERC721CardInfo on ERC721TokenMetadata {
             console.log(e);
         }
     }
-  
     functionsToExport.getBattlesReadyToAccept = async () => {
         let result = await contractObjects?.battleStorageContract?.getBattlesReadyToAccept();
 
@@ -542,7 +540,6 @@ fragment ERC721CardInfo on ERC721TokenMetadata {
             let readyToCommenceBattles = result[6]?.filter(e => e.toString() !== "0").map(e => e.toString());
             const _cancelledBattles = result[7]?.filter(e => e.toString() !== "0").length
             const _forfeitedBattles = result[8]?.filter(e => e.toString() !== "0").length
-            
             readyToAcceptBattles
                 .sort(function (a, b) {
                     return parseInt(a.toString()) - parseInt(b.toString());
@@ -788,7 +785,7 @@ fragment ERC721CardInfo on ERC721TokenMetadata {
     }
     functionsToExport.joinBattle = async ({ whaleId, battleId, amount }) => {
         try {
-            
+
             const requiredAmount = BigNumber.from(utils.parseEther(amount))
             const availableBalance = await contractObjects?.arbTokenContract.allowance(account, ARB_WHALE_BATTLE_CONTRACT_ADDRESS);
             if (availableBalance.lt(requiredAmount)) {
