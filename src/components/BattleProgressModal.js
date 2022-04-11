@@ -7,7 +7,12 @@ import BattleResultModal from './BattleResultModal/index';
 
 
 export default function BattleProgressModal({ battleId = 24, amount = 555, handleClick, handelClick, whaleId = 7, owner = "0xxx", open, setOpen, whaleData, isComplete,battleSummary,setBattleSummary }) {
-  const cancelButtonRef = useRef(null);
+  const [play,setPlay] = useState(false)
+  const vidRef = useRef(null);
+  const handlePlayVideo = () => {
+    vidRef.current.play();
+    setPlay(true);
+  }
   useEffect(() => {
     if (!open) {
       // setBattleSummary();
@@ -49,10 +54,24 @@ export default function BattleProgressModal({ battleId = 24, amount = 555, handl
             leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
           >
               <div className="relative py-8 px-8 z-50 inline-block align-bottom bg-black bg-opacity-70 rounded-lg text-center transform transition-all sm:my-8 sm:align-middle ">
-                <video width="750" height="500" playsInline autoPlay muted loop style={{ pointerEvents: "none" }} >
-
+              
+                <div className='relative' >
+                <video ref={vidRef} width="750" height="500" muted loop style={{ pointerEvents: "none" }} >
                   <source src="/BattleProgress.mp4" type="video/mp4" />
                 </video>
+                {!play && <div
+                    className="centered-element pt-36">
+                    <button
+                      onClick={() => handlePlayVideo()}
+                  style={{fontSize:"48px"}}
+                      className="w-full text-white navbar-button text-3xl cursor-pointer  "
+                    >
+                      Animate Battle
+                    </button>
+                  </div>}
+                </div>
+                
+               
                 {isComplete ?
                   <div
                     className="h-32 mx-auto  w-60 relative text-md tracking-tight font-extrabold text-white text-xl flex items-center wallet-btn ">

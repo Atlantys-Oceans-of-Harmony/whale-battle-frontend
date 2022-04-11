@@ -47,6 +47,8 @@ const Battle = () => {
     commenceBattles,
     battlesToCommence,
     createdBattles,
+    allWhalesData,
+
   } = useContext(Web3Context);
 
   // const battlesData = [
@@ -180,7 +182,7 @@ const Battle = () => {
   const renderErrorState = () => {
     return (
       <div className="text-white w-full py-52 text-3xl font-bold text-center">
-        You have no battle selected. :(
+        You have no battle selected.
       </div>
     );
   };
@@ -304,7 +306,7 @@ const Battle = () => {
                 : `whale-image ${mirror ? "-scale-x-100" : ""}`
             }
           />
-          <div className="-mt-24">
+          <div className="-mt-24 z-10">
             <div className="text-white font-bold text-4xl">
               {image === OpponentWhale ? "???" : name}
             </div>
@@ -321,7 +323,7 @@ const Battle = () => {
           <ImageContainer
             image={`https://harmony-whales-meta.herokuapp.com/token/image/transparent/${whaleId}`} // Acadia yaha pe image url daal dena (url() type wala)
             name={`Whale #${whaleId}`}
-            species=""
+            species={allWhalesData[whaleId?.toString()]?.data?.attributes[3]?.value}
           />
         </div>
         <div className="flex flex-col flex-1">
@@ -356,6 +358,8 @@ const Battle = () => {
             name={
               whaleIdAccepted != 0 ? `Whale #${whaleIdAccepted}` : undefined
             }
+            species={allWhalesData[whaleIdAccepted?.toString()]?.data?.attributes[3]?.value}
+
           />
         </div>
       </div>
@@ -407,11 +411,11 @@ const Battle = () => {
                 currentBattles.map((el) => {
                   return (
                     <BattleCard
-                      created
+                      created={el?.created}
                       data={el}
                       onClick={() => {
                         console.log(el);
-                        setSelectedBattle({ ...el, created: true });
+                        setSelectedBattle({ ...el });
                       }}
                       isSelected={
                         selectedBattle &&

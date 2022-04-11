@@ -78,6 +78,7 @@ export const Web3Provider = (props) => {
     const [allBattles, setAllBattles] = useState([]);
     const [cancelledBattles, setCancelledBattles] = useState([]);
     const [forfeitedBattles, setForfeitedBattles] = useState([]);
+    const [allWhalesData,setAllWhalesData] = useState({});
 
 
     const onAccountsChanged = async (accounts) => {
@@ -143,6 +144,7 @@ export const Web3Provider = (props) => {
                 getBattleDetails(_cancelledBattles||[]),
                 getBattleDetails(_forfeitedBattles||[]),
             ]);
+          
             setAllBattles(_allBattleDetails);
             setWonBattles(_wonBattleDetails);
             setLostBattles(_lostBattleDetails);
@@ -175,6 +177,32 @@ export const Web3Provider = (props) => {
 
             setCreatedBattles(createdBattles?.map(e => { return ({ ...e, created: true }) }));
             setBattleToCommence(commenceBattles);
+
+            
+            let allWhaleTokenIds = []
+            _allBattleDetails?.map(({whaleId,whaleIdAccepted})=>{
+                allWhaleTokenIds.push(whaleId);
+                allWhaleTokenIds.push(whaleIdAccepted);
+            })
+            createdBattles?.map(({whaleId,whaleIdAccepted})=>{
+                allWhaleTokenIds.push(whaleId);
+                allWhaleTokenIds.push(whaleIdAccepted);
+            })
+            commenceBattles?.map(({whaleId,whaleIdAccepted})=>{
+                allWhaleTokenIds.push(whaleId);
+                allWhaleTokenIds.push(whaleIdAccepted);
+            })
+            
+            allWhaleTokenIds = [...new Set(allWhaleTokenIds)];
+            console.log(allWhaleTokenIds);
+            const whaleStatData =await  getWhaleStats(allWhaleTokenIds);
+            let _whaleData = {}
+            whaleStatData?.map((element,index)=>{
+                _whaleData[element?.tokenId?.toString()] = element;
+            })
+            setAllWhalesData({...allWhalesData,..._whaleData});
+            
+
 
             // setBattlesToJoin(readyToJoinbattles);
             console.log("Created", createdBattles)
@@ -817,7 +845,8 @@ fragment ERC721CardInfo on ERC721TokenMetadata {
         battlesToCommence,
         createdBattles,
         allBattles,
-        cancelledBattles
+        cancelledBattles,
+        allWhalesData,
     }}>
         {props.children}
     </Web3Context.Provider>)

@@ -30,7 +30,8 @@ const BattleDetails = () => {
         getAllHarmonyWhales, listenToCreatedBattles,
         listenToWonBattles, listenToCanceledBattles,
         listenToAcceptedBattles, cancelBattle, getAllBattles,
-        getBattleDetails, getBattlesReadyToAccept, blockNumber, update, commenceBattle
+        getBattleDetails, getBattlesReadyToAccept, blockNumber, update, commenceBattle,    allWhalesData,
+
     } = useContext(Web3Context);
     const [createBattleForm, setCreateBattleForm] = useState({
         whaleId: "",
