@@ -473,7 +473,7 @@ fragment ERC721CardInfo on ERC721TokenMetadata {
             let _lostBattles = result[4]?.filter(e => e.toString() !== "0")
             let _cancelledBattles = result[7]?.filter(e => e.toString() !== "0")
             let _forfeitedBattles = result[8]?.filter(e => e.toString() !== "0")
-            let allBattles = [...new Set([..._wonBattles, ..._lostBattles, ..._cancelledBattles, ..._forfeitedBattles])];
+            let allBattles = [...new Set([..._wonBattles, ..._lostBattles, ..._forfeitedBattles])];
             allBattles = allBattles.map(e => parseInt(e.toString()));
             _wonBattles = _wonBattles.map(e => parseInt(e.toString()));
             _lostBattles = _lostBattles.map(e => parseInt(e.toString()));
