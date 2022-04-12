@@ -66,17 +66,16 @@ export default function FindBattleSection({ battles, form, setForm }) {
                 backgroundImage: `url(https://harmony-whales-meta.herokuapp.com/token/image/${data.whaleId})`,
               }}
               className="flex-1 mx-4 mt-4 bg-cover bg-center"
-            >
-              <div className="text-center font-bold font-impact text-yellow text-xl mt-6 mb-32">
-                Battle #{data.battleId}
-              </div>
-            </div>
+            ></div>
             <div className="flex flex-col flex-1 mx-4 mb-4 pb-4 z-20">
               <img src={AquaIcon} className="self-center w-6 mt-6" />
               <div className="text-white text-center text-2xl font-impact -mt-3">
                 {data?.amount}
               </div>
               <div className="text-white text-center text-lg -mt-2">Aqua</div>
+              <div className="text-center font-bold font-impact text-yellow text-xl">
+                Battle #{data.battleId}
+              </div>
               <div className="text-center text-yellow text-md mt-4">HOST</div>
               <div className="text-white text-center text-lg font-impact mb-6">
                 {`${data?.owner?.slice(0, 4)}...${data?.owner?.slice(-4)}`}
