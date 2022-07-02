@@ -1,6 +1,6 @@
-import ConfirmButtonImage from "../../../assets/confirm_button.png";
+import ConfirmButtonImage from "../../../assets/confirm_without_button.png";
 
-const ConfirmButton = ({ handleConfirm, className }) => {
+const ConfirmWithoutButton = ({ handleConfirm, className }) => {
   return (
     <div className="confirm-button self-center mb-32 z-10">
       <img
@@ -11,4 +11,4 @@ const ConfirmButton = ({ handleConfirm, className }) => {
     </div>
   );
 };
-export default ConfirmButton;
+export default ConfirmWithoutButton;

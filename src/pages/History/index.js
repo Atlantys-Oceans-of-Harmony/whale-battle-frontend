@@ -157,7 +157,7 @@ const History = () => {
     return (
       <div className="flex border-b border-yellow mt-6 gap-8">
         <img
-          src={`https://harmony-whales-meta.herokuapp.com/token/image/${whaleId}`}
+          src={`https://gen1.atlantys.one/token/image/${whaleId}`}
           className="w-20"
         />
         <div

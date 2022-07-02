@@ -15,6 +15,9 @@ import {
   Navigate,
   useNavigate,
 } from "../../../node_modules/react-router-dom/index";
+import Raids from "./Raids";
+import CreateRaid from "./CreateRaid";
+import EndRaid from "./EndRaid";
 
 const Play = () => {
   const {
@@ -49,16 +52,28 @@ const Play = () => {
   const handleConfirm = () => {
     setPlayState(selectedState);
   };
-
-  const Emblem = ({ title, image, subtitle, isActive }) => {
+  const [selectedEmblem, setSelectedEmblem] = useState("ARENA");
+  const Emblem = ({
+    title,
+    image,
+    subtitle,
+    link,
+    disabled,
+    defaultSubMenu,
+  }) => {
+    const isActive = selectedEmblem == title;
     return (
       <div
+        disabled
+        onClick={() => {
+          if (disabled) return;
+          setSelectedEmblem(title);
+          setSelectedState(defaultSubMenu);
+        }}
         style={isActive ? {} : { opacity: 0.5 }}
-        className={
-          isActive
-            ? "selection-active pb-8 px-16 flex-1 flex flex-col"
-            : "pb-8 flex-1 flex flex-col"
-        }
+        className={`${isActive ? "selection-active" : ""} ${
+          !disabled ? "cursor-pointer" : ""
+        } pb-8 px-16 flex-1 flex flex-col`}
       >
         <img src={image} className="h-48 self-center" />
         <div className="title">{title}</div>
@@ -100,33 +115,30 @@ const Play = () => {
       </div>
     );
   };
+  const Emblems = [
+    {
+      title: "TRAINING",
+      subtitle: "COMING SOON",
+      image: TrainingEmblem,
+      disabled: true,
+    },
+    {
+      title: "ARENA",
+      subtitle: "ONE vs ONE",
+      image: ArenaEmblem,
+      defaultSubMenu: "FIND BATTLE",
+    },
 
-  const DefaultView = () => {
+    {
+      title: "RAID",
+      subtitle: "Live Now!",
+      image: RaidEmblem,
+      defaultSubMenu: "GO TO RAIDS",
+    },
+  ];
+  const BattleSubmenu = () => {
     return (
-      <div className="flex flex-col mx-12 xl:mx-48">
-        {/* Emblem */}
-        <Container>
-          <Emblem
-            title="TRAINING"
-            subtitle="COMING SOON"
-            image={TrainingEmblem}
-            isActive={false}
-          />
-
-          <Emblem
-            title="ARENA"
-            subtitle="ONE vs ONE"
-            image={ArenaEmblem}
-            isActive={true}
-          />
-          <Emblem
-            title="RAID"
-            subtitle="COMING SOON"
-            image={RaidEmblem}
-            isActive={false}
-          />
-        </Container>
-
+      <>
         {/* Description */}
         <div className="w-64 text-white  flex border-b border-white self-center mt-6 pb-6 leading-5 font-bold">
           Crush your enemies in an epic 1v1 battle. Go up against players all
@@ -142,6 +154,49 @@ const Play = () => {
 
         {/* ConfirmButton */}
         <ConfirmButton handleConfirm={handleConfirm} />
+      </>
+    );
+  };
+  const RaidsSubmenu = () => {
+    return (
+      <>
+        {/* Description */}
+        <div className="w-64 text-white  flex border-b border-white self-center mt-6 pb-6 leading-5 font-bold">
+          Send your whales to raid on the secret plot for treasures. They might
+          even find some mysterious Artifacts!
+        </div>
+
+        {/* Buttons */}
+        <div className="buttons-container self-center my-4">
+          <Option text="GO TO RAIDS" />
+          {/* <Option text="JOIN FRIEND" extra="REWARDS DISABLED" /> */}
+        </div>
+
+        {/* ConfirmButton */}
+        <ConfirmButton handleConfirm={handleConfirm} />
+      </>
+    );
+  };
+  const renderSubmenu = () => {
+    switch (selectedEmblem) {
+      case "ARENA":
+        return <BattleSubmenu />;
+      case "RAID":
+        return <RaidsSubmenu />;
+      default:
+        return <></>;
+    }
+  };
+  const DefaultView = () => {
+    return (
+      <div className="flex flex-col mx-12 xl:mx-48">
+        {/* Emblem */}
+        <Container>
+          {Emblems?.map((data) => {
+            return <Emblem {...data} />;
+          })}
+        </Container>
+        {renderSubmenu()}
       </div>
     );
   };
@@ -153,6 +208,12 @@ const Play = () => {
         break;
       case "CREATE BATTLE":
         return <CreateBattle />;
+      case "NEW RAID":
+        return <CreateRaid setPlayState={setPlayState} />;
+      case "GO TO RAIDS":
+        return <Raids setPlayState={setPlayState} />;
+      case "RAID RESULT":
+        return <EndRaid setPlayState={setPlayState} />;
       default:
         return <DefaultView />;
         break;

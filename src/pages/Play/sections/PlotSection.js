@@ -14,11 +14,13 @@ import "react-circular-progressbar/dist/styles.css";
 import WhaleThumbActive from "../../../assets/whale_thumb.jpg";
 import GlowBackground from "../../../assets/glow-2.png";
 import SearchBox from "components/SearchBox/index";
+import PlotFull from "assets/plotFull.png";
+import PlotThumb from "assets/plotThumb.png";
 const WinStats = ({ data }) => {
-  const { won, lost } = data;
-  const percentage = (won / Math.max(1, won + lost)) * 100;
+  const { title, value } = data;
+  const percentage = Math.max(value);
   return (
-    <div className="flex mt-10 h-24 mr-20">
+    <div className="flex  w-32">
       <div className="flex-1">
         <CircularProgressbarWithChildren
           strokeWidth={10}
@@ -34,20 +36,9 @@ const WinStats = ({ data }) => {
             trailColor: "#d6d6d655",
           })}
         >
-          <div className="">Win Rate</div>
-          <div className="font-impact text-2xl">
-            {parseFloat(percentage).toFixed(2)}%
-          </div>
+          <div className="">{title}</div>
+          <div className="font-impact text-lg">{parseFloat(percentage)}%</div>
         </CircularProgressbarWithChildren>
-      </div>
-
-      <div className="flex-1 flex flex-col justify-center items-center">
-        <h1 className="text-green">
-          <span className="font-impact text-2xl">{won} </span>WON
-        </h1>
-        <h1 className="text-red mt-4">
-          <span className="font-impact text-2xl">{lost} </span> LOST
-        </h1>
       </div>
     </div>
   );
@@ -63,15 +54,19 @@ const WhaleCard = ({ data, isActive, onClick }) => {
       {isActive && <img src={SideArrow} className="min-w-6 h-6 my-auto pr-2" />}
       <div
         style={{
-          backgroundImage: `url(https://gen1.atlantys.one/token/image/${data.whaleId})`,
           backgroundSize: "cover",
           backgroundPosition: "center center",
         }}
-        className="h-24 flex w-full font-bold text-xl"
+        className="h-24 w-84 relative flex w-full font-bold text-xl overflow-hidden"
       >
+        <img
+          src={PlotThumb}
+          alt=""
+          className="absolute h-24 min-w-6 h-6 overflow-hidden -z-10"
+        />
         {isActive && (
           <div className="w-full pl-4 glow flex">
-            <div className="my-auto">Whale #{data.whaleId}</div>
+            <div className="my-auto">Plot #{data.plotId}</div>
           </div>
         )}
       </div>
@@ -104,50 +99,47 @@ const Option = ({ text, isActive }) => {
     </div>
   );
 };
-export default function BattleSection({
+export default function PlotSection({
   isCreateBattle,
   whales = [],
   form,
   setForm,
 }) {
-  let { whaleId } = form;
-  const whaleData = whales?.find((e) => e.whaleId == whaleId);
+  let { plotId } = form;
+  const whaleData = whales?.find((e) => e.plotId == plotId);
 
   return (
     <div className="flex justify-between">
-      {whaleId != "" ? (
+      {plotId != "" && plotId != "0" ? (
         <>
           <div className="flex-1 text-white p-4 px-6 ">
-            <div className="text-2xl font-bold">Whale #{whaleId}</div>
+            <div className="text-2xl font-bold">Plot #{plotId}</div>
             {/* <div className="text-md font-semibold mb-10">Whale Species</div> */}
-            <div className="text-xl">Rarity Rank:</div>
+            <div className="text-xl">Depth: {whaleData?.Depth}</div>
             <div className="font-impact text-4xl">{whaleData?.rarityRank}</div>
-            <WinStats data={{ won: whaleData?.wins, lost: whaleData?.loses }} />
+            <div className="flex h-40 w-80 items-center justify-between">
+              <WinStats
+                data={{ title: "Attack", value: whaleData["Attack"] }}
+              />
+              <WinStats
+                data={{ title: "Defense", value: whaleData["Defense"] }}
+              />
+            </div>
+            <div className="h-48 w-80 flex items-center justify-center">
+              <WinStats
+                data={{ title: "Resource", value: whaleData["Resource"] }}
+              />
+            </div>
           </div>
           <div className="flex-1 flex flex-col">
             <div>
-              <img
-                src={`https://gen1.atlantys.one/token/image/transparent/${whaleId}`}
-                className=""
-              />
+              <img src={PlotFull} className="" />
             </div>
-
-            {isCreateBattle && (
-              <div className="text-white w-52 mx-auto">
-                <SearchBox
-                  icon={AquaIcon}
-                  placeholder="Amount in ARB"
-                  pattern="^[0-9]*$"
-                  value={form["amount"]}
-                  onChange={(e) => setForm({ ...form, amount: e.target.value })}
-                />
-              </div>
-            )}
           </div>
         </>
       ) : (
         <div className="text-2xl w-full h-full my-auto text-center text-white">
-          You have no whales!
+          You have no Plots!
         </div>
       )}
       <div className="flex flex-1 text-white">
@@ -156,10 +148,10 @@ export default function BattleSection({
             return (
               <WhaleCard
                 onClick={() => {
-                  setForm({ ...form, whaleId: e.whaleId });
+                  setForm({ ...form, plotId: e.plotId });
                 }}
                 data={{ ...e }}
-                isActive={e.whaleId == whaleId ? true : false}
+                isActive={e.plotId == plotId ? true : false}
               />
             );
           })}

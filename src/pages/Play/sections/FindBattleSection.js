@@ -63,7 +63,7 @@ export default function FindBattleSection({ battles, form, setForm }) {
           >
             <div
               style={{
-                backgroundImage: `url(https://harmony-whales-meta.herokuapp.com/token/image/${data.whaleId})`,
+                backgroundImage: `url(https://gen1.atlantys.one/token/image/${data.whaleId})`,
               }}
               className="flex-1 mx-4 mt-4 bg-cover bg-center"
             ></div>
@@ -112,7 +112,7 @@ export default function FindBattleSection({ battles, form, setForm }) {
         })}
 
       <div
-        className="absolute right-20 bottom-20 flex cursor-pointer"
+        className="absolute right-20 bottom-0 md:bottom-20 flex cursor-pointer"
         onClick={() => handleRefresh()}
       >
         <img src={RefreshIcon} className="w-6 h-6  my-auto mr-4" />

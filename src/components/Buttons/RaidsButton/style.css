@@ -1,0 +1,10 @@
+.raids-button {
+  font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+  font-size: 32px;
+  cursor: pointer;
+  background-color: #ee0737;
+  padding: 4px 8px;
+}
+.raids-button:disabled {
+  background-color: gray;
+}

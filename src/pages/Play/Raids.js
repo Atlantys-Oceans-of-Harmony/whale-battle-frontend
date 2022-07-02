@@ -25,8 +25,10 @@ import BattleProgressModal from "components/BattleProgressModal";
 import { Navigate, useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import BattleResultModal from "components/BattleResultModal/index";
+import Primary from "components/Buttons/Primary";
+import RaidsButton from "components/Buttons/RaidsButton/index";
 
-const Battle = () => {
+const Raids = ({ setPlayState }) => {
   const {
     account,
     createBattle,
@@ -48,8 +50,13 @@ const Battle = () => {
     battlesToCommence,
     createdBattles,
     allWhalesData,
+    harmonyWhales,
+    allRaids,
+    currTime,
+    raidLockedPeriod,
+    returnRaid,
   } = useContext(Web3Context);
-
+  console.log(allRaids);
   // const battlesData = [
   //   {
   //     image: Whale1,
@@ -108,25 +115,28 @@ const Battle = () => {
   }, [battlesToCommence, createdBattles]);
 
   useEffect(() => {
-    if (battlesToCommence) {
-      let _battlesToShow = [...battlesToCommence, ...createdBattles];
-      if (searchText !== "") {
-        _battlesToShow = _battlesToShow?.filter(({ battleId }) =>
-          battleId?.toString().includes(searchText)
-        );
-      }
-      if (sortOption === "Stake") {
-        _battlesToShow.sort((b, a) => a?.amount - b?.amount);
-      }
-      if (sortOption === "Date") {
-        _battlesToShow.sort((b, a) => a?.battleId - b?.battleId);
-      }
-      if (sortOption === "Progress") {
-        _battlesToShow.sort((b, a) => a?.created - b?.created);
-      }
-      setBattlesToShow(_battlesToShow);
+    if (allRaids) {
+      setBattlesToShow(allRaids);
     }
-  }, [battlesToCommence, createdBattles, sortOption, searchText]);
+    // if (battlesToCommence) {
+    //   let _battlesToShow = [...battlesToCommence, ...createdBattles];
+    //   if (searchText !== "") {
+    //     _battlesToShow = _battlesToShow?.filter(({ battleId }) =>
+    //       battleId?.toString().includes(searchText)
+    //     );
+    //   }
+    //   if (sortOption === "Stake") {
+    //     _battlesToShow.sort((b, a) => a?.amount - b?.amount);
+    //   }
+    //   if (sortOption === "Date") {
+    //     _battlesToShow.sort((b, a) => a?.battleId - b?.battleId);
+    //   }
+    //   if (sortOption === "Progress") {
+    //     _battlesToShow.sort((b, a) => a?.created - b?.created);
+    //   }
+    //   setBattlesToShow(_battlesToShow);
+    // }
+  }, [battlesToCommence, createdBattles, sortOption, searchText, allRaids]);
 
   useEffect(() => {
     setCurrentBattles(battlesToShow.slice(page * 5, page * 5 + 5));
@@ -139,7 +149,7 @@ const Battle = () => {
   }, [account]);
 
   const handlePageUp = () => {
-    if (page * 5 + 5 < [...createdBattles, ...battlesToCommence].length) {
+    if (page * 5 + 5 < allRaids.length) {
       setPage(page + 1);
     }
   };
@@ -178,10 +188,56 @@ const Battle = () => {
     );
   };
 
-  const renderErrorState = () => {
+  const createOrEndRaids = () => {
+    console.log(harmonyWhales?.length);
+    console.log(harmonyWhales);
+    const finalOngoingRaids = allRaids?.filter((e) => {
+      const [
+        whaleId,
+        address,
+        land,
+        timeStaked,
+        prizeMultiplier,
+        position,
+        userPosition,
+      ] = e;
+      const dateDiff = currTime - parseInt(timeStaked) * 1000;
+      let canBeRemoved = false;
+      if (dateDiff > raidLockedPeriod * 1000) {
+        canBeRemoved = true;
+      }
+      if (prizeMultiplier <= 0) {
+        canBeRemoved = true;
+      }
+      return canBeRemoved;
+    });
     return (
-      <div className="text-white w-full py-52 text-3xl font-bold text-center">
-        You have no battle selected.
+      <div className="w-full h-full flex flex-col items-center justify-center">
+        <div className="text-white w-full py-52 text-3xl font-bold text-center">
+          {harmonyWhales?.length > 0
+            ? "Psst! Your whales are waiting idle! Send them on raid to win precious artifacts"
+            : "Looks like you don't have a whale available"}
+          <br />
+          <br />
+          <RaidsButton
+            onClick={() => setPlayState("NEW RAID")}
+            disabled={harmonyWhales?.length > 0 ? false : true}
+            className={`mr-8`}
+          >
+            CREATE NEW RAID
+          </RaidsButton>{" "}
+          <RaidsButton
+            onClick={() =>
+              returnRaid(
+                finalOngoingRaids.map((e) => e[0]),
+                setPlayState
+              )
+            }
+            disabled={finalOngoingRaids?.length > 0 ? false : true}
+          >
+            END ALL RAIDS({finalOngoingRaids?.length})
+          </RaidsButton>
+        </div>
       </div>
     );
   };
@@ -194,7 +250,7 @@ const Battle = () => {
     ];
 
     return (
-      <div className="flex-1 text-white pt-12">
+      <div style={{ visibility: "hidden" }} className="flex-1 text-white pt-12">
         <SearchBox
           autoFocus="autofocus"
           value={searchText}
@@ -223,6 +279,38 @@ const Battle = () => {
   };
 
   const BattleCard = ({ data, onClick, isSelected }) => {
+    const [
+      whaleId,
+      userAddress,
+      plotId,
+      timeStaked,
+      prizeMultiplier,
+      position,
+      userPosition,
+    ] = data;
+    const dateDiff = currTime - parseInt(timeStaked) * 1000;
+    let canBeRemoved = false;
+    if (dateDiff > raidLockedPeriod * 1000) {
+      canBeRemoved = true;
+    }
+    if (prizeMultiplier <= 0) {
+      canBeRemoved = true;
+    }
+    const secondsRemaining = Math.max(
+      0,
+      parseInt(raidLockedPeriod) - parseInt(dateDiff / 1000)
+    );
+    const displayTimeRemaining = {
+      hours: parseInt(secondsRemaining / (60 * 60 * 24))
+        .toString()
+        .padStart(2, "0"),
+      minutes: parseInt((secondsRemaining % (60 * 60 * 24)) / 60)
+        .toString()
+        .padStart(2, "0"),
+      seconds: parseInt(secondsRemaining % 60)
+        .toString()
+        .padStart(2, "0"),
+    };
     const created =
       data.acceptedBy === "0x0000000000000000000000000000000000000000";
     if (data) {
@@ -234,27 +322,45 @@ const Battle = () => {
           >
             <div
               style={{
-                backgroundImage: `url(https://gen1.atlantys.one/token/image/${data?.whaleId})`,
+                backgroundImage: `url(https://gen1.atlantys.one/token/image/${whaleId})`,
               }}
               className="flex-1 mx-4 mt-4 bg-cover bg-center"
             >
-              <div className="mt-6 text-center text-yellow text-xl">Battle</div>
+              <div className="mt-6 text-center text-yellow text-xl">Whale</div>
               <div className="text-center font-impact text-yellow text-3xl">
-                #{data.battleId}
+                #{whaleId}
               </div>
             </div>
-            <div className="z-20 flex flex-col flex-1 mx-4 bg-cover ">
-              <div className="text-white text-center text-3xl font-impact mt-6">
-                {data?.amount}
+            <div className="z-20 flex flex-col flex-1 mx-4 bg-cover px-4">
+              <div className="text-white text-center text-xl  mt-6">
+                Plot #{plotId}
               </div>
-              <div className="text-white text-center text-xl -mt-2">Aqua</div>
-              <div className="text-white text-center text-xl font-impact mt-4">
-                {data.date}
+              <div className="text-white text-center text-xl  mt-4">
+                Prize Multiplier x{prizeMultiplier}
               </div>
-              {!created && (
-                <div className="mt-4 text-center font-impact text-yellow text-3xl">
-                  DONE!
-                </div>
+              <div
+                style={{
+                  fontSize: "24px",
+                  fontFamily:
+                    "Impact, Haettenschweiler, Arial Narrow Bold, sans-serif",
+                }}
+                className={`text-white w-full text-center`}
+              >
+                {displayTimeRemaining?.hours}:{displayTimeRemaining?.minutes}:
+                {displayTimeRemaining?.seconds}{" "}
+              </div>
+              {canBeRemoved && (
+                <RaidsButton
+                  disabled={!canBeRemoved}
+                  style={{
+                    fontSize: "24px",
+                    padding: "2px",
+                    width: "fit-content",
+                    margin: "auto",
+                  }}
+                >
+                  END RAID
+                </RaidsButton>
               )}
             </div>
             <img
@@ -390,15 +496,8 @@ const Battle = () => {
       )}
 
       <div className="w-full flex flex-col mb-10">
-        <Navbar active="BATTLES" />
         <div className="mx-24">
-          <Container>
-            {selectedBattle ? (
-              <BattleDetails data={selectedBattle} />
-            ) : (
-              renderErrorState()
-            )}
-          </Container>
+          <Container>{createOrEndRaids()}</Container>
         </div>
 
         <div className="flex mt-4 mx-8 xl:mx-24 gap-5">
@@ -414,11 +513,10 @@ const Battle = () => {
                 currentBattles.map((el) => {
                   return (
                     <BattleCard
-                      created={el?.created}
                       data={el}
                       onClick={() => {
                         console.log(el);
-                        setSelectedBattle({ ...el });
+                        returnRaid([el[0]]);
                       }}
                       isSelected={
                         selectedBattle &&
@@ -439,4 +537,4 @@ const Battle = () => {
     </>
   );
 };
-export default Battle;
+export default Raids;
