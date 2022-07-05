@@ -31,22 +31,11 @@ import RaidsButton from "components/Buttons/RaidsButton/index";
 const Raids = ({ setPlayState }) => {
   const {
     account,
-    createBattle,
-    joinBattle,
-    getArbTokenBalance,
-    getAllHarmonyWhales,
-    listenToCreatedBattles,
-    listenToWonBattles,
-    listenToCanceledBattles,
-    listenToAcceptedBattles,
+
     cancelBattle,
-    getAllBattles,
-    getBattleDetails,
-    getBattlesReadyToAccept,
+
     blockNumber,
-    update,
-    commenceBattle,
-    commenceBattles,
+    reviveRaid,
     battlesToCommence,
     createdBattles,
     allWhalesData,
@@ -56,27 +45,6 @@ const Raids = ({ setPlayState }) => {
     raidLockedPeriod,
     returnRaid,
   } = useContext(Web3Context);
-  console.log(allRaids);
-  // const battlesData = [
-  //   {
-  //     image: Whale1,
-  //     battleId: 6942,
-  //     aqua: 645,
-  //     date: "23.02.2022",
-  //     done: true,
-  //   },
-  //   {
-  //     image: Whale1,
-  //     battleId: 15,
-  //     aqua: 1242,
-  //     date: "28.11.2021",
-  //     done: false,
-  //   },
-  //   null,
-  //   null,
-  //   null,
-  // ];
-  console.log(createdBattles);
   const navigate = useNavigate();
   const [selectedBattle, setSelectedBattle] = useState();
   const [selectedBattleModalDetail, setSelectedBattleModalDetail] = useState();
@@ -94,12 +62,9 @@ const Raids = ({ setPlayState }) => {
       if (openModal == undefined) {
         setOpenModal(true);
       }
-      console.log(viewBattleId);
       const _selectedBattle = battlesToCommence?.find((e) => {
-        console.log(e);
         return e?.battleId == viewBattleId.toString();
       });
-      console.log(_selectedBattle);
       setSelectedBattleModalDetail(_selectedBattle);
     } else {
     }
@@ -160,7 +125,6 @@ const Raids = ({ setPlayState }) => {
     }
   };
 
-  console.log(selectedBattleModalDetail);
   const Option = ({ text, isActive, onClick }) => {
     const conditionRender = () => {
       if (isActive) {
@@ -189,8 +153,6 @@ const Raids = ({ setPlayState }) => {
   };
 
   const createOrEndRaids = () => {
-    console.log(harmonyWhales?.length);
-    console.log(harmonyWhales);
     const finalOngoingRaids = allRaids?.filter((e) => {
       const [
         whaleId,
@@ -266,7 +228,6 @@ const Raids = ({ setPlayState }) => {
                   text={text}
                   isActive={value === id}
                   onClick={() => {
-                    console.log(id);
                     onChange(id);
                   }}
                 />
@@ -287,14 +248,19 @@ const Raids = ({ setPlayState }) => {
       prizeMultiplier,
       position,
       userPosition,
+      revived,
     ] = data;
     const dateDiff = currTime - parseInt(timeStaked) * 1000;
     let canBeRemoved = false;
+    let canBeRevived = false;
     if (dateDiff > raidLockedPeriod * 1000) {
       canBeRemoved = true;
     }
     if (prizeMultiplier <= 0) {
       canBeRemoved = true;
+      if (!revived) {
+        canBeRevived = true;
+      }
     }
     const secondsRemaining = Math.max(
       0,
@@ -316,10 +282,7 @@ const Raids = ({ setPlayState }) => {
     if (data) {
       return (
         <div className="relative">
-          <div
-            onClick={onClick}
-            className="battle-card relative flex flex-col cursor-pointer z-10"
-          >
+          <div className="battle-card relative flex flex-col cursor-pointer z-10">
             <div
               style={{
                 backgroundImage: `url(https://gen1.atlantys.one/token/image/${whaleId})`,
@@ -358,7 +321,21 @@ const Raids = ({ setPlayState }) => {
               </div>
               {canBeRemoved && (
                 <RaidsButton
+                  onClick={onClick}
                   disabled={!canBeRemoved}
+                  style={{
+                    fontSize: "24px",
+                    padding: "2px",
+                    width: "fit-content",
+                    margin: "auto",
+                  }}
+                >
+                  END RAID
+                </RaidsButton>
+              )}
+              {canBeRevived && (
+                <RaidsButton
+                  onClick={() => reviveRaid([whaleId])}
                   style={{
                     fontSize: "24px",
                     padding: "2px",
@@ -522,7 +499,6 @@ const Raids = ({ setPlayState }) => {
                     <BattleCard
                       data={el}
                       onClick={() => {
-                        console.log(el);
                         returnRaid([el[0]]);
                       }}
                       isSelected={

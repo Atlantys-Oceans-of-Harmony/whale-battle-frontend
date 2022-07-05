@@ -16,6 +16,19 @@
     "type": "constructor"
   },
   {
+    "stateMutability": "nonpayable",
+    "type": "function",
+    "name": "mint",
+    "outputs": [],
+    "inputs": [
+      {
+        "type": "uint256",
+        "name": "amount",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
     "name": "Approval",
     "anonymous": false,
     "type": "event",

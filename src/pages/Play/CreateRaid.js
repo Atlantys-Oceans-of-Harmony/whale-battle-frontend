@@ -45,7 +45,10 @@ const CreateRaid = ({ setPlayState }) => {
       return;
     }
     setSendingInProgress(true);
-    await sendToRaid({ ...createRaidForm });
+    await sendToRaid({
+      whaleId: [createRaidForm?.whaleId],
+      plotId: [createRaidForm?.plotId],
+    });
     setSendingInProgress(false);
     setCreateRaidForm({
       whaleId: "",
@@ -79,7 +82,6 @@ const CreateRaid = ({ setPlayState }) => {
       funcToRun();
     }
   }, [harmonyWhalesData, availablePlots]);
-  console.log(availablePlots);
   return (
     <>
       <div className="flex flex-col mx-12 xl:mx-48">

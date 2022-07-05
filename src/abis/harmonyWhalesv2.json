@@ -133,6 +133,19 @@
     ]
   },
   {
+    "stateMutability": "nonpayable",
+    "type": "function",
+    "name": "mint",
+    "outputs": [],
+    "inputs": [
+      {
+        "type": "uint256",
+        "name": "amount",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
     "name": "balanceOf",
     "type": "function",
     "inputs": [

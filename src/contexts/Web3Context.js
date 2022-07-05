@@ -7,6 +7,7 @@ import stakingAbi from "abis/staking.json";
 import battleStorageAbi from "abis/battleStorage.json";
 import raidsAbi from "abis/raidsAbi.json";
 import plotsAbi from "abis/plotsAbi.json";
+import raidsV2Abi from "abis/raidsV2Abi.json";
 import {
   Provider as MulticallProvider,
   Contract as MulticallContract,
@@ -42,21 +43,21 @@ const NATIVE_CURRENCY = {
 };
 const MULTI_CALL_ADDRESS = "0x34b415f4d3b332515e66f70595ace1dcf36254c5";
 const CHAIN_NAME = "Harmony Mainnet";
-const ARB_TOKEN_CONTRACT_ADDRESS = "0x1A5b1109F04Cc3f45d4C533685a347656d0983E4";
+const ARB_TOKEN_CONTRACT_ADDRESS = "0x74184E574ff50FB5DA837691039337a9e9AADFab";
 const ARB_WHALE_BATTLE_CONTRACT_ADDRESS =
   "0x707b8B324DE71D21218d52EB1bd942E27B7044ac";
 const HARMONY_WHALES_CONTRACT_ADDRfESS =
-  "0x289FF2F47cD7575c62FDcf45B62451EA9b2420dD";
+  "0xb650Dc520a27fB41BBAA1b19e81748cdD2B516C6";
 const HARMONY_WHALES_V2_CONTRACT_ADDRESS =
-  "0x289FF2F47cD7575c62FDcf45B62451EA9b2420dD";
+  "0xb650Dc520a27fB41BBAA1b19e81748cdD2B516C6";
 const BATTLE_STORAGE_CONTRACT_ADDRESS =
   "0x541f1a396dC207449A8AC37d7EE92BC1F5aaE125";
 // const HARMONY_WHALES_CONTRACT_ADDRfESS = "0x0519f50287DDcdF8b761Dae76Dc1A76776A0af70";
 const STAKING_CONTRACT_ADDRESS = "0x3d902f6447A0D4E61d65E863E7C2425D938cfEed";
 const RAIDS_CONTRACT_ADDRESS = "0x72823b3706bab466Fb9C3B0E4456a9036B62aAa4";
 const ARTIFACT_CONTRACT_ADDRESS = "0x38250446B0cE0A34C84150ba8f0A12CEE4eDdF08";
-const PLOTS_CONTRACT_ADDRESS = "0xB390f78d4569aC10FEc098A9292F2B3B5839252A";
-
+const PLOTS_CONTRACT_ADDRESS = "0x37adB697710441de9Cc16ad25A85Def6796ec229";
+const RAIDS_V2_ADDRESS = "0x37adB697710441de9Cc16ad25A85Def6796ec229";
 // const RPC_URL = "https://api.s0.b.hmny.io";
 // const CHAIN_ID = 1666700000;
 // const NATIVE_CURRENCY = {
@@ -175,6 +176,11 @@ export const Web3Provider = (props) => {
       plotsAbi,
       _signer
     );
+    const raidsV2Contract = new ethers.Contract(
+      RAIDS_V2_ADDRESS,
+      raidsV2Abi,
+      _signer
+    );
 
     const _contractObjects = {
       arbTokenContract,
@@ -185,6 +191,7 @@ export const Web3Provider = (props) => {
       raidContract,
       artifactContract,
       plotsContract,
+      raidsV2Contract,
     };
 
     setContractObjects(_contractObjects);
@@ -409,8 +416,9 @@ export const Web3Provider = (props) => {
       await promptChain();
       ethereum.on("chainChanged", onChainChanged);
       ethereum.on("accountsChanged", onAccountsChanged);
-      setAccount(accounts[0]);
+      // setAccount(accounts[0]);
       // setAccount("0xaC7245b6031c0405fE00DF1033b97E966C5193b6");
+      setAccount("0xb845e20405df993FFEbd8b70Fe29D8f0b5a8cb4f");
 
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const _signer = provider.getSigner();
@@ -1098,13 +1106,14 @@ fragment ERC721CardInfo on ERC721TokenMetadata {
   };
 
   functionsToExport.getAllRaids = async () => {
-    const allRaids = await contractObjects?.raidContract?.getUserStaked(
+    // const mints = await (contractObjects?.plotsContract?.mint("5")).wait();
+    const allRaids = await contractObjects?.raidsV2Contract?.userStaked(
       account
     );
     console.log(allRaids);
     const [multicallProvider, multicallContract] = await setupMultiCallContract(
-      RAIDS_CONTRACT_ADDRESS,
-      raidsAbi
+      RAIDS_V2_ADDRESS,
+      raidsV2Abi
     );
     return (
       await multicallProvider?.all(
@@ -1116,65 +1125,78 @@ fragment ERC721CardInfo on ERC721TokenMetadata {
       return [allRaids[i].toString(), ...e.map((ee) => ee.toString())];
     });
   };
-  functionsToExport.sendToRaid = async ({ whaleId = 2, plotId = -1 }) => {
+  functionsToExport.sendToRaid = async ({ whaleId = [2], plotId = [0] }) => {
     try {
-      plotId = plotId || 0;
       console.log(whaleId, plotId);
-      const isLandInitialized =
-        await contractObjects?.raidContract?.landInitialized(plotId);
-      console.log(isLandInitialized);
-      if (!isLandInitialized && plotId > 0) {
-        const signed = await axios.get(
-          `https://whale-plots.herokuapp.com/signed/${plotId}`
-        );
-        // const signed = await axios.get(
-        //   `https://whale-plots.herokuapp.com/signed/${plotId}`
-        // );
-        const signature = signed?.data?.signature;
-        const statsVoucher = signed?.data?.voucher;
-        console.log(signature);
-        console.log(statsVoucher);
-        console.log({
-          0: [statsVoucher?.tokenId],
-          1: [
-            [
+
+      const [multicallProvider, multicallContract] =
+        await setupMultiCallContract(RAIDS_CONTRACT_ADDRESS, raidsAbi);
+      console.log(whaleId, plotId);
+      const filteredPlots = plotId?.filter((e) => {
+        if (parseInt(e) <= 0) {
+          return false;
+        } else {
+          return true;
+        }
+      });
+      console.log(filteredPlots);
+      const res = await multicallProvider?.all(
+        filteredPlots.map((e) => {
+          return multicallContract.landInitialized(e?.toString());
+        })
+      );
+      let tokensToFetch = [];
+      const fetchSignedData = res?.map((isInit, index) => {
+        if (!isInit) {
+          tokensToFetch.push(filteredPlots[index]);
+        }
+      });
+      if (tokensToFetch?.length > 0) {
+        toast("Signing Plots Stats");
+
+        const plotsToSign = { plotIds: [], stats: [], signature: [] };
+
+        await Promise.all(
+          tokensToFetch?.map(async (token) => {
+            const signed = await axios.get(
+              `https://whale-plots.herokuapp.com/signed/${token}`
+              // `http://localhost:4193/signed/${token}`
+            );
+            const signature = signed?.data?.signature;
+            const statsVoucher = signed?.data?.voucher;
+            plotsToSign.plotIds.push(statsVoucher?.tokenId);
+            plotsToSign.stats.push([
+              statsVoucher?.resource,
               statsVoucher?.attack,
               statsVoucher?.defense,
-              statsVoucher?.resource,
-            ],
-          ],
-          2: [signature],
-        });
+            ]);
+            plotsToSign.signature.push(signature);
+            return;
+          })
+        );
         const initializeLand =
           await contractObjects?.raidContract?.initializeLand(
-            [statsVoucher?.tokenId],
-            [
-              [
-                statsVoucher?.resource,
-
-                statsVoucher?.attack,
-                statsVoucher?.defense,
-              ],
-            ],
-            [signature]
+            plotsToSign.plotIds,
+            plotsToSign.stats,
+            plotsToSign.signature
           );
         const txn = await initializeLand.wait();
 
         console.log(initializeLand);
       }
-      const amount = ethers.utils.parseEther("1050");
+      const amount = ethers.utils.parseEther((50 * plotId.length).toString());
       const requiredAmount = BigNumber.from(amount);
       const availableBalance =
         await contractObjects?.arbTokenContract.allowance(
           account,
-          RAIDS_CONTRACT_ADDRESS
+          RAIDS_V2_ADDRESS
         );
       if (availableBalance.lt(requiredAmount)) {
         toast(`Increasing Allowance for Raids (Placing Transaction)`);
 
         const increaseBal =
           await contractObjects?.arbTokenContract.increaseAllowance(
-            RAIDS_CONTRACT_ADDRESS,
+            RAIDS_V2_ADDRESS,
             requiredAmount.mul(10)
           );
         const result = await increaseBal.wait();
@@ -1182,14 +1204,14 @@ fragment ERC721CardInfo on ERC721TokenMetadata {
       const isPlotsApproved =
         await contractObjects?.plotsContract?.isApprovedForAll(
           account,
-          RAIDS_CONTRACT_ADDRESS
+          RAIDS_V2_ADDRESS
         );
       if (!isPlotsApproved) {
         toast(`Approving Raids Contract(Plots)`);
 
         const approveIt =
           await contractObjects?.plotsContract?.setApprovalForAll(
-            RAIDS_CONTRACT_ADDRESS,
+            RAIDS_V2_ADDRESS,
             true
           );
         const newBattleId = await approveIt.wait();
@@ -1198,14 +1220,14 @@ fragment ERC721CardInfo on ERC721TokenMetadata {
       const isWhalesApproved =
         await contractObjects?.harmonyWhaleContract?.isApprovedForAll(
           account,
-          RAIDS_CONTRACT_ADDRESS
+          RAIDS_V2_ADDRESS
         );
       if (!isWhalesApproved) {
         toast(`Approving Raids Contract(Whales)`);
 
         const approveIt =
           await contractObjects?.harmonyWhaleContract?.setApprovalForAll(
-            RAIDS_CONTRACT_ADDRESS,
+            RAIDS_V2_ADDRESS,
             true
           );
         const newBattleId = await approveIt.wait();
@@ -1214,7 +1236,7 @@ fragment ERC721CardInfo on ERC721TokenMetadata {
 
       toast(`Sending to Raid (Placing Transaction)`);
 
-      const newRaid = await contractObjects?.raidContract?.sendRaid(
+      const newRaid = await contractObjects?.raidsV2Contract?.sendRaid(
         whaleId,
         plotId,
         { gasLimit: 3000000 }
@@ -1233,8 +1255,8 @@ fragment ERC721CardInfo on ERC721TokenMetadata {
   functionsToExport.returnRaid = async (tokenId, setPlayState) => {
     // abiDecoder.addABI(raidsAbi);
     const [multicallProvider, multicallContract] = await setupMultiCallContract(
-      RAIDS_CONTRACT_ADDRESS,
-      raidsAbi
+      RAIDS_V2_ADDRESS,
+      raidsV2Abi
     );
     const summary = (
       await multicallProvider?.all(
@@ -1247,9 +1269,12 @@ fragment ERC721CardInfo on ERC721TokenMetadata {
     });
 
     toast("Ending Raid(Placing Transaction)");
-    const returnR = await contractObjects?.raidContract?.returnRaid(tokenId, {
-      gasLimit: 10000000,
-    });
+    const returnR = await contractObjects?.raidsV2Contract?.returnRaid(
+      tokenId,
+      {
+        gasLimit: 10000000,
+      }
+    );
     toast("Ending Raid(Transaction Placed)");
     console.log(returnR);
     let iface = new utils.Interface(raidsAbi);
@@ -1272,6 +1297,15 @@ fragment ERC721CardInfo on ERC721TokenMetadata {
 
     toast("Raid Ended!");
     setUpdate((u) => u + 1);
+  };
+  functionsToExport.reviveRaid = async (tokenId = []) => {
+    toast(`Reviving Whale #${tokenId}(Placing Transaction)`);
+    const returnR = await contractObjects?.raidsV2Contract?.reviveWhale(
+      tokenId
+    );
+    toast(`Reviving Whale #${tokenId}(Transaction Placed)`);
+    const data = await returnR.wait();
+    toast("Whale Revived!");
   };
 
   functionsToExport.getArtifacts = async () => {
