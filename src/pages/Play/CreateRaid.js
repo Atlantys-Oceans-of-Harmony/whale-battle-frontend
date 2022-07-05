@@ -49,7 +49,7 @@ const CreateRaid = ({ setPlayState }) => {
     setSendingInProgress(false);
     setCreateRaidForm({
       whaleId: "",
-      plotId: "",
+      plotId: "0",
       amount: "10",
     });
     setHasSelectedPlot(false);
@@ -57,19 +57,28 @@ const CreateRaid = ({ setPlayState }) => {
     setPlayState("GO TO RAIDS");
   };
   const funcToRun = async () => {
-    if (createRaidForm?.whaleId == "") {
-      setCreateRaidForm({
-        ...createRaidForm,
-        whaleId: harmonyWhalesData[0]?.whaleId,
-        plotId: availablePlots[0]?.plotId,
-      });
+    if (createRaidForm?.whaleId == "" || createRaidForm?.plotId == "0") {
+      if (availablePlots && availablePlots?.length > 0) {
+        setCreateRaidForm({
+          ...createRaidForm,
+          whaleId: harmonyWhalesData[0]?.whaleId,
+          plotId: availablePlots[0]?.plotId,
+        });
+      } else {
+        setCreateRaidForm({
+          ...createRaidForm,
+          whaleId: harmonyWhalesData[0]?.whaleId,
+          plotId: "0",
+        });
+      }
     }
   };
+
   useEffect(() => {
     if (harmonyWhalesData && harmonyWhalesData?.length > 0) {
       funcToRun();
     }
-  }, [harmonyWhalesData]);
+  }, [harmonyWhalesData, availablePlots]);
   console.log(availablePlots);
   return (
     <>
@@ -90,6 +99,7 @@ const CreateRaid = ({ setPlayState }) => {
                 form={createRaidForm}
                 setForm={setCreateRaidForm}
                 whales={harmonyWhalesData}
+                hideWin
               />
             ) : (
               <PlotSection

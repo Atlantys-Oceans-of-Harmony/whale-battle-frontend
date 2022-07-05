@@ -14,11 +14,11 @@ import "react-circular-progressbar/dist/styles.css";
 import WhaleThumbActive from "../../../assets/whale_thumb.jpg";
 import GlowBackground from "../../../assets/glow-2.png";
 import SearchBox from "components/SearchBox/index";
-const WinStats = ({ data }) => {
+const WinStats = ({ data, hideWin }) => {
   const { won, lost } = data;
   const percentage = (won / Math.max(1, won + lost)) * 100;
   return (
-    <div className="flex mt-10 h-24 mr-20">
+    <div className={`flex mt-10 h-24 mr-20 ${hideWin ? "invisible" : ""}`}>
       <div className="flex-1">
         <CircularProgressbarWithChildren
           strokeWidth={10}
@@ -109,6 +109,7 @@ export default function BattleSection({
   whales = [],
   form,
   setForm,
+  hideWin,
 }) {
   let { whaleId } = form;
   const whaleData = whales?.find((e) => e.whaleId == whaleId);
@@ -122,7 +123,11 @@ export default function BattleSection({
             {/* <div className="text-md font-semibold mb-10">Whale Species</div> */}
             <div className="text-xl">Rarity Rank:</div>
             <div className="font-impact text-4xl">{whaleData?.rarityRank}</div>
-            <WinStats data={{ won: whaleData?.wins, lost: whaleData?.loses }} />
+
+            <WinStats
+              hideWin={hideWin}
+              data={{ won: whaleData?.wins, lost: whaleData?.loses }}
+            />
           </div>
           <div className="flex-1 flex flex-col">
             <div>

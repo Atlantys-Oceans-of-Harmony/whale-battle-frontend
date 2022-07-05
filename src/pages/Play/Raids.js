@@ -301,10 +301,10 @@ const Raids = ({ setPlayState }) => {
       parseInt(raidLockedPeriod) - parseInt(dateDiff / 1000)
     );
     const displayTimeRemaining = {
-      hours: parseInt(secondsRemaining / (60 * 60 * 24))
+      hours: parseInt(secondsRemaining / (60 * 60))
         .toString()
         .padStart(2, "0"),
-      minutes: parseInt((secondsRemaining % (60 * 60 * 24)) / 60)
+      minutes: parseInt((secondsRemaining % (60 * 60)) / 60)
         .toString()
         .padStart(2, "0"),
       seconds: parseInt(secondsRemaining % 60)
@@ -346,8 +346,15 @@ const Raids = ({ setPlayState }) => {
                 }}
                 className={`text-white w-full text-center`}
               >
-                {displayTimeRemaining?.hours}:{displayTimeRemaining?.minutes}:
-                {displayTimeRemaining?.seconds}{" "}
+                {canBeRemoved ? (
+                  "00:00:00"
+                ) : (
+                  <>
+                    {displayTimeRemaining?.hours}:
+                    {displayTimeRemaining?.minutes}:
+                    {displayTimeRemaining?.seconds}{" "}
+                  </>
+                )}
               </div>
               {canBeRemoved && (
                 <RaidsButton

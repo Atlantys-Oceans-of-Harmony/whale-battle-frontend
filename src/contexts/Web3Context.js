@@ -170,6 +170,11 @@ export const Web3Provider = (props) => {
       harmonyWhalesAbi,
       _signer
     );
+    const plotsContract = new ethers.Contract(
+      PLOTS_CONTRACT_ADDRESS,
+      plotsAbi,
+      _signer
+    );
 
     const _contractObjects = {
       arbTokenContract,
@@ -179,6 +184,7 @@ export const Web3Provider = (props) => {
       stakingContract,
       raidContract,
       artifactContract,
+      plotsContract,
     };
 
     setContractObjects(_contractObjects);
@@ -480,7 +486,6 @@ export const Web3Provider = (props) => {
       const userBalance = parseInt(
         (await contractObjects?.plotsContract?.balanceOf(account)).toString()
       );
-
       const [multicallProvider, multicallContract] =
         await setupMultiCallContract(PLOTS_CONTRACT_ADDRESS, plotsAbi);
       let tokenCalls = [];

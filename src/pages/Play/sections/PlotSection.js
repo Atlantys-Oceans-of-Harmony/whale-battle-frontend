@@ -14,8 +14,8 @@ import "react-circular-progressbar/dist/styles.css";
 import WhaleThumbActive from "../../../assets/whale_thumb.jpg";
 import GlowBackground from "../../../assets/glow-2.png";
 import SearchBox from "components/SearchBox/index";
-import PlotFull from "assets/plotFull.png";
-import PlotThumb from "assets/plotThumb.png";
+import PlotFull from "assets/MarPacifico.jpeg";
+import PlotThumb from "assets/MarPacifico.jpeg";
 const WinStats = ({ data }) => {
   const { title, value } = data;
   const percentage = Math.max(value);
@@ -62,7 +62,7 @@ const WhaleCard = ({ data, isActive, onClick }) => {
         <img
           src={PlotThumb}
           alt=""
-          className="absolute h-24 min-w-6 h-6 overflow-hidden -z-10"
+          className="absolute object-cover w-full h-24 min-w-6 h-6 overflow-hidden -z-10"
         />
         {isActive && (
           <div className="w-full pl-4 glow flex">
@@ -133,7 +133,7 @@ export default function PlotSection({
           </div>
           <div className="flex-1 flex flex-col">
             <div>
-              <img src={PlotFull} className="" />
+              <img src={PlotFull} className="m-8 w-64 rounded-2xl" />
             </div>
           </div>
         </>
