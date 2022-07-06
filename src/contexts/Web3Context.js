@@ -57,7 +57,7 @@ const STAKING_CONTRACT_ADDRESS = "0x3d902f6447A0D4E61d65E863E7C2425D938cfEed";
 const RAIDS_CONTRACT_ADDRESS = "0x72823b3706bab466Fb9C3B0E4456a9036B62aAa4";
 const ARTIFACT_CONTRACT_ADDRESS = "0x38250446B0cE0A34C84150ba8f0A12CEE4eDdF08";
 const PLOTS_CONTRACT_ADDRESS = "0x37adB697710441de9Cc16ad25A85Def6796ec229";
-const RAIDS_V2_ADDRESS = "0x37adB697710441de9Cc16ad25A85Def6796ec229";
+const RAIDS_V2_ADDRESS = "0xED759e67ff09392F84df46372Aa7710421387b48";
 // const RPC_URL = "https://api.s0.b.hmny.io";
 // const CHAIN_ID = 1666700000;
 // const NATIVE_CURRENCY = {
@@ -416,9 +416,9 @@ export const Web3Provider = (props) => {
       await promptChain();
       ethereum.on("chainChanged", onChainChanged);
       ethereum.on("accountsChanged", onAccountsChanged);
-      // setAccount(accounts[0]);
+      setAccount(accounts[0]);
       // setAccount("0xaC7245b6031c0405fE00DF1033b97E966C5193b6");
-      setAccount("0xb845e20405df993FFEbd8b70Fe29D8f0b5a8cb4f");
+      // setAccount("0xb845e20405df993FFEbd8b70Fe29D8f0b5a8cb4f");
 
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const _signer = provider.getSigner();
@@ -1107,7 +1107,7 @@ fragment ERC721CardInfo on ERC721TokenMetadata {
 
   functionsToExport.getAllRaids = async () => {
     // const mints = await (contractObjects?.plotsContract?.mint("5")).wait();
-    const allRaids = await contractObjects?.raidsV2Contract?.userStaked(
+    const allRaids = await contractObjects?.raidsV2Contract?.getUserStaked(
       account
     );
     console.log(allRaids);
