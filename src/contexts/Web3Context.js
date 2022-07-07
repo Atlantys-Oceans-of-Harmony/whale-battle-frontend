@@ -196,6 +196,12 @@ export const Web3Provider = (props) => {
 
     setContractObjects(_contractObjects);
   }, [signer]);
+  // useEffect(() => {
+  //   account &&
+  //     contractObjects.arbTokenContract
+  //       .balanceOf(account)
+  //       .then((res) => console.log("Aqua", utils.parseEther(res)));
+  // }, [account]);
   const [blockNumber, setBlockNumber] = useState(0);
   useEffect(() => {
     const interval = setInterval(() => {
@@ -210,7 +216,17 @@ export const Web3Provider = (props) => {
 
     return () => clearInterval(interval); // This represents the unmount function, in which you need to clear your interval to prevent memory leaks.
   }, [signer]);
-
+  useEffect(() => {
+    if (account) {
+      try {
+        contractObjects.plotsContract
+          .balanceOf(account)
+          .then((res) => console.log("fewedgffgvde", parseInt(res)));
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  }, [account]);
   useEffect(() => {
     const fetchStuff = async () => {
       const {
@@ -342,7 +358,7 @@ export const Web3Provider = (props) => {
     if (account) {
       fetchStuff();
     }
-  }, [account, update, blockNumber]);
+  }, [account, update]);
   const addNewChain = async () => {
     await window.ethereum.request({
       method: "wallet_addEthereumChain",

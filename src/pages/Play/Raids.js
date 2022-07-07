@@ -186,7 +186,7 @@ const Raids = ({ setPlayState }) => {
             disabled={harmonyWhales?.length > 0 ? false : true}
             className={`mr-8`}
           >
-            CREATE NEW RAID
+            CREATE NEW RAIDS
           </RaidsButton>{" "}
           <RaidsButton
             onClick={() =>
