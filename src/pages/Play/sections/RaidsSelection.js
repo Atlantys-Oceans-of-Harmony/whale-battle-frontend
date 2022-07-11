@@ -4,6 +4,7 @@ import AquaIcon from "../../../assets/aqua.png";
 import SideArrow from "../../../assets/side-arrow.png";
 import GoldBar from "../../../assets/gold-bar.png";
 import PlotThumb from "assets/MarPacifico.jpeg";
+import LeftArrow from "../../../assets/left-arrow.png";
 import "./style.css";
 
 import {
@@ -152,14 +153,27 @@ export default function RaidsSelection({
   const [plotSelect, setPlotSelect] = useState(false);
   const [selectedCard, setSelectedCard] = useState(null);
   const [cardsArray, setCardsArray] = useState([]);
+  const [page, setPage] = useState(0);
   const whaleData = whales?.find((e) => e.whaleId == whaleIds[selectedCard]);
+
+  const handlePageUp = () => {
+    if (page * 3 + 3 < whales.length) {
+      setPage(page + 1);
+    }
+  };
+
+  const handlePageDown = () => {
+    if (page > 0) {
+      setPage(page - 1);
+    }
+  };
   // console.log(whaleData);
   return (
     <div className="flex items-center justify-between">
-      {whaleIds[selectedCard] != "" ? (
+      {/* {whaleIds[selectedCard] != "" ? (
         <>
           <div className="flex-1 text-white p-4 px-6 ">
-            {/* <div className="text-md font-semibold mb-10">Whale Species</div> */}
+            
             <div className="text-xl">Rarity Rank:</div>
             <div className="font-impact text-4xl">{whaleData?.rarityRank}</div>
 
@@ -173,8 +187,13 @@ export default function RaidsSelection({
         <div className="text-2xl w-full h-full my-auto text-center text-white">
           You have no whales!
         </div>
-      )}
-      <div className="flex flex-1 justify-center">
+      )} */}
+      <div className="flex flex-1 w-3/4 justify-center grow">
+        <img
+          src={LeftArrow}
+          className="my-auto mr-4 w-6 h-9 cursor-pointer"
+          onClick={handlePageDown}
+        />
         {cardsArray?.map((card, index) => {
           return (
             <RaidSelectCard
@@ -199,6 +218,11 @@ export default function RaidsSelection({
             setCardsArray={setCardsArray}
           />
         )}
+        <img
+          src={SideArrow}
+          className="my-auto ml-4 w-6 h-9 cursor-pointer"
+          onClick={handlePageUp}
+        />
       </div>
 
       {whaleSelect && (
