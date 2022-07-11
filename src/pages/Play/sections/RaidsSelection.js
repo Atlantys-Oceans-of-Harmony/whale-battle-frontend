@@ -57,31 +57,29 @@ const WinStats = ({ data, hideWin }) => {
 
 const WhaleCard = ({ data, isActive, onClick }) => {
   return (
-    <div onClick={onClick} className="cursor-pointer mx-4">
-      {/* {isActive && <img src={SideArrow} className="min-w-6 h-6 my-auto pr-2" />} */}
+    <div
+      onClick={onClick}
+      className="flex cursor-pointer"
+      style={!isActive ? { marginLeft: 24 } : {}}
+    >
+      {isActive && <img src={SideArrow} className="min-w-6 h-6 my-auto pr-2" />}
       <div
-        style={
-          {
-            // backgroundImage: `url(https://gen1.atlantys.one/token/image/${data.whaleId})`,
-            // backgroundSize: "cover",
-            // backgroundPosition: "center center",
-          }
-        }
-        className="w-40 font-bold text-xl"
+        style={{
+          backgroundImage: `url(https://gen1.atlantys.one/token/image/${data.whaleId})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center center",
+        }}
+        className="h-24 flex w-full font-bold text-xl"
       >
-        <img
-          src={`https://gen1.atlantys.one/token/image/${data.whaleId}`}
-          className="w-full min-w-24 overflow-hidden -z-10"
-        ></img>
         {isActive && (
-          <div className="w-full pl-4 glow flex ">
+          <div className="w-full pl-4 glow flex">
             <div className="my-auto">Whale #{data.whaleId}</div>
           </div>
         )}
       </div>
-      {/* {isActive && (
+      {isActive && (
         <img src={GoldBar} className="h-24 min-w-6 h-6 my-auto -pr-2" />
-      )} */}
+      )}
     </div>
   );
 };
@@ -90,21 +88,21 @@ const PlotCard = ({ data, isActive, onClick }) => {
   return (
     <div
       onClick={onClick}
-      className="cursor-pointer mx-4"
-      // style={!isActive ? { marginLeft: 24 } : {}}
+      className="flex cursor-pointer"
+      style={!isActive ? { marginLeft: 24 } : {}}
     >
-      {/* {isActive && <img src={SideArrow} className="min-w-6 h-6 my-auto pr-2" />} */}
+      {isActive && <img src={SideArrow} className="min-w-6 h-6 my-auto pr-2" />}
       <div
-        // style={{
-        //   backgroundSize: "cover",
-        //   backgroundPosition: "center center",
-        // }}
-        className="w-40 font-bold text-xl"
+        style={{
+          backgroundSize: "cover",
+          backgroundPosition: "center center",
+        }}
+        className="h-24 w-84 relative flex w-full font-bold text-xl overflow-hidden"
       >
         <img
           src={PlotThumb}
           alt=""
-          className="w-full min-w-24 overflow-hidden -z-10"
+          className="absolute object-cover w-full h-24 min-w-6 h-6 overflow-hidden -z-10"
         />
         {isActive && (
           <div className="w-full pl-4 glow flex">
@@ -112,9 +110,9 @@ const PlotCard = ({ data, isActive, onClick }) => {
           </div>
         )}
       </div>
-      {/* {isActive && (
+      {isActive && (
         <img src={GoldBar} className="h-24 min-w-6 h-6 my-auto -pr-2" />
-      )} */}
+      )}
     </div>
   );
 };
@@ -154,11 +152,29 @@ export default function RaidsSelection({
   const [plotSelect, setPlotSelect] = useState(false);
   const [selectedCard, setSelectedCard] = useState(null);
   const [cardsArray, setCardsArray] = useState([]);
-  //   const whaleData = whales?.find((e) => e.whaleId == whaleId);
-  // console.log("efedfef", form);
+  const whaleData = whales?.find((e) => e.whaleId == whaleIds[selectedCard]);
+  // console.log(whaleData);
   return (
-    <div className=" justify-center">
-      <div className="flex justify-center">
+    <div className="flex items-center justify-between">
+      {whaleIds[selectedCard] != "" ? (
+        <>
+          <div className="flex-1 text-white p-4 px-6 ">
+            {/* <div className="text-md font-semibold mb-10">Whale Species</div> */}
+            <div className="text-xl">Rarity Rank:</div>
+            <div className="font-impact text-4xl">{whaleData?.rarityRank}</div>
+
+            <WinStats
+              hideWin={hideWin}
+              data={{ won: whaleData?.wins, lost: whaleData?.loses }}
+            />
+          </div>
+        </>
+      ) : (
+        <div className="text-2xl w-full h-full my-auto text-center text-white">
+          You have no whales!
+        </div>
+      )}
+      <div className="flex flex-1 justify-center">
         {cardsArray?.map((card, index) => {
           return (
             <RaidSelectCard
@@ -184,88 +200,32 @@ export default function RaidsSelection({
           />
         )}
       </div>
-      {/* {whaleId != "" ? (
-        <>
-          <div className="flex-1 text-white p-4 px-6 ">
-            <div className="text-2xl font-bold">Whale #{whaleId}</div>
-            <div className="text-md font-semibold mb-10">Whale Species</div>
-            <div className="text-xl">Rarity Rank:</div>
-            <div className="font-impact text-4xl">{whaleData?.rarityRank}</div>
 
-            <WinStats
-              hideWin={hideWin}
-              data={{ won: whaleData?.wins, lost: whaleData?.loses }}
-            />
-          </div>
-          <div className="flex-1 flex flex-col">
-            <div>
-              <img
-                src={`https://gen1.atlantys.one/token/image/transparent/${whaleId}`}
-                className=""
-              />
-            </div>
-
-            {isCreateBattle && (
-              <div className="text-white w-52 mx-auto">
-                <SearchBox
-                  icon={AquaIcon}
-                  placeholder="Amount in ARB"
-                  pattern="^[0-9]*$"
-                  value={form["amount"]}
-                  onChange={(e) => setForm({ ...form, amount: e.target.value })}
-                />
-              </div>
-            )}
-          </div>
-        </>
-      ) : (
-        <div className="text-2xl w-full h-full my-auto text-center text-white">
-          You have no whales!
-        </div>
-      )}
-      <div className="flex flex-1 text-white">
-        <div className="w-2/3 overflow-auto h-128">
-          {whales?.map((e) => {
-            return (
-              <WhaleCard
-                onClick={() => {
-                  setForm({ ...form, whaleId: e.whaleId });
-                }}
-                data={{ ...e }}
-                isActive={e.whaleId == whaleId ? true : false}
-              />
-            );
-          })}
-        </div>
-        <div className="w-1/3 flex flex-col pl-2">
-          <Option text="All" isActive />
-          <Option text="Blue Whale" />
-          <Option text="Green Whale" />
-        </div>
-      </div> */}
       {whaleSelect && (
-        <div className="flex flex-row justify-center w-11/12 text-white m-auto mt-4 overflow-x-auto">
-          {whales?.map((e) => {
-            return (
-              !whaleIds.includes(e.whaleId) && (
-                <WhaleCard
-                  onClick={() => {
-                    const whaleIds2 = form.whaleIds;
-                    whaleIds2[selectedCard] = e.whaleId;
-                    const plotIds2 = form.plotIds;
-                    plotIds2[selectedCard] = "0";
-                    setForm({
-                      ...form,
-                      whaleIds: [...whaleIds2],
-                      plotIds: [...plotIds],
-                    });
-                  }}
-                  data={{ ...e }}
-                  isActive={e.whaleId == whaleIds[selectedCard] ? true : false}
-                />
-              )
-            );
-          })}
+        <div className="flex flex-0 text-white">
+          <div className="w-48 overflow-auto">
+            {whales?.map((e) => {
+              return (
+                !whaleIds.includes(e.whaleId) && (
+                  <WhaleCard
+                    onClick={() => {
+                      const whaleIds2 = form.whaleIds;
+                      whaleIds2[selectedCard] = e.whaleId;
+                      const plotIds2 = form.plotIds;
+                      plotIds2[selectedCard] = "0";
+                      setForm({
+                        ...form,
+                        whaleIds: [...whaleIds2],
+                        plotIds: [...plotIds],
+                      });
+                    }}
+                    data={{ ...e }}
+                    isActive={e.whaleId == "21" ? true : false}
+                  />
+                )
+              );
+            })}
+          </div>
         </div>
       )}
       {plotSelect && (

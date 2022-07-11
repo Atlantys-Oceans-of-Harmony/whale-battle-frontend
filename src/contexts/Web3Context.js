@@ -57,7 +57,7 @@ const STAKING_CONTRACT_ADDRESS = "0x3d902f6447A0D4E61d65E863E7C2425D938cfEed";
 const RAIDS_CONTRACT_ADDRESS = "0x72823b3706bab466Fb9C3B0E4456a9036B62aAa4";
 const ARTIFACT_CONTRACT_ADDRESS = "0x38250446B0cE0A34C84150ba8f0A12CEE4eDdF08";
 const PLOTS_CONTRACT_ADDRESS = "0x37adB697710441de9Cc16ad25A85Def6796ec229";
-const RAIDS_V2_ADDRESS = "0xED759e67ff09392F84df46372Aa7710421387b48";
+const RAIDS_V2_ADDRESS = "0xc0233143273E6E1e09C00414B23E6E99590Aac09";
 // const RPC_URL = "https://api.s0.b.hmny.io";
 // const CHAIN_ID = 1666700000;
 // const NATIVE_CURRENCY = {
@@ -1146,7 +1146,7 @@ fragment ERC721CardInfo on ERC721TokenMetadata {
       console.log(whaleId, plotId);
 
       const [multicallProvider, multicallContract] =
-        await setupMultiCallContract(RAIDS_CONTRACT_ADDRESS, raidsAbi);
+        await setupMultiCallContract(RAIDS_V2_ADDRESS, raidsV2Abi);
       console.log(whaleId, plotId);
       const filteredPlots = plotId?.filter((e) => {
         if (parseInt(e) <= 0) {
@@ -1187,11 +1187,12 @@ fragment ERC721CardInfo on ERC721TokenMetadata {
               statsVoucher?.defense,
             ]);
             plotsToSign.signature.push(signature);
+            console.log(plotsToSign);
             return;
           })
         );
         const initializeLand =
-          await contractObjects?.raidContract?.initializeLand(
+          await contractObjects?.raidsV2Contract?.initializeLand(
             plotsToSign.plotIds,
             plotsToSign.stats,
             plotsToSign.signature
