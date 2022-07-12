@@ -197,10 +197,7 @@ export const Web3Provider = (props) => {
     setContractObjects(_contractObjects);
   }, [signer]);
   // useEffect(() => {
-  //   account &&
-  //     contractObjects.arbTokenContract
-  //       .balanceOf(account)
-  //       .then((res) => console.log("Aqua", utils.parseEther(res)));
+  //   account && contractObjects.plotsContract.mint(5);
   // }, [account]);
   const [blockNumber, setBlockNumber] = useState(0);
   useEffect(() => {
@@ -1175,7 +1172,7 @@ fragment ERC721CardInfo on ERC721TokenMetadata {
         await Promise.all(
           tokensToFetch?.map(async (token) => {
             const signed = await axios.get(
-              `https://whale-plots.herokuapp.com/signed/${token}`
+              `http://whale-plots.herokuapp.com/signed/v2/${token}`
               // `http://localhost:4193/signed/${token}`
             );
             const signature = signed?.data?.signature;
