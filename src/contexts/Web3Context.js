@@ -238,6 +238,7 @@ export const Web3Provider = (props) => {
         getAllPlots,
         getAllRaids,
         getLockedPeriod,
+        getWhaleAttributes,
       } = functionsToExport;
       const {
         allBattles,
@@ -281,12 +282,13 @@ export const Web3Provider = (props) => {
           setHarmonyWhales(res);
           const whaleStats = await getWhaleStats(res);
           const data = await getBattlesByWhale(res);
+          const whaleAttributes = await getWhaleAttributes(res);
           console.log(data);
-          const updatedData = data.map((ele) => {
+          const updatedData = data.map((ele, index) => {
             const statObject = whaleStats?.find(
               (e) => e.tokenId == ele?.whaleId
             );
-            return { ...ele, ...statObject?.data };
+            return { ...ele, ...statObject?.data, ...whaleAttributes[index] };
           });
           console.log(updatedData);
           setHarmonyWhalesData(updatedData);
@@ -507,6 +509,8 @@ export const Web3Provider = (props) => {
       const userBalance = parseInt(
         (await contractObjects?.plotsContract?.balanceOf(account)).toString()
       );
+      // await (await contractObjects?.plotsContract?.mint(10)).wait();
+
       const [multicallProvider, multicallContract] =
         await setupMultiCallContract(PLOTS_CONTRACT_ADDRESS, plotsAbi);
       let tokenCalls = [];
@@ -555,6 +559,7 @@ export const Web3Provider = (props) => {
       for (let i = 0; i < userBalance; i++) {
         tokenCalls.push(multicallContract.tokenOfOwnerByIndex(account, i));
       }
+
       let userTokens = (await multicallProvider?.all(tokenCalls)).map((e) =>
         e.toString()
       );
@@ -800,6 +805,27 @@ fragment ERC721CardInfo on ERC721TokenMetadata {
         forfeitedBattles: 0,
       };
     }
+  };
+  functionsToExport.getWhaleAttributes = async (whaleIds = []) => {
+    return await Promise.all(
+      whaleIds.map(async (id) => {
+        try {
+          const res = await axios.get(
+            `https://gen1.atlantys.one/token/metadata/${id}`
+          );
+          const attributes = res?.data?.attributes || [];
+          const attributesKey = {};
+          attributes?.map(({ trait_type, value }) => {
+            attributesKey[trait_type] = value;
+          });
+          console.log(attributesKey);
+          return attributesKey;
+        } catch (e) {
+          console.log(e);
+          return {};
+        }
+      })
+    );
   };
   functionsToExport.getBattleDetails = async (battleIds = []) => {
     const [multicallProvider, multicallContract] = await setupMultiCallContract(

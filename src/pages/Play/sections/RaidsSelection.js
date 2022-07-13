@@ -19,11 +19,11 @@ import WhaleThumbActive from "../../../assets/whale_thumb.jpg";
 import GlowBackground from "../../../assets/glow-2.png";
 import SearchBox from "components/SearchBox/index";
 import RaidSelectCard from "components/RaidSelectCard";
-const WinStats = ({ data, hideWin }) => {
+const WinStats = ({ title, data, hideWin }) => {
   const { won, lost } = data;
   const percentage = (won / Math.max(1, won + lost)) * 100;
   return (
-    <div className={`flex mt-10 h-24 mr-20 ${hideWin ? "invisible" : ""}`}>
+    <div className={`flex  h-32 w-32 ${hideWin ? "invisible" : ""}`}>
       <div className="flex-1">
         <CircularProgressbarWithChildren
           strokeWidth={10}
@@ -39,20 +39,11 @@ const WinStats = ({ data, hideWin }) => {
             trailColor: "#d6d6d655",
           })}
         >
-          <div className="">Win Rate</div>
+          <div className="">{title ? title : "Win Rate"}</div>
           <div className="font-impact text-2xl">
             {parseFloat(percentage).toFixed(2)}%
           </div>
         </CircularProgressbarWithChildren>
-      </div>
-
-      <div className="flex-1 flex flex-col justify-center items-center">
-        <h1 className="text-green">
-          <span className="font-impact text-2xl">{won} </span>WON
-        </h1>
-        <h1 className="text-red mt-4">
-          <span className="font-impact text-2xl">{lost} </span> LOST
-        </h1>
       </div>
     </div>
   );
@@ -159,7 +150,8 @@ export default function RaidsSelection({
   const [cardsArray, setCardsArray] = useState([0]);
   const [page, setPage] = useState(0);
   const whaleData = whales?.find((e) => e.whaleId == whaleIds[selectedCard]);
-
+  const plotData = plots?.find((e) => e.plotId == plotIds[selectedCard]);
+  console.log(plotData);
   const handlePageUp = () => {
     if (page * 2 + 2 < whales.length) {
       setPage(page + 1);
@@ -172,17 +164,61 @@ export default function RaidsSelection({
     }
   };
   return (
-    <div className="flex items-center justify-between">
+    <div className="flex items-start justify-between">
       {whaleIds[selectedCard] != "" ? (
         <>
           <div className="flex-1 text-white p-4 px-6 ">
-            <div className="text-xl">Rarity Rank:</div>
-            <div className="font-impact text-4xl">{whaleData?.rarityRank}</div>
+            {whaleData && (
+              <>
+                <div className="text-xl text-red">Whale Attributes</div>
+                Weapon: {whaleData?.Weapon}
+                <br />
+                Body Type: {whaleData?.Body}
+                <br />
+                Accessory: {whaleData?.Accessory}
+                <br />
+                <WinStats
+                  hideWin={hideWin}
+                  data={{ won: whaleData?.wins, lost: whaleData?.loses }}
+                />
+              </>
+            )}
+            {plotData && (
+              <>
+                <div className="text-xl text-red">Plot Attributes</div>
+                <br />
+                <div className="flex items-center justify-evenly">
+                  <WinStats
+                    title={"Attack"}
+                    data={{
+                      won: plotData?.Attack,
+                      lost: 100 - plotData?.Attack,
+                    }}
+                  />
+                  <WinStats
+                    title={"Defense"}
+                    data={{
+                      won: plotData?.Defense,
+                      lost: 100 - plotData?.Defense,
+                    }}
+                  />
+                </div>
+                <div className="flex items-center justify-center">
+                  <WinStats
+                    title={"Resource"}
+                    data={{
+                      won: plotData?.Resource,
+                      lost: 100 - plotData?.Resource,
+                    }}
+                  />
+                </div>
 
-            <WinStats
-              hideWin={hideWin}
-              data={{ won: whaleData?.wins, lost: whaleData?.loses }}
-            />
+                <WinStats
+                  hideWin={hideWin}
+                  data={{ won: whaleData?.wins, lost: whaleData?.loses }}
+                />
+              </>
+            )}
           </div>
         </>
       ) : (
