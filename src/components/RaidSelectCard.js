@@ -47,6 +47,9 @@ export default function RaidSelectCard({
                           setCardNumber(index);
                         }}
                       />
+                      <div className="absolute text-lg font-extrabold p-8 pl-6 text-white top-0 left-0">
+                        Whale #{whalePlotIds.whaleId}
+                      </div>
                     </span>
                   ) : (
                     <button
@@ -80,6 +83,9 @@ export default function RaidSelectCard({
                         src={PlotThumb2}
                         className="h-full overflow-hidden "
                       />
+                      <div className="absolute text-lg font-extrabold p-8 pl-6 text-white top-0 left-0">
+                        Plot #{whalePlotIds.plotId}
+                      </div>
                     </span>
                   ) : (
                     <button

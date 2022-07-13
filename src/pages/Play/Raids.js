@@ -343,7 +343,7 @@ const Raids = ({ setPlayState }) => {
                     margin: "auto",
                   }}
                 >
-                  END RAID
+                  REVIVE
                 </RaidsButton>
               )}
             </div>

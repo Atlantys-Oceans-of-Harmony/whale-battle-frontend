@@ -2,7 +2,6 @@
   "name": "whales-testing",
   "version": "0.1.0",
   "private": true,
-  "homepage": "/battles",
   "dependencies": {
     "@headlessui/react": "^1.4.3",
     "@heroicons/react": "^1.0.5",
