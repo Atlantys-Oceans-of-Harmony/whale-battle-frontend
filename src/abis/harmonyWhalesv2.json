@@ -320,34 +320,7 @@
     "type": "function",
     "stateMutability": "nonpayable"
   },
-  {
-    "stateMutability": "nonpayable",
-    "inputs": [
-      {
-        "name": "from",
-        "internalType": "address",
-        "type": "address"
-      },
-      {
-        "type": "address",
-        "internalType": "address",
-        "name": "to"
-      },
-      {
-        "name": "tokenId",
-        "type": "uint256",
-        "internalType": "uint256"
-      },
-      {
-        "type": "bytes",
-        "internalType": "bytes",
-        "name": "_data"
-      }
-    ],
-    "name": "safeTransferFrom",
-    "outputs": [],
-    "type": "function"
-  },
+
   {
     "name": "setApprovalForAll",
     "outputs": [],

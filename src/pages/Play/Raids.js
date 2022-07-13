@@ -44,6 +44,7 @@ const Raids = ({ setPlayState }) => {
     currTime,
     raidLockedPeriod,
     returnRaid,
+    userArtifacts,
   } = useContext(Web3Context);
   const navigate = useNavigate();
   const [selectedBattle, setSelectedBattle] = useState();
@@ -259,7 +260,7 @@ const Raids = ({ setPlayState }) => {
 
     if (prizeMultiplier <= 0) {
       canBeRemoved = true;
-      if (!revived) {
+      if (revived == "false" && userArtifacts?.length > 0) {
         canBeRevived = true;
       }
     }
@@ -296,7 +297,7 @@ const Raids = ({ setPlayState }) => {
                 #{whaleId}
               </div>
             </div>
-            <div className="z-20 flex flex-col flex-1 mx-4 bg-cover px-4">
+            <div className="z-50 flex flex-col flex-1 mx-4 bg-cover px-4">
               <div className="text-white text-center text-xl  mt-6">
                 Plot #{plotId}
               </div>
@@ -337,7 +338,7 @@ const Raids = ({ setPlayState }) => {
               )}
               {canBeRevived && (
                 <RaidsButton
-                  onClick={() => reviveRaid([whaleId])}
+                  onClick={() => reviveRaid([whaleId], [userArtifacts[0]])}
                   style={{
                     fontSize: "24px",
                     padding: "2px",

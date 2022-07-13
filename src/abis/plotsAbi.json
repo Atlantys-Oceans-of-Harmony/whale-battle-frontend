@@ -328,34 +328,7 @@
     "outputs": [],
     "type": "function"
   },
-  {
-    "type": "function",
-    "outputs": [],
-    "inputs": [
-      {
-        "type": "address",
-        "name": "from",
-        "internalType": "address"
-      },
-      {
-        "name": "to",
-        "type": "address",
-        "internalType": "address"
-      },
-      {
-        "internalType": "uint256",
-        "type": "uint256",
-        "name": "tokenId"
-      },
-      {
-        "internalType": "bytes",
-        "name": "_data",
-        "type": "bytes"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "name": "safeTransferFrom"
-  },
+
   {
     "type": "function",
     "name": "setApprovalForAll",

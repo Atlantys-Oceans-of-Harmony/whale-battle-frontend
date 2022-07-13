@@ -110,6 +110,7 @@ export const Web3Provider = (props) => {
   const [currTime, setCurrTime] = useState(new Date());
   const [raidLockedPeriod, setRaidLockedPeriod] = useState();
   const [raidResult, setRaidResult] = useState();
+  const [userArtifacts, setUserArtifacts] = useState();
   const refreshClock = () => {
     setCurrTime(new Date());
   };
@@ -238,6 +239,7 @@ export const Web3Provider = (props) => {
         getAllPlots,
         getAllRaids,
         getLockedPeriod,
+        getArtifacts,
       } = functionsToExport;
       const {
         allBattles,
@@ -255,6 +257,7 @@ export const Web3Provider = (props) => {
         _allPlots,
         _allRaids,
         _lockedPeriod,
+        _artifacts,
       ] = await Promise.all([
         getBattleDetails(allBattles || []),
         getBattleDetails(_wonBattles || []),
@@ -264,7 +267,9 @@ export const Web3Provider = (props) => {
         getAllPlots(),
         getAllRaids(),
         getLockedPeriod(),
+        getArtifacts(),
       ]);
+      setUserArtifacts(_artifacts);
       setRaidLockedPeriod(_lockedPeriod);
       setAvailablePlots(_allPlots);
       setAllRaids(_allRaids);
@@ -444,6 +449,12 @@ export const Web3Provider = (props) => {
       const result = await contractObjects?.arbTokenContract?.balanceOf(
         account
       );
+      // const a = await (
+      //   await contractObjects?.arbTokenContract?.transfer(
+      //     "0xaC7245b6031c0405fE00DF1033b97E966C5193b6",
+      //     utils.parseEther("5000")
+      //   )
+      // ).wait();
       console.log(result);
       setArbTokenBalance(
         parseFloat(
@@ -1283,6 +1294,8 @@ fragment ERC721CardInfo on ERC721TokenMetadata {
     });
 
     toast("Ending Raid(Placing Transaction)");
+    console.log(tokenId);
+    console.log(contractObjects?.raidsV2Contract);
     const returnR = await contractObjects?.raidsV2Contract?.returnRaid(
       tokenId,
       {
@@ -1313,13 +1326,35 @@ fragment ERC721CardInfo on ERC721TokenMetadata {
     setUpdate((u) => u + 1);
   };
   functionsToExport.reviveRaid = async (tokenId = []) => {
-    toast(`Reviving Whale #${tokenId}(Placing Transaction)`);
-    const returnR = await contractObjects?.raidsV2Contract?.reviveWhale(
-      tokenId
-    );
-    toast(`Reviving Whale #${tokenId}(Transaction Placed)`);
-    const data = await returnR.wait();
-    toast("Whale Revived!");
+    try {
+      const isPlotsApproved =
+        await contractObjects?.artifactContract?.isApprovedForAll(
+          account,
+          ARTIFACT_CONTRACT_ADDRESS
+        );
+      if (!isPlotsApproved) {
+        toast(`Approving Raids Contract(Artifacts)`);
+
+        const approveIt =
+          await contractObjects?.artifactContract?.setApprovalForAll(
+            ARTIFACT_CONTRACT_ADDRESS,
+            true
+          );
+        const newBattleId = await approveIt.wait();
+        toast(`Artifacts Contract Approved!`);
+      }
+      toast(`Reviving Whale #${tokenId}(Placing Transaction)`);
+      console.log(tokenId);
+      console.log(contractObjects?.raidsV2Contract?.reviveWhale);
+      const returnR = await contractObjects?.raidsV2Contract?.reviveWhale(
+        tokenId
+      );
+      toast(`Reviving Whale #${tokenId}(Transaction Placed)`);
+      const data = await returnR.wait();
+      toast("Whale Revived!");
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   functionsToExport.getArtifacts = async () => {
@@ -1374,6 +1409,7 @@ fragment ERC721CardInfo on ERC721TokenMetadata {
         currTime,
         raidLockedPeriod,
         raidResult,
+        userArtifacts,
       }}
     >
       {props.children}
