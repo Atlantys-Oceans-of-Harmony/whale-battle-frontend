@@ -256,12 +256,14 @@ const Raids = ({ setPlayState }) => {
     if (dateDiff > raidLockedPeriod * 1000) {
       canBeRemoved = true;
     }
+
     if (prizeMultiplier <= 0) {
       canBeRemoved = true;
       if (!revived) {
         canBeRevived = true;
       }
     }
+
     const secondsRemaining = Math.max(
       0,
       parseInt(raidLockedPeriod) - parseInt(dateDiff / 1000)

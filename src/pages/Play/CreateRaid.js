@@ -85,7 +85,7 @@ const CreateRaid = ({ setPlayState }) => {
   // }, [harmonyWhalesData, availablePlots]);
   return (
     <>
-      <div className="flex flex-col mx-12 xl:mx-48">
+      <div className="flex flex-col mx-12">
         <Container>
           <div className="text-white text-3xl font-bold text-center w-full mb-6">
             Send to Raid

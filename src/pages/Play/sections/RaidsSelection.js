@@ -167,7 +167,7 @@ export default function RaidsSelection({
     <div className="flex items-start justify-between">
       {whaleIds[selectedCard] != "" ? (
         <>
-          <div className="flex-1 text-white p-4 px-6 ">
+          <div className="flex-0 text-white p-4 px-6 ">
             {whaleData && (
               <>
                 <div className="text-xl text-red">Whale Attributes</div>
@@ -187,7 +187,7 @@ export default function RaidsSelection({
               <>
                 <div className="text-xl text-red">Plot Attributes</div>
                 <br />
-                <div className="flex items-center justify-evenly">
+                <div className="flex items-center gap-4 justify-evenly">
                   <WinStats
                     title={"Attack"}
                     data={{
