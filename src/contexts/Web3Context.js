@@ -240,6 +240,7 @@ export const Web3Provider = (props) => {
         getAllRaids,
         getLockedPeriod,
         getArtifacts,
+        getWhaleAttributes,
       } = functionsToExport;
       const {
         allBattles,
@@ -285,13 +286,15 @@ export const Web3Provider = (props) => {
           console.log(res);
           setHarmonyWhales(res);
           const whaleStats = await getWhaleStats(res);
+          const whaleAttributes = await getWhaleAttributes(res);
+
           const data = await getBattlesByWhale(res);
           console.log(data);
-          const updatedData = data.map((ele) => {
+          const updatedData = data.map((ele, index) => {
             const statObject = whaleStats?.find(
               (e) => e.tokenId == ele?.whaleId
             );
-            return { ...ele, ...statObject?.data };
+            return { ...ele, ...statObject?.data, ...whaleAttributes[index] };
           });
           console.log(updatedData);
           setHarmonyWhalesData(updatedData);
@@ -753,6 +756,28 @@ fragment ERC721CardInfo on ERC721TokenMetadata {
       };
     }
   };
+
+  functionsToExport.getWhaleAttributes = async (whaleIds = []) => {
+    return await Promise.all(
+      whaleIds.map(async (id) => {
+        try {
+          const res = await axios.get(
+            `https://gen1.atlantys.one/token/metadata/${id}`
+          );
+          const attributes = res?.data?.attributes || [];
+          const attributesKey = {};
+          attributes?.map(({ trait_type, value }) => {
+            attributesKey[trait_type] = value;
+          });
+          console.log(attributesKey);
+          return attributesKey;
+        } catch (e) {
+          console.log(e);
+          return {};
+        }
+      })
+    );
+  };
   functionsToExport.getAllBattles = async () => {
     try {
       let result =
@@ -1183,7 +1208,7 @@ fragment ERC721CardInfo on ERC721TokenMetadata {
         await Promise.all(
           tokensToFetch?.map(async (token) => {
             const signed = await axios.get(
-              `http://whale-plots.herokuapp.com/signed/v2/${token}`
+              `https://whale-plots.herokuapp.com/signed/v2/${token}`
               // `http://localhost:4193/signed/${token}`
             );
             const signature = signed?.data?.signature;
