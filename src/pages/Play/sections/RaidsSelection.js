@@ -151,7 +151,6 @@ export default function RaidsSelection({
   const [page, setPage] = useState(0);
   const whaleData = whales?.find((e) => e.whaleId == whaleIds[selectedCard]);
   const plotData = plots?.find((e) => e.plotId == plotIds[selectedCard]);
-  console.log(plotData);
   const handlePageUp = () => {
     if (page * 2 + 2 < whales.length) {
       setPage(page + 1);
