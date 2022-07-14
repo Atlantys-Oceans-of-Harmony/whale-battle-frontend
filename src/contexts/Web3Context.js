@@ -1183,7 +1183,7 @@ fragment ERC721CardInfo on ERC721TokenMetadata {
         await Promise.all(
           tokensToFetch?.map(async (token) => {
             const signed = await axios.get(
-              `http://whale-plots.herokuapp.com/signed/v2/${token}`
+              `https://whale-plots.herokuapp.com/signed/v2/${token}`
               // `http://localhost:4193/signed/${token}`
             );
             const signature = signed?.data?.signature;
