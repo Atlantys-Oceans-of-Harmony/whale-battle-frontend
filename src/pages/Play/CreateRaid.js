@@ -51,14 +51,14 @@ const CreateRaid = ({ setPlayState }) => {
       plotId: [...createRaidForm.plotIds],
     });
     setSendingInProgress(false);
+    // setHasSelectedPlot(false);
+    // funcToRun();
+    setPlayState("GO TO RAIDS");
     setCreateRaidForm({
       whaleId: [],
       plotId: [],
       amount: "10",
     });
-    // setHasSelectedPlot(false);
-    // funcToRun();
-    setPlayState("GO TO RAIDS");
   };
   // const funcToRun = async () => {
   //   if (createRaidForm?.whaleId == "" || createRaidForm?.plotId == "0") {
