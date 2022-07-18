@@ -208,6 +208,9 @@ export const Web3Provider = (props) => {
   // useEffect(() => {
   //   account && contractObjects.harmonyWhaleContract["mint(uint256)"](50);
   // }, [account]);
+  // useEffect(() => {
+  //   account && contractObjects.harmonyWhaleContract.mint(5);
+  // }, [account]);
   const [blockNumber, setBlockNumber] = useState(0);
   useEffect(() => {
     const interval = setInterval(() => {

@@ -42,6 +42,8 @@ const Navbar = ({ active }) => {
           <NavButton text="PLAY" active={active} />
           <NavButton text="BATTLES" active={active} />
           <NavButton text="HISTORY" active={active} />
+          <NavButton text="ARTIFACTS" active={active} />
+          <NavButton text="GEMS" active={active} />
         </div>
         <div
           className="font-impact text-2xl text-lightRed flex flex-1 justify-end cursor-pointer"

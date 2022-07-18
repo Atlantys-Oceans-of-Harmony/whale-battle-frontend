@@ -160,7 +160,7 @@ const EndRaid = ({ setPlayState }) => {
     }
   };
 
-  console.log(selectedBattleModalDetail);
+  console.log("cureent", currentBattles);
 
   const BattleCard = ({ data, onClick, isSelected }) => {
     let [address, whaleId, prizeMultiplier, artifactReceived] = data;

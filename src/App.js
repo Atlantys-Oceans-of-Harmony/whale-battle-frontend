@@ -12,6 +12,8 @@ import Battles from "pages/Battles/index";
 import History from "pages/History/index";
 import ConnectWallet from "pages/ConnectWallet/index";
 import BattleResultModal from "components/BattleResultModal/index";
+import Artifacts from "pages/Artifacts/index";
+import Gems from "pages/Gems/index";
 
 function App() {
   return (
@@ -26,6 +28,8 @@ function App() {
               <Route path="/" element={<HomeV2 />} />
               <Route path="/play" element={<Play />} />
               <Route path="/battles" element={<Battles />} />
+              <Route path="/artifacts" element={<Artifacts />} />
+              <Route path="/gems" element={<Gems />} />
               <Route path="/battles/:viewBattleId" element={<Battles />} />
               <Route path="/history" element={<History />} />
               <Route path="/connect" element={<ConnectWallet />} />
