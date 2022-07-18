@@ -163,7 +163,9 @@ const EndRaid = ({ setPlayState }) => {
   console.log(selectedBattleModalDetail);
 
   const BattleCard = ({ data, onClick, isSelected }) => {
-    const [address, whaleId, prizeMultiplier, artifactReceived] = data;
+    let [address, whaleId, prizeMultiplier, artifactReceived] = data;
+    whaleId = parseInt(whaleId, 16);
+    prizeMultiplier = parseInt(prizeMultiplier, 16);
 
     if (data) {
       return (
@@ -233,10 +235,10 @@ const EndRaid = ({ setPlayState }) => {
                 currentBattles.map((el) => {
                   return (
                     <BattleCard
-                      data={el}
+                      data={el?.args}
                       onClick={() => {
-                        console.log(el);
-                        returnRaid([el[0]], setPlayState);
+                        // console.log(el);
+                        // returnRaid([el[0]], setPlayState);
                       }}
                       isSelected={
                         selectedBattle &&

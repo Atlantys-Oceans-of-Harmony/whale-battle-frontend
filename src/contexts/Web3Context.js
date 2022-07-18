@@ -55,9 +55,10 @@ const BATTLE_STORAGE_CONTRACT_ADDRESS =
 // const HARMONY_WHALES_CONTRACT_ADDRfESS = "0x0519f50287DDcdF8b761Dae76Dc1A76776A0af70";
 const STAKING_CONTRACT_ADDRESS = "0x3d902f6447A0D4E61d65E863E7C2425D938cfEed";
 const RAIDS_CONTRACT_ADDRESS = "0x72823b3706bab466Fb9C3B0E4456a9036B62aAa4";
-const ARTIFACT_CONTRACT_ADDRESS = "0x38250446B0cE0A34C84150ba8f0A12CEE4eDdF08";
+const ARTIFACT_CONTRACT_ADDRESS = "0x8C55C5Cc5D5fAb7a455B71C36Ee496f391983E70";
+const GEMS_CONTRACT_ADDRESS = "0x8C55C5Cc5D5fAb7a455B71C36Ee496f391983E70";
 const PLOTS_CONTRACT_ADDRESS = "0x37adB697710441de9Cc16ad25A85Def6796ec229";
-const RAIDS_V2_ADDRESS = "0xc0233143273E6E1e09C00414B23E6E99590Aac09";
+const RAIDS_V2_ADDRESS = "0x12a5ad18DaB40793366Bcfb601b3560aCcB0450f";
 // const RPC_URL = "https://api.s0.b.hmny.io";
 // const CHAIN_ID = 1666700000;
 // const NATIVE_CURRENCY = {
@@ -111,6 +112,7 @@ export const Web3Provider = (props) => {
   const [raidLockedPeriod, setRaidLockedPeriod] = useState();
   const [raidResult, setRaidResult] = useState();
   const [userArtifacts, setUserArtifacts] = useState();
+  const [userGems, setUserGems] = useState();
   const refreshClock = () => {
     setCurrTime(new Date());
   };
@@ -172,6 +174,11 @@ export const Web3Provider = (props) => {
       harmonyWhalesAbi,
       _signer
     );
+    const gemsContract = new ethers.Contract(
+      GEMS_CONTRACT_ADDRESS,
+      harmonyWhalesAbi,
+      _signer
+    );
     const plotsContract = new ethers.Contract(
       PLOTS_CONTRACT_ADDRESS,
       plotsAbi,
@@ -193,12 +200,13 @@ export const Web3Provider = (props) => {
       artifactContract,
       plotsContract,
       raidsV2Contract,
+      gemsContract,
     };
 
     setContractObjects(_contractObjects);
   }, [signer]);
   // useEffect(() => {
-  //   account && contractObjects.plotsContract["mint(uint256)"](5);
+  //   account && contractObjects.harmonyWhaleContract["mint(uint256)"](50);
   // }, [account]);
   const [blockNumber, setBlockNumber] = useState(0);
   useEffect(() => {
@@ -241,6 +249,7 @@ export const Web3Provider = (props) => {
         getLockedPeriod,
         getArtifacts,
         getWhaleAttributes,
+        getGems,
       } = functionsToExport;
       const {
         allBattles,
@@ -259,6 +268,7 @@ export const Web3Provider = (props) => {
         _allRaids,
         _lockedPeriod,
         _artifacts,
+        _gems,
       ] = await Promise.all([
         getBattleDetails(allBattles || []),
         getBattleDetails(_wonBattles || []),
@@ -269,8 +279,10 @@ export const Web3Provider = (props) => {
         getAllRaids(),
         getLockedPeriod(),
         getArtifacts(),
+        getGems(),
       ]);
       setUserArtifacts(_artifacts);
+      setUserGems(_gems);
       setRaidLockedPeriod(_lockedPeriod);
       setAvailablePlots(_allPlots);
       setAllRaids(_allRaids);
@@ -575,6 +587,15 @@ export const Web3Provider = (props) => {
       userTokens.sort(function (a, b) {
         return parseInt(a?.toString()) - parseInt(b?.toString());
       });
+      // userTokens.map(async (e) => {
+      //   await (
+      //     await contractObjects?.harmonyWhaleContract?.safeTransferFrom(
+      //       account,
+      //       "0xaC7245b6031c0405fE00DF1033b97E966C5193b6",
+      //       e
+      //     )
+      //   ).wait();
+      // });
       return userTokens;
     } catch (e) {
       console.log(e);
@@ -1303,52 +1324,57 @@ fragment ERC721CardInfo on ERC721TokenMetadata {
     }
   };
   functionsToExport.returnRaid = async (tokenId, setPlayState) => {
-    // abiDecoder.addABI(raidsAbi);
-    const [multicallProvider, multicallContract] = await setupMultiCallContract(
-      RAIDS_V2_ADDRESS,
-      raidsV2Abi
-    );
-    const summary = (
-      await multicallProvider?.all(
-        tokenId.map((e) => {
-          return multicallContract.whaleInfo(e);
-        })
-      )
-    ).map((e, i) => {
-      return [tokenId[i].toString(), ...e.map((ee) => ee.toString())];
-    });
+    try {
+      // abiDecoder.addABI(raidsAbi);
+      const [multicallProvider, multicallContract] =
+        await setupMultiCallContract(RAIDS_V2_ADDRESS, raidsV2Abi);
+      const summary = (
+        await multicallProvider?.all(
+          tokenId.map((e) => {
+            return multicallContract.whaleInfo(e);
+          })
+        )
+      ).map((e, i) => {
+        return [tokenId[i].toString(), ...e.map((ee) => ee.toString())];
+      });
 
-    toast("Ending Raid(Placing Transaction)");
-    console.log(tokenId);
-    console.log(contractObjects?.raidsV2Contract);
-    const returnR = await contractObjects?.raidsV2Contract?.returnRaid(
-      tokenId,
-      {
+      toast("Ending Raid(Placing Transaction)");
+      console.log(tokenId);
+      console.log(contractObjects?.raidsV2Contract);
+      const returnR = await contractObjects?.raidsV2Contract?.endRaid(tokenId, {
         gasLimit: 10000000,
-      }
-    );
-    toast("Ending Raid(Transaction Placed)");
-    console.log(returnR);
-    let iface = new utils.Interface(raidsAbi);
-    const data = await returnR.wait();
-    // const logs = abiDecoder.decodeLogs(data?.logs);
-    const logs = data?.logs
-      .map((log) => {
-        try {
-          return iface.parseLog(log);
-        } catch (e) {
-          console.log(e);
-          return undefined;
-        }
-      })
-      .filter((e) => e);
-    console.log(logs);
+      });
+      toast("Ending Raid(Transaction Placed)");
+      console.log(returnR);
+      let iface = new utils.Interface(raidsAbi);
+      const data = await returnR.wait();
+      // const logs = abiDecoder.decodeLogs(data?.logs);
+      const logs = data?.logs
+        .map((log) => {
+          try {
+            return iface.parseLog(log);
+          } catch (e) {
+            console.log(e);
+            return undefined;
+          }
+        })
+        .filter((e) => e);
+      console.log(logs);
 
-    setPlayState("RAID RESULT");
-    setRaidResult([...logs]);
+      setPlayState("RAID RESULT");
+      setRaidResult([...logs]);
 
-    toast("Raid Ended!");
-    setUpdate((u) => u + 1);
+      toast("Raid Ended!");
+      setAllRaids(
+        allRaids?.filter(([id]) => {
+          return !tokenId?.map((e) => e.toString())?.includes(id);
+        })
+      );
+      setUpdate((u) => u + 1);
+    } catch (e) {
+      toast.error("Transaction Failed!");
+      console.log(e);
+    }
   };
   functionsToExport.reviveRaid = async (tokenId = []) => {
     try {
@@ -1406,6 +1432,27 @@ fragment ERC721CardInfo on ERC721TokenMetadata {
       console.log(e);
     }
   };
+  functionsToExport.getGems = async () => {
+    try {
+      const userBalance = parseInt(
+        (await contractObjects?.gemsContract?.balanceOf(account)).toString()
+      );
+      console.log(userBalance?.toString());
+      const [multicallProvider, multicallContract] =
+        await setupMultiCallContract(GEMS_CONTRACT_ADDRESS, harmonyWhalesAbi);
+      let tokenCalls = [];
+      for (let i = 0; i < userBalance; i++) {
+        tokenCalls.push(multicallContract.tokenOfOwnerByIndex(account, i));
+      }
+      const userTokens = (await multicallProvider?.all(tokenCalls)).map((e) =>
+        e.toString()
+      );
+      // return [1, 2, 3, 4, 5, 67];
+      return userTokens;
+    } catch (e) {
+      console.log(e);
+    }
+  };
   functionsToExport.getLockedPeriod = async () => {
     const lockedPeriod = await contractObjects?.raidContract?.lockPeriod();
     console.log(lockedPeriod.toString());
@@ -1435,6 +1482,7 @@ fragment ERC721CardInfo on ERC721TokenMetadata {
         raidLockedPeriod,
         raidResult,
         userArtifacts,
+        userGems,
       }}
     >
       {props.children}

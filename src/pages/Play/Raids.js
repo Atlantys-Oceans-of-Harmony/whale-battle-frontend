@@ -82,7 +82,7 @@ const Raids = ({ setPlayState }) => {
 
   useEffect(() => {
     if (allRaids) {
-      setBattlesToShow(allRaids);
+      setBattlesToShow([...allRaids]);
     }
     // if (battlesToCommence) {
     //   let _battlesToShow = [...battlesToCommence, ...createdBattles];
@@ -502,7 +502,7 @@ const Raids = ({ setPlayState }) => {
                     <BattleCard
                       data={el}
                       onClick={() => {
-                        returnRaid([el[0]]);
+                        returnRaid([el[0]], setPlayState);
                       }}
                       isSelected={
                         selectedBattle &&
