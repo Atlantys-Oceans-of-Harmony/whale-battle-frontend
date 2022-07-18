@@ -2,42 +2,6 @@
   {
     "inputs": [
       {
-        "internalType": "uint256[]",
-        "name": "whale",
-        "type": "uint256[]"
-      }
-    ],
-    "name": "endRaid",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256[]",
-        "name": "tokenId",
-        "type": "uint256[]"
-      },
-      {
-        "internalType": "uint256[3][]",
-        "name": "stats",
-        "type": "uint256[3][]"
-      },
-      {
-        "internalType": "bytes[]",
-        "name": "sigantures",
-        "type": "bytes[]"
-      }
-    ],
-    "name": "initializeLand",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
         "internalType": "address",
         "name": "_whale",
         "type": "address"
@@ -55,6 +19,16 @@
       {
         "internalType": "address",
         "name": "_aqua",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_artifact",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_gem",
         "type": "address"
       }
     ],
@@ -81,19 +55,6 @@
     "type": "event"
   },
   {
-    "inputs": [
-      {
-        "internalType": "bool",
-        "name": "_pause",
-        "type": "bool"
-      }
-    ],
-    "name": "Pause",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
     "anonymous": false,
     "inputs": [
       {
@@ -116,131 +77,23 @@
       },
       {
         "indexed": false,
-        "internalType": "bool",
+        "internalType": "uint8",
         "name": "artifactReceived",
-        "type": "bool"
+        "type": "uint8"
       }
     ],
     "name": "RaidResult",
     "type": "event"
   },
   {
-    "inputs": [],
-    "name": "renounceOwnership",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
-        "internalType": "uint256[]",
-        "name": "tokenIds",
-        "type": "uint256[]"
-      },
-      {
-        "internalType": "uint256[]",
-        "name": "artifacts",
-        "type": "uint256[]"
+        "internalType": "bool",
+        "name": "_pause",
+        "type": "bool"
       }
     ],
-    "name": "reviveWhale",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256[]",
-        "name": "whale",
-        "type": "uint256[]"
-      },
-      {
-        "internalType": "uint256[]",
-        "name": "plot",
-        "type": "uint256[]"
-      }
-    ],
-    "name": "sendRaid",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_aqua",
-        "type": "address"
-      }
-    ],
-    "name": "setAqua",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_plot",
-        "type": "address"
-      }
-    ],
-    "name": "setPlot",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_signer",
-        "type": "address"
-      }
-    ],
-    "name": "setSigner",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_traits",
-        "type": "address"
-      }
-    ],
-    "name": "setTraits",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_whale",
-        "type": "address"
-      }
-    ],
-    "name": "setWhale",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "newOwner",
-        "type": "address"
-      }
-    ],
-    "name": "transferOwnership",
+    "name": "Pause",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -304,19 +157,6 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "burnAddress",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
         "internalType": "uint256",
@@ -346,6 +186,19 @@
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256[]",
+        "name": "whale",
+        "type": "uint256[]"
+      }
+    ],
+    "name": "endRaid",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -424,6 +277,29 @@
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256[]",
+        "name": "tokenId",
+        "type": "uint256[]"
+      },
+      {
+        "internalType": "uint256[3][]",
+        "name": "stats",
+        "type": "uint256[3][]"
+      },
+      {
+        "internalType": "bytes[]",
+        "name": "sigantures",
+        "type": "bytes[]"
+      }
+    ],
+    "name": "initializeLand",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -509,6 +385,32 @@
     "type": "function"
   },
   {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_whale",
+        "type": "uint256"
+      }
+    ],
+    "name": "readWeaponBody",
+    "outputs": [
+      {
+        "internalType": "uint256[2]",
+        "name": "traits",
+        "type": "uint256[2]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "renounceOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "revivalFees",
     "outputs": [
@@ -519,6 +421,133 @@
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256[]",
+        "name": "tokenIds",
+        "type": "uint256[]"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "artifacts",
+        "type": "uint256[]"
+      }
+    ],
+    "name": "reviveWhale",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256[]",
+        "name": "whale",
+        "type": "uint256[]"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "plot",
+        "type": "uint256[]"
+      }
+    ],
+    "name": "sendRaid",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_aqua",
+        "type": "address"
+      }
+    ],
+    "name": "setAqua",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_artifacts",
+        "type": "address"
+      }
+    ],
+    "name": "setArtifacts",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_gem",
+        "type": "address"
+      }
+    ],
+    "name": "setGem",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_plot",
+        "type": "address"
+      }
+    ],
+    "name": "setPlot",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_signer",
+        "type": "address"
+      }
+    ],
+    "name": "setSigner",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_traits",
+        "type": "address"
+      }
+    ],
+    "name": "setTraits",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_whale",
+        "type": "address"
+      }
+    ],
+    "name": "setWhale",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -538,6 +567,19 @@
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
+      }
+    ],
+    "name": "transferOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {

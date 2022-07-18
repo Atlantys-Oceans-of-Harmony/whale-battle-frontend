@@ -166,6 +166,8 @@ const EndRaid = ({ setPlayState }) => {
     let [address, whaleId, prizeMultiplier, artifactReceived] = data;
     whaleId = parseInt(whaleId, 16);
     prizeMultiplier = parseInt(prizeMultiplier, 16);
+    artifactReceived = parseInt(artifactReceived) == 1 ? true : false;
+    let gemReceived = parseInt(artifactReceived) == 2 ? true : false;
 
     if (data) {
       return (
@@ -194,6 +196,9 @@ const EndRaid = ({ setPlayState }) => {
               </div>
               <div className="text-white text-left">
                 Mystery Artifact: {artifactReceived ? "Yes" : "No"}
+              </div>
+              <div className="text-white text-left">
+                Gem: {gemReceived ? "Yes" : "No"}
               </div>
             </div>
             <img
